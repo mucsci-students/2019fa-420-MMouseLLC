@@ -13,9 +13,9 @@ import java.util.ArrayList;
 public class UMLItem {
     private int id;
     private String name;
-    private List<String> attributes = new ArrayList<>();
+    private List<String> attributes = new ArrayList<String>();
     private int parent = 0;
-    private List<Integer> children = new ArrayList<>();
+    private List<Integer> children = new ArrayList<Integer>();
     
     public UMLItem(int Id, String Name, int Parent, List<String> Attr) {
         this.id = Id;
