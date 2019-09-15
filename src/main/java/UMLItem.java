@@ -5,7 +5,7 @@
  * @author Eric Hinerdeer
  * Date: August 29, 2019
  */
-package testumlproject;
+
 
 import java.util.List;
 import java.util.ArrayList;
@@ -13,14 +13,10 @@ import java.util.ArrayList;
 public class UMLItem {
     private int id;
     private String name;
-    private List<String> attributes = new ArrayList<>();
+    private List<String> attributes = new ArrayList<String>();
     private int parent = 0;
-    private List<Integer> children = new ArrayList<>();
+    private List<Integer> children = new ArrayList<Integer>();
     
-    /*
-     * 
-     * Test!
-     */
     public UMLItem(int Id, String Name, int Parent, List<String> Attr) {
         this.id = Id;
         this.name = Name;
