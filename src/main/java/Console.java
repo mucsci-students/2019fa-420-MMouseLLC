@@ -87,7 +87,7 @@ public class Console {
 				}
 			} else {
 				System.out.println("Save canceled.");
-				homeScreen();
+				homeScreen(); 
 			}
 			
 			
