@@ -1,9 +1,7 @@
 /target/
-<<<<<<< HEAD
-=======
 bin/
 .settings/
 .DS_Store
 .classpath
 .project
->>>>>>> 8560b0e0650ccdceec9bb1e8182baa2d7505f46f
+
