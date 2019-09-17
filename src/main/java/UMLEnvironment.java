@@ -6,14 +6,13 @@
  * @author Eric Hinerdeer
  * Date: August 29, 2019
  */
-package testumlproject;
 
 import java.util.List;
 import java.util.ArrayList;
 
 public class UMLEnvironment {
     
-    List<UMLItem> Items = new ArrayList<>();
+    List<UMLItem> Items = new ArrayList<UMLItem>();
     
     public UMLEnvironment() {
         
