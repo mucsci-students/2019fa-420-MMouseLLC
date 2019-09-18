@@ -16,17 +16,15 @@ public class LocalFileTest {
   
   /** The UMLEnvironment. */
   private UMLEnvironment env = new UMLEnvironment();
+  
 
   /**
    * Test saveFile.
    */
   @Test
   public void testSaveFile() {
-    createTestUMLEnvironment();
-    String fileName = "test_file";
-    LocalFile file = new LocalFile(env, fileName);
+    LocalFile file = createSaveFile();
     file.saveFile();
-    
     File testFile = new File(SAVE_DIR + "/" + file.getFileName() + ".json");
     assertTrue("File not found", testFile.exists());
   }
@@ -38,11 +36,57 @@ public class LocalFileTest {
    */
   @Test
   public void testLoadFile() throws IOException {
+    LocalFile file = createSaveFile();
+    file.saveFile();
     String fileName = "test_file";
-    LocalFile file = new LocalFile(fileName);
-    env = file.loadFile();
+    LocalFile fileTest = new LocalFile(fileName);
+    env = fileTest.loadFile();
     
     assertTrue("Number of UMLItems not correct", env.getItems().size() == 2);
+  }
+  
+  /**
+   * Test deleteFile.
+   * 
+   * @throws IOException Signals that an I/O exception has occurred.
+   */
+  @Test
+  public void testDeleteFile() throws IOException {
+    LocalFile file = createSaveFile();
+    file.saveFile();
+    
+    String fileName = "test_file";
+    LocalFile fileTest = new LocalFile(fileName);
+    
+    fileTest.deleteFile();
+    
+    assertTrue("File was not deleted", !fileTest.hasExistingFileName(fileName));
+  }
+  
+  /**
+   * Test deleteAllFiles
+   */
+  @Test
+  public void testDeleteAllFiles() throws IOException {
+    LocalFile file = createSaveFile();
+    file.saveFile();
+    
+    String fileName = "test_file";
+    LocalFile fileTest = new LocalFile(fileName);
+    
+    fileTest.deleteFile();
+    
+    /** directory size should be 1 due to .gitignore in directory */
+    assertTrue("saved_file directory still has contents.", fileTest.getDirectory().list().length == 1);
+  }
+ 
+  /**
+   * Creates the file to be saved in LocalFile.
+   */
+  public LocalFile createSaveFile() {
+    createTestUMLEnvironment();
+    String fileName = "test_file";
+    return new LocalFile(env, fileName);
   }
   
   /**
