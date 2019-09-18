@@ -14,6 +14,10 @@ public class UMLEnvironment {
     
     List<UMLItem> Items = new ArrayList<UMLItem>();
     
+    public int getSize() {
+    	return Items.size();
+    }
+    
     public UMLEnvironment() {
         
     }

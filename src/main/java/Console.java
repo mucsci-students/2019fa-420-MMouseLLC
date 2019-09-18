@@ -16,6 +16,7 @@ public class Console {
 			checkInput(input);
 			input = console.next();
 		}
+		console.close();
 	}
 	public static void checkInput(String input) {
 			if (input.equals("add")) {
@@ -43,9 +44,10 @@ public class Console {
 			//add class function
 			System.out.println("Class added " + newClass + ".");
 		} else {
-			System.out.println("Add canceled.");
+			System.out.println("Add cancelled.");
 		}
 		homeScreen();
+		console.close();
 	}
 	
 	public static void list() {
@@ -65,6 +67,7 @@ public class Console {
 			System.out.println("Load complete.");
 			homeScreen();
 		}
+		console.close();
 	}
 	
 	public static void save() {
@@ -89,7 +92,7 @@ public class Console {
 				System.out.println("Save canceled.");
 				homeScreen(); 
 			}
-			
+			console.close();
 			
 	}
 
