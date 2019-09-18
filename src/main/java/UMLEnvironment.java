@@ -13,17 +13,19 @@ import java.util.ArrayList;
 public class UMLEnvironment {
     
     List<UMLItem> Items = new ArrayList<UMLItem>();
+    int size;
     
     public int getSize() {
     	return Items.size();
     }
     
     public UMLEnvironment() {
-        
+        this.size = 0;
     }
     
     public UMLEnvironment(UMLItem item) {
         this.Items.add(item);
+        this.size++;
     }
     
     public List<UMLItem> getItems() {
@@ -39,6 +41,7 @@ public class UMLEnvironment {
             }
         }
         this.Items.add(item);
+        this.size++;
         return true;
     }
     
@@ -47,6 +50,7 @@ public class UMLEnvironment {
             for(int i = 0; i < this.Items.size(); i++) {
             if(item.getId() == this.Items.get(i).getId()) {
                 this.Items.remove(i);
+                this.size--;
                 return true;
             }
         }

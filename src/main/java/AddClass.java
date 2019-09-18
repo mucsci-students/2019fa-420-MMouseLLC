@@ -87,6 +87,7 @@ public class AddClass {
 	public static boolean editItem(UMLEnvironment umlEnv, String oldName, String newName){
 		// return false if the newName is already found in the list. NO dups
 		if (getItem(umlEnv, newName) != null) {
+			System.out.println(newName + " already exists. Pick another name.");
 			return false;
 		}
 		UMLItem i = getItem(umlEnv, oldName); 
@@ -95,6 +96,7 @@ public class AddClass {
 			i.setName(newName);
 			return true;
 		}
+		System.out.println(oldName + " does not exist. Please create it.");
 		return false;
 	}
 	
