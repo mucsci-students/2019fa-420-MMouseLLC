@@ -51,7 +51,8 @@ public class Console {
 	}
 	
 	public static void list() {
-		System.out.println("list of classes");
+		System.out.println("List of classes: ");
+		
 	}
 	
 	public static void load() {

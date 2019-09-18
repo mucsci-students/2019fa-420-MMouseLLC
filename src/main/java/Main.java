@@ -2,8 +2,13 @@
 public class Main {
 
 	public static void main(String[] args) {
-		Console.main(args);
+		AddClass.main(args);
 
+	}
+	
+	public static void Run() {
+		UMLEnvironment env = new UMLEnvironment();
+		
 	}
 
 }
