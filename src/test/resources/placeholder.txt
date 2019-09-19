@@ -1,0 +1,1 @@
+Do not remove this file until resources are added to directory. This keeps the directory from disappearing in github.

@@ -7,6 +7,7 @@ import java.nio.file.Paths;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 
 import com.fasterxml.jackson.core.JsonEncoding;
@@ -63,6 +64,7 @@ public class LocalFile {
    */
   public LocalFile(String fileName) {
     this.fileName = fileName;
+    this.directory = new File(SAVE_DIR);
   }
   
   /**
@@ -74,6 +76,7 @@ public class LocalFile {
   public LocalFile(UMLEnvironment env, String fileName) {
     this.env = env;
     this.fileName = fileName;
+    this.directory = new File(SAVE_DIR);
   }
   
   /**
@@ -93,6 +96,7 @@ public class LocalFile {
     } catch(IOException e) {
       logger.log(Level.SEVERE, "Error. IOException in writeToFile(): ", e);
     }
+    logger.info("File saved successfully");
   }
   
   /**
@@ -104,7 +108,28 @@ public class LocalFile {
   public UMLEnvironment loadFile() throws IOException {
     byte[] saveData = Files.readAllBytes(Paths.get(SAVE_DIR + "/" + fileName + ".json"));
     ObjectMapper objectMapper = new ObjectMapper();
+    logger.info("Loading file in loadFile()");
     return objectMapper.readValue(saveData, UMLEnvironment.class);
+  }
+  
+  /**
+   * Deletes a file.
+   */
+  public void deleteFile() {
+    File file = new File(SAVE_DIR + "/" + fileName + ".json");
+    if(file.delete())
+      logger.info("File: " + fileName + " deleted successfully.");
+    else
+      logger.warning("File: " + fileName + " not deleted successfully.");
+  }
+  
+  /**
+   * Deletes all files in the saved_files directory.
+   * 
+   * @throws IOException Signals that an I/O exception has occurred.
+   */
+  public void deleteAllFiles() throws IOException {
+    FileUtils.cleanDirectory(directory);
   }
   
 
@@ -132,6 +157,15 @@ public class LocalFile {
    */
   public String getFileName() {
     return this.fileName;
+  }
+  
+  /**
+   * Gets the directory.
+   * 
+   * @return the directory
+   */
+  public File getDirectory() {
+    return this.directory;
   }
   
 }
