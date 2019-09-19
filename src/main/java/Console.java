@@ -29,7 +29,10 @@ public class Console {
 				save(env);
 			} else if (input.equals("edit")) {
 				edit(env);
+			}else if (input.equals("help")) {
+				help(env);
 			}
+			
 			else {
 				System.err.println("command not found - retry");
 				homeScreen(env);
@@ -133,5 +136,14 @@ public class Console {
 		homeScreen(env);
 		console.close();
 	}
-
+	
+	public static void help (UMLEnvironment env) {
+		System.out.println("To add a class type \"add\" ");
+		System.out.println("To list a class type \"list\" ");
+		System.out.println("To edit a class type \"edit\" ");
+		System.out.println("To save your project \"save\" ");
+		System.out.println("To load your project type \"load\" ");
+		System.out.println(" ");
+		homeScreen(env);
+		}
 }
