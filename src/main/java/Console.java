@@ -19,16 +19,18 @@ public class Console {
 		console.close();
 	}
 	public static void checkInput(String input, UMLEnvironment env) {
-			if (input.equals("add")) {
+			if (input.toLowerCase().equals("add")) {
 				add(env);
-			} else if (input.equals("list")) {
+			} else if (input.toLowerCase().equals("list")) {
 				list(env);
-			} else if (input.equals("load")) {
+			} else if (input.toLowerCase().equals("load")) {
 				load(env);
-			} else if (input.equals("save")) {
+			} else if (input.toLowerCase().equals("save")) {
 				save(env);
-			} else if (input.equals("edit")) {
+			} else if (input.toLowerCase().equals("edit")) {
 				edit(env);
+			} else if (input.toLowerCase().equals("find")) {
+				find(env);
 			}
 			else {
 				System.err.println("command not found - retry");
@@ -133,5 +135,21 @@ public class Console {
 		homeScreen(env);
 		console.close();
 	}
-
+	
+	public static void find(UMLEnvironment env) {
+		System.out.print("Enter class name to find: ");
+		Scanner console = new Scanner (System.in);
+		String name = console.next();
+		for (UMLItem i : env.getItems()){
+			if(i.getName().toLowerCase().equals(name.toLowerCase())) {
+				System.out.println("Class " + name + " exists.");
+				homeScreen(env);
+				console.close();
+				return;
+			}
+		}
+		System.out.println("Class does not exist.");
+		homeScreen(env);
+		console.close();
+	}
 }

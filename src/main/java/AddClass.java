@@ -46,7 +46,7 @@ public class AddClass {
 	 */
 	public static UMLItem getItem(UMLEnvironment umlEnv, String name) {
 		for (UMLItem i : umlEnv.Items){
-			if (i.getName().equals(name)){
+			if (i.getName().toLowerCase().equals(name.toLowerCase())){
 				return i;
 			}
 		}
