@@ -28,6 +28,12 @@ public class UMLItem {
         this.attributes = Attr;
     }
     
+    public UMLItem(int Id, String name)
+    {
+    	this.id = Id;
+    	this.name = name;
+    }
+    
     public int getId() {
         return this.id;
     }

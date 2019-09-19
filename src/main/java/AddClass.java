@@ -72,9 +72,22 @@ public class AddClass {
 		return false;
 	}
 	
+	//Adds a Class with only name and uses the size of Env to create a unique ID
+	public static boolean addClass(UMLEnvironment umlEnv, String name)
+	{
+		if (getItem(umlEnv, name) == null){
+			UMLItem uml = new UMLItem((umlEnv.getSize() + 1), name);
+			umlEnv.addItem(uml);
+			return true;
+		}
+		
+		return false;
+	}
+	
 	public static boolean editItem(UMLEnvironment umlEnv, String oldName, String newName){
 		// return false if the newName is already found in the list. NO dups
 		if (getItem(umlEnv, newName) != null) {
+			System.out.println(newName + " already exists. Pick another name.");
 			return false;
 		}
 		UMLItem i = getItem(umlEnv, oldName); 
@@ -83,6 +96,7 @@ public class AddClass {
 			i.setName(newName);
 			return true;
 		}
+		System.out.println(oldName + " does not exist. Please create it.");
 		return false;
 	}
 	
