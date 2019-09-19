@@ -29,10 +29,12 @@ public class Console {
 				save(env);
 			} else if (input.toLowerCase().equals("edit")) {
 				edit(env);
-			}else if (input.toLowerCase().equals("help")) {
+			} else if (input.toLowerCase().equals("help")) {
 				help(env);
 			} else if (input.toLowerCase().equals("find")) {
 				find(env);
+			} else if (input.toLowerCase().equals("quit")) {
+				quit(env);
 			}
 			
 			else {
@@ -162,6 +164,18 @@ public class Console {
 		}
 		System.out.println("Class does not exist.");
 		homeScreen(env);
+		console.close();
+	}
+	
+	public static void quit(UMLEnvironment env) {
+		System.out.print("Any unsaved work will be lost, do you want to save? (y/n): ");
+		Scanner console = new Scanner (System.in);
+		String answer = console.next();
+		if (answer.equals("y")) {
+			save(env);
+		} else { 
+			System.out.print("Quitting program");
+		}
 		console.close();
 	}
 }
