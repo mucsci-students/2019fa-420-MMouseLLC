@@ -29,9 +29,12 @@ public class Console {
 				save(env);
 			} else if (input.toLowerCase().equals("edit")) {
 				edit(env);
+			}else if (input.toLowerCase().equals("help")) {
+				help(env);
 			} else if (input.toLowerCase().equals("find")) {
 				find(env);
 			}
+			
 			else {
 				System.err.println("command not found - retry");
 				homeScreen(env);
@@ -136,6 +139,15 @@ public class Console {
 		console.close();
 	}
 	
+	public static void help (UMLEnvironment env) {
+		System.out.println("To add a class type \"add\" ");
+		System.out.println("To list a class type \"list\" ");
+		System.out.println("To edit a class type \"edit\" ");
+		System.out.println("To save your project \"save\" ");
+		System.out.println("To load your project type \"load\" ");
+		System.out.println(" ");
+		homeScreen(env);
+		}
 	public static void find(UMLEnvironment env) {
 		System.out.print("Enter class name to find: ");
 		Scanner console = new Scanner (System.in);
