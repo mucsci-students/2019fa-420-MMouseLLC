@@ -25,6 +25,7 @@ public class Console {
 		}
 		console.close();
 	}
+
 	
 	/**
 	 * Takes users command from homescreen and checks if its a valid command 
@@ -34,17 +35,22 @@ public class Console {
 	 * @throws IOException signals that an I/O exception has occurred
 	 */
 	public static void checkInput(String input, UMLEnvironment env) throws IOException {
-			if (input.equals("add")) {
+			if (input.toLowerCase().equals("add")) {
 				add(env);
-			} else if (input.equals("list")) {
+			} else if (input.toLowerCase().equals("list")) {
 				list(env);
-			} else if (input.equals("load")) {
+			} else if (input.toLowerCase().equals("load")) {
 				load(env);
-			} else if (input.equals("save")) {
+			} else if (input.toLowerCase().equals("save")) {
 				save(env);
-			} else if (input.equals("edit")) {
+			} else if (input.toLowerCase().equals("edit")) {
 				edit(env);
+			}else if (input.toLowerCase().equals("help")) {
+				help(env);
+			} else if (input.toLowerCase().equals("find")) {
+				find(env);
 			}
+			
 			else {
 				System.err.println("command not found - retry");
 				homeScreen(env);
@@ -192,5 +198,30 @@ public class Console {
 		homeScreen(env);
 		console.close();
 	}
-
+	
+	public static void help (UMLEnvironment env) {
+		System.out.println("To add a class type \"add\" ");
+		System.out.println("To list a class type \"list\" ");
+		System.out.println("To edit a class type \"edit\" ");
+		System.out.println("To save your project \"save\" ");
+		System.out.println("To load your project type \"load\" ");
+		System.out.println(" ");
+		homeScreen(env);
+		}
+	public static void find(UMLEnvironment env) {
+		System.out.print("Enter class name to find: ");
+		Scanner console = new Scanner (System.in);
+		String name = console.next();
+		for (UMLItem i : env.getItems()){
+			if(i.getName().toLowerCase().equals(name.toLowerCase())) {
+				System.out.println("Class " + name + " exists.");
+				homeScreen(env);
+				console.close();
+				return;
+			}
+		}
+		System.out.println("Class does not exist.");
+		homeScreen(env);
+		console.close();
+	}
 }
