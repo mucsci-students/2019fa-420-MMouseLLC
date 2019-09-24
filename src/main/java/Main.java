@@ -13,6 +13,7 @@ public class Main {
 	 * will ensure the environment stays up to date.
 	 * */
   public static void Run() throws IOException  {
+	    ReplScanner.initialize();
 		UMLEnvironment env = new UMLEnvironment();
 		Console.homeScreen(env);
 	}

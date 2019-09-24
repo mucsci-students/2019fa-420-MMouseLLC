@@ -10,16 +10,18 @@ public class Console {
 	 * 
 	 */
 	public static void homeScreen (UMLEnvironment env) throws IOException {
-		System.out.print("Please input a command: ");
 		
-		Scanner console = new Scanner (System.in);
-		String input = console.nextLine();
-		
+		final Scanner console = ReplScanner.getInstance();
 		while (true) {
-			checkInput(input, env);
-			input = console.nextLine();
+			System.out.print("Please input a command: ");
+			if (console.hasNextLine()){
+				String input = console.nextLine();
+				checkInput(input, env);	
+			} else {
+				break;
+			}
 		}
-		//console.close();
+		console.close();
 	}
 
 	public static void multiArgCommand(UMLEnvironment env, String[] input) throws IOException{
@@ -44,7 +46,6 @@ public class Console {
 		} else {
 			System.out.println("Invalid Command");
 		}
-		homeScreen(env);
 	}
 	
 	/**
@@ -59,7 +60,7 @@ public class Console {
 		String input = lineArr[0];
 		if (lineArr.length > 1){
 			multiArgCommand(env, lineArr);
-			homeScreen(env);
+			return;
 		}
 		if (input.toLowerCase().equals("add")) {
 			add(env);
@@ -81,7 +82,6 @@ public class Console {
 		
 		else {
 			System.out.println("command not found - retry");
-			homeScreen(env);
 		}
 	}
 	
@@ -94,7 +94,7 @@ public class Console {
 	 */
 	public static void add(UMLEnvironment env) throws IOException {
 		System.out.print("Enter new class name: ");
-		Scanner console = new Scanner (System.in);
+		final Scanner console = ReplScanner.getInstance();
 		String newClass = console.next();
 		System.out.print("Add class " + newClass + "? (y/n): ");
 		String answer = console.next();
@@ -110,8 +110,7 @@ public class Console {
 		} else {
 			System.out.println("Add cancelled.");
 		}
-		homeScreen(env);
-		console.close();
+		console.nextLine();
 	}
 	
 	/**
@@ -126,7 +125,6 @@ public class Console {
 			System.out.print(i.getName() + " ");
 		}
 		System.out.print("]\n");
-		homeScreen(env);
 	}
 	
 	/**
@@ -139,7 +137,7 @@ public class Console {
 	 */
 	public static void load(UMLEnvironment env) throws IOException {
 		System.out.print("Any unsaved work will be lost, do you want to save? (y/n): ");
-		Scanner console = new Scanner (System.in);
+		final Scanner console = ReplScanner.getInstance();
 		String answer = console.next();
 		if (answer.equals("y")) {
 			save(env);
@@ -149,14 +147,11 @@ public class Console {
 			LocalFile file = new LocalFile(fileName);
 			if (!file.hasExistingFileName(fileName)) {
 				System.out.print("No such file under name: " + fileName + ". Load canceled.\n");
-				homeScreen(env);
 			} else {
 				env = file.loadFile();
+				System.out.println("Load complete.");
 			}
-			System.out.println("Load complete.");
-			homeScreen(env);
 		}
-		console.close();
 	}
 	
 	/**
@@ -168,7 +163,7 @@ public class Console {
 	public static void save(UMLEnvironment env) throws IOException {
 		
 		System.out.print("Save current work? (y/n): ");
-		Scanner console = new Scanner (System.in);
+		final Scanner console = ReplScanner.getInstance();
 		String answer = console.next();
 			if (answer.equals("y")) {
 				System.out.print("Please enter file name: ");
@@ -185,7 +180,6 @@ public class Console {
 								break;
 							} else {
 								System.out.print("Save canceled.");
-								homeScreen(env);
 							}
 						} else {
 							break;
@@ -193,21 +187,18 @@ public class Console {
 					}	
 					file.saveFile();
 					System.out.println("File has been saved.");
-					homeScreen(env);
 				} else {	
 					System.out.println("Save canceled.");
-					homeScreen(env);
 				}
 			} else {
 				System.out.println("Save canceled.");
-				homeScreen(env); 
 			}
-			console.close();
+			console.nextLine();
 	}		
 	
 	public static void edit(UMLEnvironment env) throws IOException {
 		System.out.print("Enter old class name: ");
-		Scanner console = new Scanner (System.in);
+		final Scanner console = ReplScanner.getInstance();
 		String oldClass = console.next();
 		System.out.print("Enter new class name: ");
 		String newClass = console.next();
@@ -224,8 +215,7 @@ public class Console {
 		} else {
 			System.out.println("Add cancelled.");
 		}
-		homeScreen(env);
-		console.close();
+		console.nextLine();
 	}
 	
 	public static void help (UMLEnvironment env) throws IOException {
@@ -235,29 +225,25 @@ public class Console {
 		System.out.println("To save your project \"save\" ");
 		System.out.println("To load your project type \"load\" ");
 		System.out.println(" ");
-		homeScreen(env);
 	}
 	
 	public static void find(UMLEnvironment env) throws IOException {
 		System.out.print("Enter class name to find: ");
-		Scanner console = new Scanner (System.in);
+		final Scanner console = ReplScanner.getInstance();
 		String name = console.next();
 		for (UMLItem i : env.getItems()){
 			if(i.getName().toLowerCase().equals(name.toLowerCase())) {
 				System.out.println("Class " + name + " exists.");
-				homeScreen(env);
-				console.close();
 				return;
 			}
 		}
 		System.out.println("Class does not exist.");
-		homeScreen(env);
-		console.close();
+		console.nextLine();
 	}
 	
 	public static void quit(UMLEnvironment env) {
 		System.out.print("Any unsaved work will be lost, do you want to save? (y/n): ");
-		Scanner console = new Scanner (System.in);
+		final Scanner console = ReplScanner.getInstance();
 		String answer = console.next();
 		if (answer.equals("y")) {
 			saveAndQuit(env);
@@ -267,17 +253,18 @@ public class Console {
 		console.close();
 		System.exit(0);
 	}
+	
 	public static void saveAndQuit(UMLEnvironment env) {
 		LocalFile file = new LocalFile(env);
 		boolean needsValidSaveResp = true;
-		Scanner sc = new Scanner(System.in);
+		final Scanner console = ReplScanner.getInstance();
 		String fileName = "";
 		while(needsValidSaveResp) {
 			System.out.print("Please enter a filename to save: ");
-			fileName = sc.nextLine();
+			fileName = console.nextLine();
 			if(file.hasExistingFileName(fileName)) {
 				System.out.print("Filename currently exists. Overwrite? (Y/N)");
-				String response = sc.nextLine();
+				String response = console.nextLine();
 			 	if(response.equalsIgnoreCase("y"))
 	          		needsValidSaveResp = false;
 	    		else if(!response.equalsIgnoreCase("n"))
@@ -288,7 +275,6 @@ public class Console {
 			}
 		}
 		file.saveFile();
-		sc.close();
 		System.out.println("File saved");
 	}
 	
