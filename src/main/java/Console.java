@@ -172,10 +172,36 @@ public class Console {
 		Scanner console = new Scanner (System.in);
 		String answer = console.next();
 		if (answer.equals("y")) {
-			save(env);
+			saveAndQuit(env);
 		} else { 
-			System.out.print("Quitting program");
+			System.out.println("Quitting program");
 		}
 		console.close();
+		System.exit(0);
 	}
+	public static void saveAndQuit(UMLEnvironment env) {
+		LocalFile file = new LocalFile(env);
+		boolean needsValidSaveResp = true;
+		Scanner sc = new Scanner(System.in);
+		String fileName = "";
+		while(needsValidSaveResp) {
+			System.out.print("Please enter a filename to save: ");
+			fileName = sc.nextLine();
+			if(file.hasExistingFileName(fileName)) {
+				System.out.print("Filename currently exists. Overwrite? (Y/N)");
+				String response = sc.nextLine();
+			 	if(response.equalsIgnoreCase("y"))
+	          		needsValidSaveResp = false;
+	    		else if(!response.equalsIgnoreCase("n"))
+	          		System.out.println("Response not valid. Please try again.");
+			} else {
+				System.out.println("Saving file");
+				needsValidSaveResp = false;
+			}
+		}
+		file.saveFile();
+		sc.close();
+		System.out.println("File saved");
+	}
+	
 }
