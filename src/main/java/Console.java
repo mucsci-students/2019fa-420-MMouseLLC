@@ -1,11 +1,7 @@
 import java.io.IOException;
-import java.util.*;
+import java.util.Scanner;
 public class Console {
 
-	/*public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		homeScreen();
-	}	*/
 	/**
 	 * Where user begins with all commands
 	 * 
@@ -17,15 +13,39 @@ public class Console {
 		System.out.print("Please input a command: ");
 		
 		Scanner console = new Scanner (System.in);
-		String input = console.next();
+		String input = console.nextLine();
 		
-		while (console.hasNextLine()) {
+		while (true) {
 			checkInput(input, env);
-			input = console.next();
+			input = console.nextLine();
 		}
-		console.close();
+		//console.close();
 	}
 
+	public static void multiArgCommand(UMLEnvironment env, String[] input) throws IOException{
+		input[0] = input[0].toLowerCase();
+		if (input[0].equals("add")){
+			if (!AddClass.addClass(env, input[1])){
+				System.out.println(input[1] + " is already a class.");
+			}
+		} else if (input[0].equals("edit")){
+			if (input.length < 3){
+				System.out.println("Invalid: edit [oldClass] [newClass]");
+			} else {
+				AddClass.editItem(env, input[1], input[2]);
+			}
+		} else if (input[0].equals("find")){
+			UMLItem i = AddClass.getItem(env, input[1]);
+			if (i != null){
+				System.out.println(i + " exists.");
+			} else {
+				System.out.println(i + " does not exist.");
+			}
+		} else {
+			System.out.println("Invalid Command");
+		}
+		homeScreen(env);
+	}
 	
 	/**
 	 * Takes users command from homescreen and checks if its a valid command 
@@ -34,29 +54,35 @@ public class Console {
 	 * @param env the  UMLEvnironment
 	 * @throws IOException signals that an I/O exception has occurred
 	 */
-	public static void checkInput(String input, UMLEnvironment env) throws IOException {
-			if (input.toLowerCase().equals("add")) {
-				add(env);
-			} else if (input.toLowerCase().equals("list")) {
-				list(env);
-			} else if (input.toLowerCase().equals("load")) {
-				load(env);
-			} else if (input.toLowerCase().equals("save")) {
-				save(env);
-			} else if (input.toLowerCase().equals("edit")) {
-				edit(env);
-			} else if (input.toLowerCase().equals("help")) {
-				help(env);
-			} else if (input.toLowerCase().equals("find")) {
-				find(env);
-			} else if (input.toLowerCase().equals("quit")) {
-				quit(env);
-			}
-			
-			else {
-				System.err.println("command not found - retry");
-				homeScreen(env);
-			}
+	public static void checkInput(String line, UMLEnvironment env) throws IOException {
+		String[] lineArr = line.split(" ");
+		String input = lineArr[0];
+		if (lineArr.length > 1){
+			multiArgCommand(env, lineArr);
+			homeScreen(env);
+		}
+		if (input.toLowerCase().equals("add")) {
+			add(env);
+		} else if (input.toLowerCase().equals("list")) {
+			list(env);
+		} else if (input.toLowerCase().equals("load")) {
+			load(env);
+		} else if (input.toLowerCase().equals("save")) {
+			save(env);
+		} else if (input.toLowerCase().equals("edit")) {
+			edit(env);
+		} else if (input.toLowerCase().equals("help")) {
+			help(env);
+		} else if (input.toLowerCase().equals("find")) {
+			find(env);
+		} else if (input.toLowerCase().equals("quit")) {
+			quit(env);
+		}
+		
+		else {
+			System.out.println("command not found - retry");
+			homeScreen(env);
+		}
 	}
 	
 	/**
@@ -100,6 +126,7 @@ public class Console {
 			System.out.print(i.getName() + " ");
 		}
 		System.out.print("]\n");
+		homeScreen(env);
 	}
 	
 	/**
@@ -201,7 +228,7 @@ public class Console {
 		console.close();
 	}
 	
-	public static void help (UMLEnvironment env) {
+	public static void help (UMLEnvironment env) throws IOException {
 		System.out.println("To add a class type \"add\" ");
 		System.out.println("To list a class type \"list\" ");
 		System.out.println("To edit a class type \"edit\" ");
@@ -209,8 +236,9 @@ public class Console {
 		System.out.println("To load your project type \"load\" ");
 		System.out.println(" ");
 		homeScreen(env);
-		}
-	public static void find(UMLEnvironment env) {
+	}
+	
+	public static void find(UMLEnvironment env) throws IOException {
 		System.out.print("Enter class name to find: ");
 		Scanner console = new Scanner (System.in);
 		String name = console.next();
