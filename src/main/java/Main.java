@@ -1,7 +1,8 @@
+import java.io.IOException;
 
 public class Main {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
 		Run();
 	}
 	/*
@@ -11,7 +12,7 @@ public class Main {
 	 * the console open during use. Passing the environment around
 	 * will ensure the environment stays up to date.
 	 * */
-	public static void Run() {
+  public static void Run() throws IOException  {
 		UMLEnvironment env = new UMLEnvironment();
 		Console.homeScreen(env);
 	}

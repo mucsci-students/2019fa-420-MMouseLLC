@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.util.*;
 public class Console {
 
@@ -5,8 +6,14 @@ public class Console {
 		// TODO Auto-generated method stub
 		homeScreen();
 	}	*/
-	
-	public static void homeScreen (UMLEnvironment env) {
+	/**
+	 * Where user begins with all commands
+	 * 
+	 * @param env the UMLEnvironment
+	 * @throws IOException signals that an I/O exception has occurred.
+	 * 
+	 */
+	public static void homeScreen (UMLEnvironment env) throws IOException {
 		System.out.print("Please input a command: ");
 		
 		Scanner console = new Scanner (System.in);
@@ -18,7 +25,16 @@ public class Console {
 		}
 		console.close();
 	}
-	public static void checkInput(String input, UMLEnvironment env) {
+
+	
+	/**
+	 * Takes users command from homescreen and checks if its a valid command 
+	 * 
+	 * @param input users request
+	 * @param env the  UMLEvnironment
+	 * @throws IOException signals that an I/O exception has occurred
+	 */
+	public static void checkInput(String input, UMLEnvironment env) throws IOException {
 			if (input.toLowerCase().equals("add")) {
 				add(env);
 			} else if (input.toLowerCase().equals("list")) {
@@ -41,8 +57,14 @@ public class Console {
 			}
 	}
 	
-	
-	public static void add(UMLEnvironment env) {
+	/**
+	 * prompts user for input and calls add function to add a new class in environment
+	 * then gives a list of the classes currently in the environment
+	 * 
+	 * @param env the UMLEvnironment
+	 * @throws IOException signals that an I/O exception has occurred 
+	 */
+	public static void add(UMLEnvironment env) throws IOException {
 		System.out.print("Enter new class name: ");
 		Scanner console = new Scanner (System.in);
 		String newClass = console.next();
@@ -64,16 +86,29 @@ public class Console {
 		console.close();
 	}
 	
-	public static void list(UMLEnvironment env) {
+	/**
+	 * gives a list of the classes currently in the environment
+	 * 
+	 * @param env the UMLEnvironment
+	 * @throws IOException signals that an I/O exception has occurred
+	 */
+	public static void list(UMLEnvironment env) throws IOException {
 		System.out.print("List of classes: [ ");
 		for (UMLItem i : env.getItems()){
 			System.out.print(i.getName() + " ");
 		}
 		System.out.print("]\n");
-		
 	}
 	
-	public static void load(UMLEnvironment env) {
+	/**
+	 * loads an existing file into the environment
+	 * if user wishes to save unsaved work, directed to save
+	 * otherwise load function is called, then returned to homescreen
+	 * 
+	 * @param env the UMLEnvironment
+	 * @throws IOException signals that an I/O exception has occurred
+	 */
+	public static void load(UMLEnvironment env) throws IOException {
 		System.out.print("Any unsaved work will be lost, do you want to save? (y/n): ");
 		Scanner console = new Scanner (System.in);
 		String answer = console.next();
@@ -81,31 +116,56 @@ public class Console {
 			save(env);
 		} else {
 			System.out.print("Enter file name to load: ");
-			answer = console.next();
-			//load function
+			String fileName = console.next();
+			LocalFile file = new LocalFile(fileName);
+			if (!file.hasExistingFileName(fileName)) {
+				System.out.print("No such file under name: " + fileName + ". Load canceled.\n");
+				homeScreen(env);
+			} else {
+				env = file.loadFile();
+			}
 			System.out.println("Load complete.");
 			homeScreen(env);
 		}
 		console.close();
 	}
 	
-	public static void save(UMLEnvironment env) {
+	/**
+	 * prompts user for filename and checks if a file already exists under that name
+	 * will either cancel or overwrite based on user input, then return to homescreen
+	 * @param env the UMLEnvironment 
+	 * @throws IOException signals that an I/O exception has occurred
+	 */
+	public static void save(UMLEnvironment env) throws IOException {
 		
 		System.out.print("Save current work? (y/n): ");
 		Scanner console = new Scanner (System.in);
 		String answer = console.next();
 			if (answer.equals("y")) {
 				System.out.print("Please enter file name: ");
-				answer = console.next();
-				//need if/else checking file name exists ??
-				System.out.print("Use filename: " + answer + "? (y/n): ");
+				String fileName = console.next();
+				LocalFile file = new LocalFile(env, fileName);
+				System.out.print("Use filename: " + fileName + "? (y/n): ");
 				answer = console.next();
 				if (answer.equals("y")) {
-					LocalFile file = new LocalFile(env);
+					while(true) {
+						if(file.hasExistingFileName(fileName)) {
+							System.out.print(fileName + " is already a saved file. Do you wish to overwrite this file? (y/n): ");
+							answer = console.next();
+							if (answer.equals("y")) {
+								break;
+							} else {
+								System.out.print("Save canceled.");
+								homeScreen(env);
+							}
+						} else {
+							break;
+						}
+					}	
 					file.saveFile();
 					System.out.println("File has been saved.");
 					homeScreen(env);
-				} else {
+				} else {	
 					System.out.println("Save canceled.");
 					homeScreen(env);
 				}
@@ -114,9 +174,9 @@ public class Console {
 				homeScreen(env); 
 			}
 			console.close();
-			
-	}
-	public static void edit(UMLEnvironment env) {
+	}		
+	
+	public static void edit(UMLEnvironment env) throws IOException {
 		System.out.print("Enter old class name: ");
 		Scanner console = new Scanner (System.in);
 		String oldClass = console.next();
