@@ -8,7 +8,7 @@ public class AddClass {
 		UMLEnvironment uE = new UMLEnvironment();
 		// REPL
 		// Only takes command add name
-		Scanner in = new Scanner (System.in);
+		final Scanner in = ReplScanner.getInstance();
 		while (in.hasNext()){
 			String cmdline = in.nextLine();
 			String[] cmd = cmdline.split(" ");
@@ -35,7 +35,6 @@ public class AddClass {
 			}
 			System.out.print("]\n");	
 		}
-		in.close();
 	}
 	
 	/**
