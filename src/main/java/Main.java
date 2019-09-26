@@ -15,7 +15,9 @@ public class Main {
   public static void Run() throws IOException  {
 	    ReplScanner.initialize();
 		UMLEnvironment env = new UMLEnvironment();
-		Console.homeScreen(env);
+		//Console.homeScreen(env);
+		Console console = new Console(env);
+		console.homeScreen();
 	}
 
 }
