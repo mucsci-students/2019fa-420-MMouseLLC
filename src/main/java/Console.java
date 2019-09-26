@@ -188,9 +188,10 @@ public class Console {
 		System.out.print("Save current work? (y/n): ");
 		final Scanner console = ReplScanner.getInstance();
 		String answer = console.next();
+		console.nextLine();
 		if (answer.equals("y")) {
 			System.out.print("Please enter file name: ");
-			String fileName = console.next();
+			String fileName = console.nextLine();
 			LocalFile file = new LocalFile(env, fileName);
 			System.out.print("Use filename: " + fileName + "? (y/n): ");
 			answer = console.next();
