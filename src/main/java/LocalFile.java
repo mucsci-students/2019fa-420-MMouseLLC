@@ -160,6 +160,15 @@ public class LocalFile {
   }
   
   /**
+   * sSets the file name
+   * 
+   * @param fileName
+   */
+  public void setFileName(String fileName) {
+    this.fileName = fileName;
+  }
+  
+  /**
    * Gets the directory.
    * 
    * @return the directory

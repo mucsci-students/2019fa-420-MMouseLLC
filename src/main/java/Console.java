@@ -1,8 +1,15 @@
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class Console {
 
+  UMLEnvironment env;
+  
+  public Console(UMLEnvironment env) {
+    this.env = env;
+  }
+  
 	/**
 	 * Where user begins with all commands
 	 * 
@@ -12,14 +19,14 @@ public class Console {
 	 *             signals that an I/O exception has occurred.
 	 * 
 	 */
-	public static void homeScreen(UMLEnvironment env) throws IOException {
+	public void homeScreen() throws IOException {
 
 		final Scanner console = ReplScanner.getInstance();
 		while (true) {
 			System.out.print("Please input a command: ");
 			if (console.hasNextLine()) {
 				String input = console.nextLine();
-				checkInput(input, env);
+				checkInput(input);
 			} else {
 				break;
 			}
@@ -27,7 +34,7 @@ public class Console {
 		console.close();
 	}
 
-	public static void multiArgCommand(UMLEnvironment env, String[] input) throws IOException {
+	public void multiArgCommand(String[] input) throws IOException {
 		input[0] = input[0].toLowerCase();
 		if (input[0].equals("add")) {
 			if (!AddClass.addClass(env, input[1])) {
@@ -61,29 +68,29 @@ public class Console {
 	 * @throws IOException
 	 *             signals that an I/O exception has occurred
 	 */
-	public static void checkInput(String line, UMLEnvironment env) throws IOException {
+	public void checkInput(String line) throws IOException {
 		String[] lineArr = line.split(" ");
 		String input = lineArr[0];
 		if (lineArr.length > 1) {
-			multiArgCommand(env, lineArr);
+			multiArgCommand(lineArr);
 			return;
 		}
 		if (input.toLowerCase().equals("add")) {
-			add(env);
+			add();
 		} else if (input.toLowerCase().equals("list")) {
-			list(env);
+			list();
 		} else if (input.toLowerCase().equals("load")) {
-			load(env);
+			load();
 		} else if (input.toLowerCase().equals("save")) {
-			save(env);
+			save();
 		} else if (input.toLowerCase().equals("edit")) {
-			edit(env);
+			edit();
 		} else if (input.toLowerCase().equals("help")) {
-			help(env);
+			help();
 		} else if (input.toLowerCase().equals("find")) {
-			find(env);
+			find();
 		} else if (input.toLowerCase().equals("quit")) {
-			quit(env);
+			quit();
 		}
 
 		else {
@@ -100,7 +107,7 @@ public class Console {
 	 * @throws IOException
 	 *             signals that an I/O exception has occurred
 	 */
-	public static void add(UMLEnvironment env) throws IOException {
+	public void add() throws IOException {
 		System.out.print("Enter new class name: ");
 		final Scanner console = ReplScanner.getInstance();
 		String newClass = console.next();
@@ -110,10 +117,10 @@ public class Console {
 			boolean added = AddClass.addClass(env, newClass);
 			if (added) {
 				System.out.println("Class added " + newClass + ".");
-				list(env);
+				list();
 			} else {
 				System.out.println(newClass + " is already a class.");
-				list(env);
+				list();
 			}
 		} else {
 			System.out.println("Add cancelled.");
@@ -129,7 +136,7 @@ public class Console {
 	 * @throws IOException
 	 *             signals that an I/O exception has occurred
 	 */
-	public static void list(UMLEnvironment env) throws IOException {
+	public void list() throws IOException {
 		System.out.print("List of classes: [ ");
 		for (UMLItem i : env.getItems()) {
 			System.out.print(i.getName() + " ");
@@ -147,15 +154,15 @@ public class Console {
 	 * @throws IOException
 	 *             signals that an I/O exception has occurred
 	 */
-	public static void load(UMLEnvironment env) throws IOException {
+	public void load() throws IOException {
 		System.out.print("Any unsaved work will be lost, do you want to save? (y/n): ");
 		final Scanner console = ReplScanner.getInstance();
-		String answer = console.next();
+		String answer = console.nextLine();
 		if (answer.equals("y")) {
-			save(env);
+			save();
 		} else {
 			System.out.print("Enter file name to load: ");
-			String fileName = console.next();
+			String fileName = console.nextLine();
 			LocalFile file = new LocalFile(fileName);
 			if (!file.hasExistingFileName(fileName)) {
 				System.out.print("No such file under name: " + fileName + ". Load canceled.\n");
@@ -176,7 +183,7 @@ public class Console {
 	 * @throws IOException
 	 *             signals that an I/O exception has occurred
 	 */
-	public static void save(UMLEnvironment env) throws IOException {
+	public void save() throws IOException {
 
 		System.out.print("Save current work? (y/n): ");
 		final Scanner console = ReplScanner.getInstance();
@@ -213,7 +220,7 @@ public class Console {
 		console.nextLine();
 	}
 
-	public static void edit(UMLEnvironment env) throws IOException {
+	public void edit() throws IOException {
 		System.out.print("Enter old class name: ");
 		final Scanner console = ReplScanner.getInstance();
 		String oldClass = console.next();
@@ -225,9 +232,9 @@ public class Console {
 			boolean edited = AddClass.editItem(env, oldClass, newClass);
 			if (edited) {
 				System.out.println("Class " + oldClass + " changed to " + newClass + ".");
-				list(env);
+				list();
 			} else {
-				list(env);
+				list();
 			}
 		} else {
 			System.out.println("Add cancelled.");
@@ -235,7 +242,7 @@ public class Console {
 		console.nextLine();
 	}
 
-	public static void help(UMLEnvironment env) throws IOException {
+	public void help() throws IOException {
 		System.out.println("To add a class type \"add\" ");
 		System.out.println("To list a class type \"list\" ");
 		System.out.println("To edit a class type \"edit\" ");
@@ -244,7 +251,7 @@ public class Console {
 		System.out.println(" ");
 	}
 
-	public static void find(UMLEnvironment env) throws IOException {
+	public void find() throws IOException {
 		System.out.print("Enter class name to find: ");
 		final Scanner console = ReplScanner.getInstance();
 		String name = console.next();
@@ -258,12 +265,12 @@ public class Console {
 		console.nextLine();
 	}
 
-	public static void quit(UMLEnvironment env) {
+	public void quit() {
 		System.out.print("Any unsaved work will be lost, do you want to save? (y/n): ");
 		final Scanner console = ReplScanner.getInstance();
 		String answer = console.next();
 		if (answer.equals("y")) {
-			saveAndQuit(env);
+			saveAndQuit();
 		} else {
 			System.out.println("Quitting program");
 		}
@@ -271,10 +278,11 @@ public class Console {
 		System.exit(0);
 	}
 
-	public static void saveAndQuit(UMLEnvironment env) {
+	public void saveAndQuit() {
 		LocalFile file = new LocalFile(env);
 		boolean needsValidSaveResp = true;
 		final Scanner console = ReplScanner.getInstance();
+		console.nextLine();
 		String fileName = "";
 		while (needsValidSaveResp) {
 			System.out.print("Please enter a filename to save: ");
@@ -291,6 +299,7 @@ public class Console {
 				needsValidSaveResp = false;
 			}
 		}
+		file.setFileName(fileName);
 		file.saveFile();
 		System.out.println("File saved");
 	}
