@@ -25,7 +25,7 @@ public class LocalFileTest {
   public void testSaveFile() {
     LocalFile file = createSaveFile();
     file.saveFile();
-    File testFile = new File(SAVE_DIR + "/" + file.getFileName() + ".json");
+    File testFile = new File(SAVE_DIR + "/" + file.getFileName() + ".yaml");
     assertTrue("File not found", testFile.exists());
   }
   
