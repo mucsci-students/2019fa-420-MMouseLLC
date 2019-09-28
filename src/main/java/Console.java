@@ -1,5 +1,5 @@
 import java.io.IOException;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Console {
@@ -53,6 +53,30 @@ public class Console {
 			} else {
 				System.out.println(i + " does not exist.");
 			}
+		} else if (input[0].equals("save")){
+			boolean overWrite = false;
+			ArrayList<String> easier = new ArrayList<String>();
+			for (String i : input){
+				easier.add(i);
+			}
+			if (easier.contains("-f")){
+				easier.remove("-f");
+				overWrite = true;
+			}
+			
+			String buildUp = "";
+			for (String i : easier){
+				buildUp += i;
+			}
+			LocalFile file = new LocalFile(env, buildUp);
+			if (file.hasExistingFileName(buildUp) && !overWrite){
+				System.out.println("Filename: " + buildUp + " already exists. Run command with \"-f\" flag to overwrite.");
+				return;
+			}
+			file.saveFile();
+			
+			
+			
 		} else {
 			System.out.println("Invalid Command");
 		}
