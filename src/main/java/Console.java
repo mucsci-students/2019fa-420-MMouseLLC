@@ -343,12 +343,9 @@ public class Console {
 		System.out.println("To find if class exists type \"find\" ");
 		System.out.println("To save your project \"save\" ");
 		System.out.println("To load your project type \"load\" ");
-
 		System.out.println("To quit your project type \"quit\" ");
 		System.out.println("To list commands type \"help\" ");
-
 		System.out.println("To view single-lined command syntax type \"help2\" ");
-
 		System.out.println(" ");
 	}
 
