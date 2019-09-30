@@ -20,7 +20,7 @@ public class Console {
 	 * 
 	 */
 	public void homeScreen() throws IOException {
-
+		System.out.println("For a list of commands please type \"help\"  ");
 		final Scanner console = ReplScanner.getInstance();
 		while (true) {
 			System.out.flush();
@@ -158,6 +158,7 @@ public class Console {
 
 		else {
 			System.out.println("command not found - retry");
+			System.out.println("For a list of commands please type \"help\"  ");
 		}
 	}
 
@@ -342,6 +343,8 @@ public class Console {
 		System.out.println("To find if class exists type \"find\" ");
 		System.out.println("To save your project \"save\" ");
 		System.out.println("To load your project type \"load\" ");
+		System.out.println("To quit your project type \"quit\" ");
+		System.out.println("To list commands type \"help\" ");
 		System.out.println("To view single-lined command syntax type \"help2\" ");
 		System.out.println(" ");
 	}
@@ -397,8 +400,10 @@ public class Console {
 				String response = console.nextLine();
 				if (response.equalsIgnoreCase("y"))
 					needsValidSaveResp = false;
-				else if (!response.equalsIgnoreCase("n"))
+				else if (!response.equalsIgnoreCase("n")) {
 					System.out.println("Response not valid. Please try again.");
+					System.out.println("For a list of commands please type \"help\"  ");
+				}
 			} else {
 				System.out.println("Saving file");
 				needsValidSaveResp = false;
