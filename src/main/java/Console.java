@@ -174,21 +174,29 @@ public class Console {
 		System.out.print("Enter new class name: ");
 		final Scanner console = ReplScanner.getInstance();
 		String newClass = console.next();
-		System.out.print("Add class " + newClass + "? (y/n): ");
-		String answer = console.next();
-		if (answer.equals("y")) {
-			boolean added = AddClass.addClass(env, newClass);
-			if (added) {
-				System.out.println("Class added " + newClass + ".");
-				list();
-			} else {
-				System.out.println(newClass + " is already a class.");
-				list();
-			}
-		} else {
-			System.out.println("Add cancelled.");
+		UMLItem isNull = AddClass.getItem(env, newClass);
+		if (isNull != null){
+			System.out.println("Class " + newClass + " is already added. Use \"edit\" to modify this class.");
+			console.nextLine();
+			list();
+			return;
 		}
-		console.nextLine();
+		System.out.print("Add class " + newClass + "? (y/n): ");
+		while (true){
+			String answer = console.next();
+			if (answer.equals("y")) {
+				AddClass.addClass(env, newClass);
+				console.nextLine();
+				list();
+				return;
+			} else if (answer.equals("n")){
+				System.out.println("Add cancelled.");
+				console.nextLine();
+				list();
+				return;
+			}
+			System.out.println("Please confirm (y/n).");
+		}
 	}
 
 	/**
@@ -288,22 +296,43 @@ public class Console {
 		System.out.print("Enter old class name: ");
 		final Scanner console = ReplScanner.getInstance();
 		String oldClass = console.next();
+		// Check if oldClass exists
+		if (AddClass.getItem(env, oldClass) == null){
+			System.out.println("Class " + oldClass+ " does not exist. Please choose an existing class.");
+			console.nextLine();
+			list();
+			return;
+		}
 		System.out.print("Enter new class name: ");
 		String newClass = console.next();
-		System.out.print("Change " + oldClass + " to " + newClass + "? (y/n): ");
-		String answer = console.next();
-		if (answer.equals("y")) {
-			boolean edited = AddClass.editItem(env, oldClass, newClass);
-			if (edited) {
-				System.out.println("Class " + oldClass + " changed to " + newClass + ".");
-				list();
-			} else {
-				list();
-			}
-		} else {
-			System.out.println("Add cancelled.");
+		// check if new class is not already a class
+		if (AddClass.getItem(env, newClass) != null){
+			System.out.println("Class " + newClass + " already exists. Please choose another class name.");
+			console.nextLine();
+			list();
+			return;
 		}
-		console.nextLine();
+		
+		System.out.print("Change " + oldClass + " to " + newClass + "? (y/n): ");
+		while(true){
+			String answer = console.next();
+			if (answer.equals("y")) {
+				AddClass.editItem(env, oldClass, newClass);
+				System.out.println("Class " + oldClass + " changed to " + newClass+ ".");
+				list();
+				console.nextLine();
+				return;
+			} else if (answer.equals("n")){
+				System.out.println("Edit cancelled.");
+				list();
+				console.nextLine();
+				return;
+			// Force them to conform to our prompts demands
+			} else {
+				System.out.println("Please confirm (y/n).");
+			}
+			
+		}
 	}
 
 	public void help() {
