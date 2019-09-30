@@ -295,9 +295,10 @@ public class Console {
 				String response = console.nextLine();
 				if (response.equalsIgnoreCase("y"))
 					needsValidSaveResp = false;
-				else if (!response.equalsIgnoreCase("n"))
+				else if (!response.equalsIgnoreCase("n")) {
 					System.out.println("Response not valid. Please try again.");
 					System.out.println("For a list of commands please type \"help\"  ");
+				}
 			} else {
 				System.out.println("Saving file");
 				needsValidSaveResp = false;
