@@ -9,7 +9,7 @@
 
 In the root project directory, run
 
-> ./build_package.sh
+> ./build_package.sh </br>
 > ./run_uml.sh
 
 This should successfully build and test the project and then open the CLI. 
@@ -18,5 +18,5 @@ This should successfully build and test the project and then open the CLI.
 
 In the root project directory, run
 
-> mvn package
+> mvn package </br>
 > java -cp target/mmouse-uml-0.0.1-SNAPSHOT.jar Main
