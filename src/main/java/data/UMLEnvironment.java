@@ -1,3 +1,8 @@
+package data;
+
+import java.util.List;
+import java.util.ArrayList;
+
 /*
  * UMLEnvironment is an object meant to keep track of all the UMLItems that 
  * exist at any given point in the running of the program. The purpose of this 
@@ -6,10 +11,6 @@
  * @author Eric Hinerdeer
  * Date: August 29, 2019
  */
-
-import java.util.List;
-import java.util.ArrayList;
-
 public class UMLEnvironment {
     
     List<UMLItem> Items = new ArrayList<UMLItem>();

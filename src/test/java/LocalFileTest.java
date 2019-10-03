@@ -6,6 +6,10 @@ import java.util.ArrayList;
 
 import org.junit.Test;
 
+import data.UMLEnvironment;
+import data.UMLItem;
+import utility.LocalFile;
+
 /**
  * The Class LocalFileTest.
  */
