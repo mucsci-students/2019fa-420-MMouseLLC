@@ -35,16 +35,16 @@ public class UMLItem {
      * @param Parent- Single UMLItem 
      * @param Child- Single UMLItem
      */
-    public UMLItem(int Id, String Name, UMLItem Parent, UMLItem Child) {
-        this.id = Id;
-        this.name = Name;
+    public UMLItem(int id, String name, UMLItem parent, UMLItem child) {
+        this.id = id;
+        this.name = name;
         
         this.attributes = new ArrayList<String>();
 		this.parents    = new ArrayList<UMLItem>();
 		this.children   = new ArrayList<UMLItem>();
 		
-		this.parents.add(Parent);
-		this.children.add(Child);
+		this.parents.add(parent);
+		this.children.add(child);
     }
     
     /**
@@ -55,10 +55,10 @@ public class UMLItem {
      * @param c
      * @param attr
      */
-    public UMLItem (int Id, String Name, ArrayList<UMLItem> p, 
+    public UMLItem (int id, String name, ArrayList<UMLItem> p, 
     		ArrayList<UMLItem> c, ArrayList<String> attr){
-    		this.id = Id;
-    		this.name = Name;
+    		this.id = id;
+    		this.name = name;
     		this.parents = p;
     		this.children = c;
     		this.attributes = attr;
@@ -70,8 +70,8 @@ public class UMLItem {
      * @param Id
      * @param name
      */
-    public UMLItem(int Id, String name){
-	    	this.id = Id;
+    public UMLItem(int id, String name){
+	    	this.id = id;
 	    	this.name = name;
     }
     
@@ -86,16 +86,16 @@ public class UMLItem {
      * Set new ID
      * @param Id
      */
-    public void setId(int Id) {
-        this.id = Id;
+    public void setId(int id) {
+        this.id = id;
     }
     
     public String getName() {
         return this.name;
     }
     
-    public void setName(String Name) {
-        this.name = Name;
+    public void setName(String name) {
+        this.name = name;
     }
     
     /**
