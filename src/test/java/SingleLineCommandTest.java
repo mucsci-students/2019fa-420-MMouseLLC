@@ -1,11 +1,11 @@
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
-import java.io.File;
 import java.io.IOException;
-import java.util.Random;
 
 import org.junit.Test;
+import org.mmouse.data.UMLEnvironment;
+import org.mmouse.data.UMLItem;
+import org.mmouse.utility.Console;
 
 /**
  * The Class SingleLineCommandTest
@@ -18,7 +18,7 @@ public class SingleLineCommandTest {
   
   public String list(){
 	  String buildUp = "[ ";
-	  for (UMLItem i : env.Items){
+	  for (UMLItem i : env.getItems()){
 		  buildUp += i.getName() + " ";
 	  }
 	  buildUp += "]";
