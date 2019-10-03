@@ -23,9 +23,9 @@ public class UMLItem {
     public UMLItem() {
     		id = -1;
     		name = "";
-    		attributes = new ArrayList<String>();
-    		parents    = new ArrayList<UMLItem>();
-    		children   = new ArrayList<UMLItem>();
+    		attributes = new ArrayList<>();
+    		parents    = new ArrayList<>();
+    		children   = new ArrayList<>();
     }
     
     /**
@@ -39,9 +39,9 @@ public class UMLItem {
         this.id = id;
         this.name = name;
         
-        this.attributes = new ArrayList<String>();
-		this.parents    = new ArrayList<UMLItem>();
-		this.children   = new ArrayList<UMLItem>();
+        this.attributes = new ArrayList<>();
+		this.parents    = new ArrayList<>();
+		this.children   = new ArrayList<>();
 		
 		this.parents.add(parent);
 		this.children.add(child);
@@ -187,5 +187,25 @@ public class UMLItem {
      */
     public boolean removeChild(UMLItem remove) {
         return children.remove(remove);
+    }
+    
+    /**
+     * Removes the child from a specified parent object.
+     * @param parent the parent
+     * @param child the child
+     */
+    public void deleteChildFromParent(UMLItem parent, UMLItem child) {
+      parent.removeChild(child);
+    }
+    
+    /**
+     * Removes the child from all parent objects it is attached to. 
+     * @param child the child
+     */
+    public void deleteAllChildren(UMLItem child) {
+      for(UMLItem i : parents) {
+        if(i.equals(child))
+          i.removeChild(child);
+      }
     }
 }
