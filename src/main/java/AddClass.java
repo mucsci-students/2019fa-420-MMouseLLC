@@ -1,42 +1,11 @@
-import java.util.List;
-import java.util.Scanner;
-
+/**
+ * Class containing methods for adding, finding and editing a UMLItem in a given
+ * 	UMLEnvironment. 
+ * @author Matt Fossett, Grant Hartenstine
+ */
 
 public class AddClass {
 
-	public static void main(String[] args) {
-		UMLEnvironment uE = new UMLEnvironment();
-		// REPL
-		// Only takes command add name
-		final Scanner in = ReplScanner.getInstance();
-		while (in.hasNext()){
-			String cmdline = in.nextLine();
-			String[] cmd = cmdline.split(" ");
-			if (cmd[0].equals("add")){
-				if (!addClass(uE, 0, cmd[1], null)){
-					System.out.println(cmd[1] + " is already added.");
-				}
-			} else if (cmd[0].equals("edit")) {
-				// cmd syntax: edit oldClassName newClassName
-				//editItem(uE, cmd[1], cmd[2]);
-				if (!editItem(uE, cmd[1], cmd[2])){
-					System.out.println(cmd[2] + " is already a class.");
-				}
-			}
-			
-			else {
-				System.out.println("Invalid command");
-				continue;
-			}
-			// PRINT
-			System.out.print("[ ");
-			for (UMLItem i : uE.getItems()){
-				System.out.print(i.getName() + " ");
-			}
-			System.out.print("]\n");	
-		}
-	}
-	
 	/**
 	 * Accesses item by name in the UMLEnvironment list
 	 * @param umlEnv
@@ -61,9 +30,9 @@ public class AddClass {
 	 * @param attr
 	 * @return true if name is unique to the provided UMLEnvironment
 	 */
-	public static boolean addClass(UMLEnvironment umlEnv, int id, String name, List<String> attr){
+	public static boolean addClass(UMLEnvironment umlEnv, int id, String name){
 		if (getItem(umlEnv, name) == null){
-			UMLItem uml = new UMLItem(id, name, -1 ,attr);
+			UMLItem uml = new UMLItem(id, name);
 			umlEnv.addItem(uml);
 			return true;
 		}
