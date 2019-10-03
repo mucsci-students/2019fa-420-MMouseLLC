@@ -3,7 +3,8 @@ import java.io.IOException;
 public class Main {
 
 	public static void main(String[] args) throws IOException {
-		Run();
+		//Run();
+		GUITest(args);
 	}
 	/*
 	 * @author eric
@@ -15,9 +16,11 @@ public class Main {
   public static void Run() throws IOException  {
 	    ReplScanner.initialize();
 		UMLEnvironment env = new UMLEnvironment();
-		//Console.homeScreen(env);
 		Console console = new Console(env);
-		console.homeScreen();
+		console.homeScreen(); 
 	}
 
+  public static void GUITest(String[] args) throws IOException {
+	  GUI.main(args);
+  }
 }
