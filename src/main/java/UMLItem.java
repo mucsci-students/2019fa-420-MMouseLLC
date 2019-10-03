@@ -13,7 +13,7 @@ import java.util.ArrayList;
 public class UMLItem {
     private int id;
     private String name;
-    private List<String> attributes = new ArrayList<String>();
+    private ArrayList<String> attributes = new ArrayList<String>();
     private int parent = 0;
     private List<Integer> children = new ArrayList<Integer>();
     
@@ -21,7 +21,7 @@ public class UMLItem {
       
     }
     
-    public UMLItem(int Id, String Name, int Parent, List<String> Attr) {
+    public UMLItem(int Id, String Name, int Parent, ArrayList<String> Attr) {
         this.id = Id;
         this.name = Name;
         this.parent = Parent;
@@ -50,7 +50,7 @@ public class UMLItem {
         this.name = Name;
     }
     
-    public List<String> getAttributes() {
+    public ArrayList<String> getAttributes() {
         return this.attributes;
     }
     
