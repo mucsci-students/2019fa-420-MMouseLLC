@@ -1,12 +1,21 @@
+package org.mmouse.utility;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
+import org.mmouse.data.UMLEnvironment;
 
+import com.fasterxml.jackson.core.JsonEncoding;
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 
 /**
  * The class LocalFile. Deals with everything related to the file that can be saved
@@ -76,12 +85,19 @@ public class LocalFile {
    * Writes the Object(s) to the file.
    */
   public void saveFile() {
-	  ObjectMapper objectMapper = new ObjectMapper(new YAMLFactory());
-	  try {
-		objectMapper.writeValue(new File(SAVE_DIR + "/" + fileName + ".yaml"), env);
-	} catch (IOException e) {
-		logger.severe("LocalFile: IOException occured in saveFile: " + e.getCause());
-	}
+    JsonFactory jsonFactory = new JsonFactory(); 
+    FileOutputStream file = null;
+    try {
+      file = new FileOutputStream(new File(SAVE_DIR + "/" + fileName + ".json"));
+    } catch (FileNotFoundException e) {
+      logger.log(Level.SEVERE, "Error. saved_files directory not found: ", e);
+    }
+    try(JsonGenerator jsonGen = jsonFactory.createGenerator(file, JsonEncoding.UTF8)) {
+      jsonGen.setCodec(new ObjectMapper());
+      jsonGen.writeObject(env);
+    } catch(IOException e) {
+      logger.log(Level.SEVERE, "Error. IOException in writeToFile(): ", e);
+    }
     logger.info("File saved successfully");
   }
   
@@ -92,21 +108,17 @@ public class LocalFile {
    * @throws IOException Signals that an I/O exception has occurred.
    */
   public UMLEnvironment loadFile() throws IOException {
-	long startTime = System.nanoTime();
-    ObjectMapper objectMapper = new ObjectMapper(new YAMLFactory());
+    byte[] saveData = Files.readAllBytes(Paths.get(SAVE_DIR + "/" + fileName + ".json"));
+    ObjectMapper objectMapper = new ObjectMapper();
     logger.info("Loading file in loadFile()");
-    long endTime = System.nanoTime();
-    /** Gives the duration to execute the load in ms */
-    long duration = (endTime - startTime) / 1000000;
-    logger.info("Load completed in: " + duration + " ms.");
-    return objectMapper.readValue(new File(SAVE_DIR + "/" + fileName + ".yaml"), UMLEnvironment.class);
+    return objectMapper.readValue(saveData, UMLEnvironment.class);
   }
   
   /**
    * Deletes a file.
    */
   public void deleteFile() {
-    File file = new File(SAVE_DIR + "/" + fileName + ".yaml");
+    File file = new File(SAVE_DIR + "/" + fileName + ".json");
     if(file.delete())
       logger.info("File: " + fileName + " deleted successfully.");
     else

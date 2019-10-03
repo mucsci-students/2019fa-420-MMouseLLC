@@ -1,3 +1,5 @@
+package org.mmouse.utility;
+
 import java.util.Scanner;
 
 public class ReplScanner {
