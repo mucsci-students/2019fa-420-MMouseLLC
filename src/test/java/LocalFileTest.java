@@ -5,9 +5,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import org.junit.Test;
-import org.mmouse.data.UMLEnvironment;
-import org.mmouse.data.UMLItem;
-import org.mmouse.utility.LocalFile;
+
+import data.UMLEnvironment;
+import data.UMLItem;
+import utility.LocalFile;
 
 /**
  * The Class LocalFileTest.

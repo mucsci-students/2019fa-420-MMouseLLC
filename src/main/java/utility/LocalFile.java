@@ -1,4 +1,4 @@
-package org.mmouse.utility;
+package utility;
 
 import java.io.File;
 import java.io.IOException;
@@ -6,11 +6,12 @@ import java.util.logging.Logger;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
-import org.mmouse.data.UMLEnvironment;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+
+import data.UMLEnvironment;
 
 /**
  * The class LocalFile. Deals with everything related to the file that can be saved

@@ -1,11 +1,11 @@
-package org.mmouse.utility;
+package utility;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import org.mmouse.data.UMLEnvironment;
-import org.mmouse.data.UMLItem;
+import data.UMLEnvironment;
+import data.UMLItem;
 
 public class Console {
 

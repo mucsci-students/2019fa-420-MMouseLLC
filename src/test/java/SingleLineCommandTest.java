@@ -3,9 +3,10 @@ import static org.junit.Assert.assertEquals;
 import java.io.IOException;
 
 import org.junit.Test;
-import org.mmouse.data.UMLEnvironment;
-import org.mmouse.data.UMLItem;
-import org.mmouse.utility.Console;
+
+import data.UMLEnvironment;
+import data.UMLItem;
+import utility.Console;
 
 /**
  * The Class SingleLineCommandTest

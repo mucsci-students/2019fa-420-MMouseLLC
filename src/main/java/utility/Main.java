@@ -1,7 +1,7 @@
-package org.mmouse.utility;
+package utility;
 import java.io.IOException;
 
-import org.mmouse.data.UMLEnvironment;
+import data.UMLEnvironment;
 
 public class Main {
 

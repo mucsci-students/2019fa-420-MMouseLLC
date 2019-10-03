@@ -1,4 +1,4 @@
-package org.mmouse.utility;
+package utility;
 
 import java.util.Scanner;
 

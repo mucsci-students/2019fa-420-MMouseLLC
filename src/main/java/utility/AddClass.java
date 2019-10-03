@@ -1,7 +1,7 @@
-package org.mmouse.utility;
+package utility;
 
-import org.mmouse.data.UMLEnvironment;
-import org.mmouse.data.UMLItem;
+import data.UMLEnvironment;
+import data.UMLItem;
 
 /**
  * Class containing methods for adding, finding and editing a UMLItem in a given
