@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.mmouse.project</groupId>
   <artifactId>mmouse-uml</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>0.0.2-SNAPSHOT</version>
   <name>mmouse-uml-editor</name>
   <description>UML Editor created by MMouse LLC</description>
   <properties>
@@ -18,6 +18,11 @@
           <descriptorRefs>
             <descriptorRef>jar-with-dependencies</descriptorRef>
           </descriptorRefs>
+          <archive>
+		    <manifest>
+		      <mainClass>utility.Main</mainClass>
+		    </manifest>
+		  </archive>
         </configuration>
       </plugin>
     </plugins>
