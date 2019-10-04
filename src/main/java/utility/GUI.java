@@ -1,3 +1,5 @@
+package utility;
+
 import javafx.application.Application;
 import javafx.event.*;
 import javafx.scene.Scene;
