@@ -6,6 +6,10 @@ import java.util.ArrayList;
 
 import org.junit.Test;
 
+import data.UMLEnvironment;
+import data.UMLItem;
+import utility.LocalFile;
+
 /**
  * The Class LocalFileTest.
  */
@@ -42,7 +46,7 @@ public class LocalFileTest {
     LocalFile fileTest = new LocalFile(fileName);
     env = fileTest.loadFile();
     
-    assertTrue("Number of UMLItems not correct", env.getItems().size() == 2);
+    assertTrue("Number of UMLItems not correct", env.getItems().size() == 1);
   }
   
   /**
@@ -93,14 +97,12 @@ public class LocalFileTest {
    * Creates the test data for the UMLEnvironment
    */
   public void createTestUMLEnvironment() {
-    ArrayList<String> arr = new ArrayList<>();
-    arr.add("Eric");
-    arr.add("Matt");
-    arr.add("Lauren");
-    arr.add("Grant");
+    UMLItem item = new UMLItem();
+    UMLItem itemTwo = new UMLItem();
     
-    UMLItem item = new UMLItem(1, "Dan", 2, arr);
-    UMLItem itemTwo = new UMLItem(2, "Captain Planet", 3, arr);
+    item.addAttribute("Dan");
+    itemTwo.addAttribute("Matt");
+    
     env.addItem(item);
     env.addItem(itemTwo);
   }

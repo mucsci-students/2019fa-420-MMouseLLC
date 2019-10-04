@@ -1,6 +1,11 @@
+package utility;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
+
+import data.UMLEnvironment;
+import data.UMLItem;
 
 public class Console {
 

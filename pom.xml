@@ -47,6 +47,12 @@
 	    <artifactId>jackson-dataformat-yaml</artifactId>
 	    <version>2.9.9</version>
 	</dependency>
+	<!-- https://mvnrepository.com/artifact/org.jline/jline -->
+	<dependency>
+	    <groupId>org.jline</groupId>
+	    <artifactId>jline</artifactId>
+	    <version>3.12.1</version>
+	</dependency>
 	<dependency>
 		<groupId>junit</groupId>
 		<artifactId>junit</artifactId>

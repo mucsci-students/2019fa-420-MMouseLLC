@@ -1,3 +1,8 @@
+package utility;
+
+import data.UMLEnvironment;
+import data.UMLItem;
+
 /**
  * Class containing methods for adding, finding and editing a UMLItem in a given
  * 	UMLEnvironment. 
@@ -13,7 +18,7 @@ public class AddClass {
 	 * @return UMLItem if exists, else null
 	 */
 	public static UMLItem getItem(UMLEnvironment umlEnv, String name) {
-		for (UMLItem i : umlEnv.Items){
+		for (UMLItem i : umlEnv.getItems()){
 			if (i.getName().equals(name)){
 				return i;
 			}

@@ -1,3 +1,5 @@
+package utility;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.logging.Logger;
@@ -6,15 +8,14 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+
+import data.UMLEnvironment;
 
 /**
  * The class LocalFile. Deals with everything related to the file that can be saved
  * and loaded for the user.
- * 
- * @author  Daniel Hartenstine
- * @version 1.0
- * @since   2019-09-09
  */
 public class LocalFile {
   
@@ -76,12 +77,12 @@ public class LocalFile {
    * Writes the Object(s) to the file.
    */
   public void saveFile() {
-	  ObjectMapper objectMapper = new ObjectMapper(new YAMLFactory());
-	  try {
-		objectMapper.writeValue(new File(SAVE_DIR + "/" + fileName + ".yaml"), env);
-	} catch (IOException e) {
-		logger.severe("LocalFile: IOException occured in saveFile: " + e.getCause());
-	}
+    ObjectMapper objectMapper = new ObjectMapper(new YAMLFactory());
+    try {
+    objectMapper.writeValue(new File(SAVE_DIR + "/" + fileName + ".yaml"), env);
+  } catch (IOException e) {
+    logger.severe("LocalFile: IOException occured in saveFile: " + e.getCause());
+  }
     logger.info("File saved successfully");
   }
   
@@ -92,7 +93,7 @@ public class LocalFile {
    * @throws IOException Signals that an I/O exception has occurred.
    */
   public UMLEnvironment loadFile() throws IOException {
-	long startTime = System.nanoTime();
+  long startTime = System.nanoTime();
     ObjectMapper objectMapper = new ObjectMapper(new YAMLFactory());
     logger.info("Loading file in loadFile()");
     long endTime = System.nanoTime();
@@ -168,3 +169,4 @@ public class LocalFile {
   }
   
 }
+

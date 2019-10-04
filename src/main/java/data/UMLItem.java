@@ -1,3 +1,7 @@
+package data;
+
+import java.util.ArrayList;
+
 /*
  * UMLItem is a class that represents a single item in the UML Environment.
  * Getters and Setters are created here to define Id, Name, Parent, Children
@@ -6,9 +10,6 @@
  * Modified by Matt Fossett
  * Date: August 29, 2019
  */
-
-import java.util.ArrayList;
-
 public class UMLItem {
     private int id;
     private String name;
@@ -21,11 +22,11 @@ public class UMLItem {
      * id is assigned -1, Name is empty string, lists are empty
      */
     public UMLItem() {
-    		id = -1;
-    		name = "";
-    		attributes = new ArrayList<String>();
-    		parents    = new ArrayList<UMLItem>();
-    		children   = new ArrayList<UMLItem>();
+        id = -1;
+        name = "";
+        attributes = new ArrayList<>();
+        parents    = new ArrayList<>();
+        children   = new ArrayList<>();
     }
     
     /**
@@ -39,12 +40,12 @@ public class UMLItem {
         this.id = id;
         this.name = name;
         
-        this.attributes = new ArrayList<String>();
-		this.parents    = new ArrayList<UMLItem>();
-		this.children   = new ArrayList<UMLItem>();
-		
-		this.parents.add(parent);
-		this.children.add(child);
+        this.attributes = new ArrayList<>();
+    this.parents    = new ArrayList<>();
+    this.children   = new ArrayList<>();
+    
+    this.parents.add(parent);
+    this.children.add(child);
     }
     
     /**
@@ -56,12 +57,12 @@ public class UMLItem {
      * @param attr
      */
     public UMLItem (int id, String name, ArrayList<UMLItem> p, 
-    		ArrayList<UMLItem> c, ArrayList<String> attr){
-    		this.id = id;
-    		this.name = name;
-    		this.parents = p;
-    		this.children = c;
-    		this.attributes = attr;
+        ArrayList<UMLItem> c, ArrayList<String> attr){
+        this.id = id;
+        this.name = name;
+        this.parents = p;
+        this.children = c;
+        this.attributes = attr;
     }
     
     /**
@@ -71,8 +72,8 @@ public class UMLItem {
      * @param name
      */
     public UMLItem(int id, String name){
-	    	this.id = id;
-	    	this.name = name;
+        this.id = id;
+        this.name = name;
     }
     
     /**
@@ -120,7 +121,7 @@ public class UMLItem {
      * @return true if attr is found in ArrayList<String> attributes, else false
      */
     public boolean removeAttribute(String attr){
-    		return this.attributes.remove(attr);
+        return this.attributes.remove(attr);
     }
     
     /**
@@ -136,7 +137,7 @@ public class UMLItem {
      * @param parent
      */
     public void addParent(UMLItem parent) {
-    		parents.add(parent);
+        parents.add(parent);
     }
     
     /**
@@ -144,7 +145,7 @@ public class UMLItem {
      * @param parents
      */
     public void setParents(ArrayList<UMLItem> parents){
-    		this.parents = parents;
+        this.parents = parents;
     }
     
     /**
@@ -153,7 +154,7 @@ public class UMLItem {
      * @return true if item exists in list else false
      */
     boolean removeParent(UMLItem i){
-    		return parents.remove(i);
+        return parents.remove(i);
     }
     
     /**
@@ -169,7 +170,7 @@ public class UMLItem {
      * @param c
      */
     public void setChildren(ArrayList<UMLItem> c){
-    		this.children = c;
+        this.children = c;
     }
     
     /**
@@ -187,5 +188,25 @@ public class UMLItem {
      */
     public boolean removeChild(UMLItem remove) {
         return children.remove(remove);
+    }
+    
+    /**
+     * Removes the child from a specified parent object.
+     * @param parent the parent
+     * @param child the child
+     */
+    public void deleteChildFromParent(UMLItem parent, UMLItem child) {
+      parent.removeChild(child);
+    }
+    
+    /**
+     * Removes the child from all parent objects it is attached to. 
+     * @param child the child
+     */
+    public void deleteAllChildren(UMLItem child) {
+      for(UMLItem i : parents) {
+        if(i.equals(child))
+          i.removeChild(child);
+      }
     }
 }
