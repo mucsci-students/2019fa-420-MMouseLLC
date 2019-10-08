@@ -15,6 +15,10 @@ public class Console {
     this.env = env;
   }
   
+  public UMLEnvironment getEnv() {
+	  return this.env;
+  }
+  
 	/**
 	 * Where user begins with all commands
 	 * 

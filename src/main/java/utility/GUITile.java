@@ -20,11 +20,10 @@ public class GUITile extends Pane {
         Button save = new Button("Save");
 	
 	public GUITile() {
-            this.pane.setMaxWidth(100);
-            this.pane.setMinWidth(100);
-            this.pane.setMaxHeight(300);
-            this.pane.setMinHeight(300);
-            this.pane.setLayoutX(100);
+            this.pane.setMaxWidth(150);
+            this.pane.setMinWidth(150);
+            this.pane.setMaxHeight(150);
+            this.pane.setMinHeight(150);
             this.pane.setLayoutY(100);
 		
             this.nameBox.setLayoutX(10);
