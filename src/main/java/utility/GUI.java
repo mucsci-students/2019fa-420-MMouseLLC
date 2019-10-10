@@ -1,7 +1,11 @@
 package utility;
 
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import data.UMLEnvironment;
+import data.UMLItem;
 import javafx.application.Application;
 import javafx.event.*;
 import javafx.scene.Scene;
@@ -64,7 +68,7 @@ public class GUI extends Application {
 		this.size = size;
 	}
 	
-	private boolean clickedRemove() {
+	private boolean isRemoved() {
 		return this.removed;
 	}
 	
@@ -111,8 +115,8 @@ public class GUI extends Application {
             		t.pane.setStyle("-fx-background-color: cyan");
             		t.pane.setStyle("-fx-border-color: black");
             	}
+            	layout.getChildren().add(t.pane);
             	increaseSize();
-            	
             	
             	/*
             	 * @author eric
@@ -121,6 +125,23 @@ public class GUI extends Application {
             	 * confirmation window will appear. if fail an error window will appear. 
             	 */
             	t.add.setOnAction((event) -> {
+            		String[] nameTest = t.nameBox.getText().split(" ");
+            		
+            		if(nameTest.length > 1) {
+            			Alert a = new Alert(Alert.AlertType.ERROR, "Name cannot contain spaces.\nExample: New Class should be NewClass");
+            			a.show();
+            			return;
+            		}
+            		Pattern pattern = Pattern.compile("\\s");
+            		Matcher matcher = pattern.matcher(t.nameBox.getText());
+            		boolean found = matcher.find();
+            		boolean isWhitespace = t.nameBox.getText().matches("^\\s*$");
+            		if(isWhitespace) {
+            			Alert a = new Alert(Alert.AlertType.ERROR, "Name cannot be only whitespace.");
+            			a.show();
+            			return;
+            		}
+            		
             		if(AddClass.addClass(env, t.nameBox.getText()))
                 	{
                 		Alert a = new Alert(Alert.AlertType.CONFIRMATION, t.nameBox.getText() + " added successfully!");
@@ -149,12 +170,21 @@ public class GUI extends Application {
             	 * be checked if it exists, if it does not the class will be changed to that name, if
             	 * it does exist the user will be prompted to enter a new name instead. 
             	 */
+            	
             	t.edit.setOnAction((event) -> {
             		TextInputDialog input = new TextInputDialog();
             		input.setHeaderText("Enter New name for \""  + t.nameBox.getText() + "\": ");
             		input.setHeight(50);
             		input.setWidth(120);
             		Optional<String> answer = input.showAndWait();
+            		String[] nameTest = answer.toString().split(" ");
+            		
+            		if(nameTest.length > 1) {
+            			Alert a = new Alert(Alert.AlertType.ERROR, "Name cannot contain spaces.\nExample: New Class should be NewClass");
+            			a.show();
+            			return;
+            		}
+            		
             		if (answer.isPresent()) {
             			if(AddClass.editItem(env, t.nameBox.getText(), answer.get())) {
             				Alert a = new Alert(Alert.AlertType.CONFIRMATION, t.nameBox.getText() + " successsfully changed to " + answer.get());
@@ -171,35 +201,33 @@ public class GUI extends Application {
             		}
             		
             	});
-            	
+            	/*
+            	 * @author eric
+            	 * t.remove button event is set to remove an item from the environment and also from the gui's
+            	 * main display when remove button is pressed on a specific uml item. 
+            	 */
             	t.remove.setOnAction((event) -> {
-            		setRemoved(true);
             		Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Delete " + t.nameBox.getText() + "? ", ButtonType.YES, ButtonType.NO);
             		alert.showAndWait();
-            		if(alert.getResult() == ButtonType.YES) {
+            		if(alert.getResult().getButtonData() == ButtonBar.ButtonData.YES) {
+            			t.pane.setVisible(false);
             			layout.getChildren().remove(t.pane);
-            			setSize(0);
-            			for(int i = 0; i < layout.getChildren().size(); i++) {
-            				if(getSize() == 0) {
-            					layout.getChildren().get(i).setLayoutX(0);
-            				} else {
-            					layout.getChildren().get(i).setLayoutX(getSize() * 160);
-            				}
-            				increaseSize();
+            			UMLItem remove = new UMLItem(t.nameBox.getText());
+            			env.removeItem(remove);
+            			setSize(getSize() - 1);
+            			for(int i = 2; i < layout.getChildren().size(); i++)
+            			{
+            				layout.getChildren().get(i).relocate((i-2) * 160, layout.getChildren().get(i).getLayoutY());
             			}
             		}
-            		setRemoved(false);
             	});
-            	if(!clickedRemove()) {
-                    layout.getChildren().add(t.pane);
-            	}
             } 
         }; 
         
         resetAll.setOnAction((event) -> {
         	this.env = new UMLEnvironment();
         	
-        	for(int i = 0; i < layout.getChildren().size(); i++) {
+        	for(int i = 2; i < layout.getChildren().size(); i++) {
         		layout.getChildren().remove(i);
         	}
         	layout.getChildren().add(addButton);

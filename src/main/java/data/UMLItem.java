@@ -75,7 +75,9 @@ public class UMLItem {
         this.id = id;
         this.name = name;
     }
-    
+    public UMLItem(String name){
+        this.name = name;
+    }
     /**
      * @return unique ID assigned to this UMLItem
      */
