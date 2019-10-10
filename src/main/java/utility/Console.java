@@ -418,5 +418,34 @@ public class Console {
 		file.saveFile();
 		System.out.println("File saved");
 	}
+	
+	
+	public void addChild() throws IOException {
+		final Scanner console = ReplScanner.getInstance();
+		System.out.print("Enter child name: ");
+		String chName = console.next();
+		
+		UMLItem c = ;
+		while (c == null){
+				System.out.println("Child name does not exist, enter valid name: ");
+				list();
+				System.out.print("Enter child name: ");
+			}
+		}
+		
+		System.out.print("Enter parent name: ");
+		String parName = console.next();
+		UMLItem p = ;
+		while (p == null){
+				System.out.println("Parent name does not exist, enter valid name: ");
+				list();
+				System.out.print("Enter parent name: ");
+			}
+		}
+		
+		c.setParent(p);
+		p.addChild(c);
+		
+	}
 
 }
