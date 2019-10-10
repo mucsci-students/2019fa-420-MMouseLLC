@@ -132,12 +132,11 @@ public class GUI extends Application {
             			a.show();
             			return;
             		}
-            		Pattern pattern = Pattern.compile("\\s");
-            		Matcher matcher = pattern.matcher(t.nameBox.getText());
-            		boolean found = matcher.find();
+            		
             		boolean isWhitespace = t.nameBox.getText().matches("^\\s*$");
+            		
             		if(isWhitespace) {
-            			Alert a = new Alert(Alert.AlertType.ERROR, "Name cannot be only whitespace.");
+            			Alert a = new Alert(Alert.AlertType.ERROR, "Name cannot be only whitespace.\nInput example: NewClass");
             			a.show();
             			return;
             		}
@@ -151,13 +150,14 @@ public class GUI extends Application {
                 		t.nameLabel.setText(t.nameBox.getText());
                 		t.edit.setVisible(true);
                 		t.remove.setVisible(true);
-                        t.pane.setMaxHeight(190);
-                        t.pane.setMinHeight(190);
+                		t.addAttr.setVisible(true);
+                        t.pane.setMaxHeight(230);
+                        t.pane.setMinHeight(230);
                         t.pane.getChildren().remove(t.add);
                         
                 	} else
                 	{
-                		Alert b = new Alert(Alert.AlertType.ERROR, t.nameBox.getText() + " could not be added. Name already exists");
+                		Alert b = new Alert(Alert.AlertType.ERROR, t.nameBox.getText() + " could not be added. Name already exists.\nPlease choose another name.");
                 		b.show();
                 	}
             	});
@@ -181,6 +181,14 @@ public class GUI extends Application {
             		
             		if(nameTest.length > 1) {
             			Alert a = new Alert(Alert.AlertType.ERROR, "Name cannot contain spaces.\nExample: New Class should be NewClass");
+            			a.show();
+            			return;
+            		}
+            		
+            		boolean isWhitespace = t.nameBox.getText().matches("^\\s*$"); //checks if name entered is only whitespace.
+            		
+            		if(isWhitespace) {
+            			Alert a = new Alert(Alert.AlertType.ERROR, "Name cannot be only whitespace.\nInput example: NewClass");
             			a.show();
             			return;
             		}
@@ -220,6 +228,45 @@ public class GUI extends Application {
             				layout.getChildren().get(i).relocate((i-2) * 160, layout.getChildren().get(i).getLayoutY());
             			}
             		}
+            	});
+            	
+            	t.addAttr.setOnAction((event) -> {
+            		TextInputDialog input = new TextInputDialog();
+            		input.setHeaderText("Enter attribute to add for " + t.nameBox.getText() + ":\nMust be one word no spaces\nExample: NewAttribute");
+            		input.setHeight(50);
+            		input.setWidth(120);
+            		Optional<String> answer = input.showAndWait();
+            		String[] attrTest = answer.toString().split(" ");
+            		
+            		if(attrTest.length > 1) {
+            			Alert a = new Alert(Alert.AlertType.ERROR, "Attribute cannot contain spaces.\nExample: New Attr should be NewAttr");
+            			a.show();
+            			return;
+            		}
+            		
+            		boolean isWhitespace = answer.get().matches("^\\s*$"); //checks if name entered is only whitespace.
+            		
+            		if(isWhitespace) {
+            			Alert a = new Alert(Alert.AlertType.ERROR, "Attribute cannot be only whitespace.\nExample: NewAttr");
+            			a.show();
+            			return;
+            		}
+            		if(answer.isPresent()) {
+            			UMLItem found = AddClass.getItem(env, t.nameBox.getText());
+                		if(found != null) {
+                			//found.addAttribute(answer.get().toString());
+                				String newAttr = t.displayAttr.getText() + "\u2022" + answer.get() + "\n";
+                    			t.displayAttr.setText(newAttr);
+                    			t.pane.setMinHeight(t.pane.getHeight() + 17);
+                    			t.pane.setMaxHeight(t.pane.getHeight() + 17);
+                    			t.edit.setLayoutY(t.edit.getLayoutY() + 17);
+                    			t.addAttr.setLayoutY(t.addAttr.getLayoutY() + 17);
+                    			t.remove.setLayoutY(t.remove.getLayoutY() + 17);
+                		}
+            		} else {
+            			Alert a = new Alert(Alert.AlertType.ERROR, "Attribute cannot be blank.");
+            		}
+            		
             	});
             } 
         }; 

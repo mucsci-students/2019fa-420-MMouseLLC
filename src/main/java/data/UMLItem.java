@@ -24,7 +24,7 @@ public class UMLItem {
     public UMLItem() {
         id = -1;
         name = "";
-        attributes = new ArrayList<>();
+        attributes = new ArrayList<String>();
         parents    = new ArrayList<>();
         children   = new ArrayList<>();
     }
@@ -41,11 +41,10 @@ public class UMLItem {
         this.name = name;
         
         this.attributes = new ArrayList<>();
-    this.parents    = new ArrayList<>();
-    this.children   = new ArrayList<>();
-    
-    this.parents.add(parent);
-    this.children.add(child);
+        this.parents    = new ArrayList<>();
+        this.children   = new ArrayList<>();
+        this.parents.add(parent);
+        this.children.add(child);
     }
     
     /**
@@ -75,8 +74,16 @@ public class UMLItem {
         this.id = id;
         this.name = name;
     }
+    /**
+     * Name Constructor
+     * Only assigns Name
+     * @param name
+     */
     public UMLItem(String name){
         this.name = name;
+        this.attributes = new ArrayList<>();
+        this.parents    = new ArrayList<>();
+        this.children   = new ArrayList<>();
     }
     /**
      * @return unique ID assigned to this UMLItem
