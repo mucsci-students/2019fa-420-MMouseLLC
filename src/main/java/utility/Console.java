@@ -9,19 +9,17 @@ import data.UMLItem;
 
 public class Console {
 
-  UMLEnvironment env;
-  
-  public Console(UMLEnvironment env) {
-    this.env = env;
-  }
-  
+	UMLEnvironment env;
+
+	public Console(UMLEnvironment env) {
+		this.env = env;
+	}
+
 	/**
 	 * Where user begins with all commands
 	 * 
-	 * @param env
-	 *            the UMLEnvironment
-	 * @throws IOException
-	 *             signals that an I/O exception has occurred.
+	 * @param env the UMLEnvironment
+	 * @throws IOException signals that an I/O exception has occurred.
 	 * 
 	 */
 	public void homeScreen() throws IOException {
@@ -30,7 +28,7 @@ public class Console {
 		while (true) {
 			System.out.flush();
 			System.err.flush();
-			
+
 			System.out.print("Please input a command: ");
 			if (console.hasNextLine()) {
 				String input = console.nextLine();
@@ -43,16 +41,17 @@ public class Console {
 	}
 
 	/**
-	 * Processes commands in single-line format to skip prompts. 
-	 * Commands taken are add, edit, find, save and load.
-	 * Check the help2 command to see exact specs for each.  
+	 * Processes commands in single-line format to skip prompts. Commands taken are
+	 * add, edit, find, save and load. Check the help2 command to see exact specs
+	 * for each.
+	 * 
 	 * @param input
 	 * @throws IOException
 	 */
 	public void multiArgCommand(String[] input) throws IOException {
 		input[0] = input[0].toLowerCase();
 		if (input[0].equals("add")) {
-			// Adds class or promts that it is taken. 
+			// Adds class or promts that it is taken.
 			if (!AddClass.addClass(env, input[1])) {
 				System.out.println(input[1] + " is already a class.");
 			}
@@ -69,70 +68,88 @@ public class Console {
 			} else {
 				System.out.println(i + " does not exist.");
 			}
-		} else if (input[0].equals("save")){
+		} else if (input[0].equals("save")) {
 			boolean overWrite = false;
 			// build up string again to allow spaces in file save
 			ArrayList<String> easier = new ArrayList<String>();
-			for (String i : input){
+			for (String i : input) {
 				easier.add(i);
 			}
 			easier.remove(0);
 			// Check for -f flag, which allows overwriting same-name file
-			if (easier.contains("-f")){
+			if (easier.contains("-f")) {
 				easier.remove("-f");
 				overWrite = true;
 			}
 			String buildUp = "";
-			for (String i : easier){
+			for (String i : easier) {
 				buildUp += i + " ";
 			}
 			buildUp = buildUp.trim();
 			LocalFile file = new LocalFile(env, buildUp);
-			// Only allow existing files to overwrite if -f flag 
-			if (file.hasExistingFileName(buildUp) && !overWrite){
-				System.out.println("Filename: " + buildUp + " already exists. Run command with \"-f\" flag to overwrite.");
+			// Only allow existing files to overwrite if -f flag
+			if (file.hasExistingFileName(buildUp) && !overWrite) {
+				System.out.println(
+						"Filename: " + buildUp + " already exists. Run command with \"-f\" flag to overwrite.");
 				return;
 			}
 			file.saveFile();
-		} else if (input[0].equals("load")){
+		} else if (input[0].equals("load")) {
 			ArrayList<String> easier = new ArrayList<String>();
-			for (String i : input){
+			for (String i : input) {
 				easier.add(i);
 			}
 			easier.remove(0);
 			// Force users to use -f flag to confirm awareness of not saving
-			if (easier.contains("-f")){
+			if (easier.contains("-f")) {
 				easier.remove("-f");
 			} else {
 				System.out.println("Use flag \"-f\" to confirm awareness that unsaved changes will be lost.");
 				return;
 			}
 			String buildUp = "";
-			for (String i : easier){
+			for (String i : easier) {
 				buildUp += i + " ";
 			}
 			buildUp = buildUp.trim();
 			LocalFile file = new LocalFile();
-			if (!file.hasExistingFileName(buildUp)){
+			if (!file.hasExistingFileName(buildUp)) {
 				System.out.println("Filename: " + buildUp + " does not exist.");
 				return;
 			}
 			file.setFileName(buildUp);
 			env = file.loadFile();
+		} else if (input[0].equals("addchild")) {
+			UMLItem c = AddClass.getItem(env, input[1]);
+			UMLItem p = AddClass.getItem(env, input[2]);
+			if (c == null || p == null) {
+				System.out.println("Invalid: addchild [child] [parent], both must be from current class list");
+			} else {
+				p.addChild(c);
+				c.addParent(p);
+			}
+		} else if (input[0].equals("removechild")) {
+			UMLItem c = AddClass.getItem(env, input[1]);
+			UMLItem p = AddClass.getItem(env, input[2]);
+			if (c == null || p == null) {
+				System.out.println("Invalid: removechild [child] [parent], both must be from current class list");
+			} else {
+				p.removeChild(c);
+				c.removeParent(p);
+			}
 		} else {
+
 			System.out.println("Invalid Command");
 		}
+
 	}
 
 	/**
 	 * Takes users command from homescreen and checks if its a valid command
 	 * 
-	 * @param input
-	 *            users request
-	 * @param env
-	 *            the UMLEvnironment
-	 * @throws IOException
-	 *             signals that an I/O exception has occurred
+	 * @param input users request
+	 * @param env   the UMLEvnironment
+	 * @throws IOException signals that an I/O exception has occurred
 	 */
 	public void checkInput(String line) throws IOException {
 		String[] lineArr = line.split(" ");
@@ -159,6 +176,10 @@ public class Console {
 			find();
 		} else if (input.toLowerCase().equals("quit")) {
 			quit();
+		} else if (input.toLowerCase().equals("addchild")) {
+			addChild();
+		} else if (input.toLowerCase().equals("removechild")) {
+			removeChild();
 		}
 
 		else {
@@ -171,31 +192,29 @@ public class Console {
 	 * prompts user for input and calls add function to add a new class in
 	 * environment then gives a list of the classes currently in the environment
 	 * 
-	 * @param env
-	 *            the UMLEvnironment
-	 * @throws IOException
-	 *             signals that an I/O exception has occurred
+	 * @param env the UMLEvnironment
+	 * @throws IOException signals that an I/O exception has occurred
 	 */
 	public void add() throws IOException {
 		System.out.print("Enter new class name: ");
 		final Scanner console = ReplScanner.getInstance();
 		String newClass = console.next();
 		UMLItem isNull = AddClass.getItem(env, newClass);
-		if (isNull != null){
+		if (isNull != null) {
 			System.out.println("Class " + newClass + " is already added. Use \"edit\" to modify this class.");
 			console.nextLine();
 			list();
 			return;
 		}
 		System.out.print("Add class " + newClass + "? (y/n): ");
-		while (true){
+		while (true) {
 			String answer = console.next();
 			if (answer.equals("y")) {
 				AddClass.addClass(env, newClass);
 				console.nextLine();
 				list();
 				return;
-			} else if (answer.equals("n")){
+			} else if (answer.equals("n")) {
 				System.out.println("Add cancelled.");
 				console.nextLine();
 				list();
@@ -208,10 +227,8 @@ public class Console {
 	/**
 	 * gives a list of the classes currently in the environment
 	 * 
-	 * @param env
-	 *            the UMLEnvironment
-	 * @throws IOException
-	 *             signals that an I/O exception has occurred
+	 * @param env the UMLEnvironment
+	 * @throws IOException signals that an I/O exception has occurred
 	 */
 	public void list() throws IOException {
 		System.out.print("List of classes: [ ");
@@ -222,14 +239,12 @@ public class Console {
 	}
 
 	/**
-	 * loads an existing file into the environment if user wishes to save
-	 * unsaved work, directed to save otherwise load function is called, then
-	 * returned to homescreen
+	 * loads an existing file into the environment if user wishes to save unsaved
+	 * work, directed to save otherwise load function is called, then returned to
+	 * homescreen
 	 * 
-	 * @param env
-	 *            the UMLEnvironment
-	 * @throws IOException
-	 *             signals that an I/O exception has occurred
+	 * @param env the UMLEnvironment
+	 * @throws IOException signals that an I/O exception has occurred
 	 */
 	public void load() throws IOException {
 		System.out.print("Any unsaved work will be lost, do you want to save? (y/n): ");
@@ -251,14 +266,12 @@ public class Console {
 	}
 
 	/**
-	 * prompts user for filename and checks if a file already exists under that
-	 * name will either cancel or overwrite based on user input, then return to
+	 * prompts user for filename and checks if a file already exists under that name
+	 * will either cancel or overwrite based on user input, then return to
 	 * homescreen
 	 * 
-	 * @param env
-	 *            the UMLEnvironment
-	 * @throws IOException
-	 *             signals that an I/O exception has occurred
+	 * @param env the UMLEnvironment
+	 * @throws IOException signals that an I/O exception has occurred
 	 */
 	public void save() throws IOException {
 
@@ -303,8 +316,8 @@ public class Console {
 		final Scanner console = ReplScanner.getInstance();
 		String oldClass = console.next();
 		// Check if oldClass exists
-		if (AddClass.getItem(env, oldClass) == null){
-			System.out.println("Class " + oldClass+ " does not exist. Please choose an existing class.");
+		if (AddClass.getItem(env, oldClass) == null) {
+			System.out.println("Class " + oldClass + " does not exist. Please choose an existing class.");
 			console.nextLine();
 			list();
 			return;
@@ -312,32 +325,32 @@ public class Console {
 		System.out.print("Enter new class name: ");
 		String newClass = console.next();
 		// check if new class is not already a class
-		if (AddClass.getItem(env, newClass) != null){
+		if (AddClass.getItem(env, newClass) != null) {
 			System.out.println("Class " + newClass + " already exists. Please choose another class name.");
 			console.nextLine();
 			list();
 			return;
 		}
-		
+
 		System.out.print("Change " + oldClass + " to " + newClass + "? (y/n): ");
-		while(true){
+		while (true) {
 			String answer = console.next();
 			if (answer.equals("y")) {
 				AddClass.editItem(env, oldClass, newClass);
-				System.out.println("Class " + oldClass + " changed to " + newClass+ ".");
+				System.out.println("Class " + oldClass + " changed to " + newClass + ".");
 				list();
 				console.nextLine();
 				return;
-			} else if (answer.equals("n")){
+			} else if (answer.equals("n")) {
 				System.out.println("Edit cancelled.");
 				list();
 				console.nextLine();
 				return;
-			// Force them to conform to our prompts demands
+				// Force them to conform to our prompts demands
 			} else {
 				System.out.println("Please confirm (y/n).");
 			}
-			
+
 		}
 	}
 
@@ -354,7 +367,7 @@ public class Console {
 		System.out.println(" ");
 	}
 
-	public void help2(){
+	public void help2() {
 		System.out.println("Here is a list of the commands executed in one line without prompts.");
 		System.out.println("add  [className]");
 		System.out.println("edit [originalClass] [newClass] ");
@@ -363,7 +376,7 @@ public class Console {
 		System.out.println("load [flag \"-f\" confirms unsaved changes lost] [filename] ");
 		System.out.println(" ");
 	}
-	
+
 	public void find() {
 		System.out.print("Enter class name to find: ");
 		final Scanner console = ReplScanner.getInstance();
@@ -418,34 +431,70 @@ public class Console {
 		file.saveFile();
 		System.out.println("File saved");
 	}
-	
-	
+
 	public void addChild() throws IOException {
 		final Scanner console = ReplScanner.getInstance();
 		System.out.print("Enter child name: ");
-		String chName = console.next();
-		
-		UMLItem c = ;
-		while (c == null){
-				System.out.println("Child name does not exist, enter valid name: ");
-				list();
-				System.out.print("Enter child name: ");
-			}
+
+		String chName = console.nextLine();
+		UMLItem c = AddClass.getItem(env, chName);
+		while (c == null) {
+			System.out.println("Child name does not exist, enter valid name: ");
+			list();
+			System.out.print("Enter child name: ");
+			chName = console.nextLine();
+			c = AddClass.getItem(env, chName);
 		}
-		
+
 		System.out.print("Enter parent name: ");
-		String parName = console.next();
-		UMLItem p = ;
-		while (p == null){
-				System.out.println("Parent name does not exist, enter valid name: ");
-				list();
-				System.out.print("Enter parent name: ");
-			}
+
+		String parName = console.nextLine();
+		UMLItem p = AddClass.getItem(env, parName);
+
+		while (p == null) {
+			System.out.println("Parent name does not exist, enter valid name: ");
+			list();
+			System.out.print("Enter parent name: ");
+			parName = console.nextLine();
+			p = AddClass.getItem(env, parName);
 		}
-		
-		c.setParent(p);
+
 		p.addChild(c);
-		
+		c.addParent(p);
+		System.out.print("child added.\n");
+	}
+
+	public void removeChild() throws IOException {
+		final Scanner console = ReplScanner.getInstance();
+		System.out.print("Enter child name: ");
+
+		String chName = console.nextLine();
+		UMLItem c = AddClass.getItem(env, chName);
+		while (c == null) {
+			System.out.println("Child name does not exist, enter valid name: ");
+			list();
+			System.out.print("Enter child name: ");
+			chName = console.nextLine();
+			c = AddClass.getItem(env, chName);
+		}
+
+		System.out.print("Enter parent name: ");
+
+		String parName = console.nextLine();
+		UMLItem p = AddClass.getItem(env, parName);
+
+		while (p == null) {
+			System.out.println("Parent name does not exist, enter valid name: ");
+			list();
+			System.out.print("Enter parent name: ");
+			parName = console.nextLine();
+			p = AddClass.getItem(env, parName);
+		}
+
+		p.removeChild(c);
+		c.removeParent(p);
+		System.out.println(c.getParents());
+		System.out.print("child removed.\n");
 	}
 
 }
