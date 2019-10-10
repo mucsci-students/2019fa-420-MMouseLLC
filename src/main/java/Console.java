@@ -132,7 +132,10 @@ public class Console {
 	public void checkInput(String line) throws IOException {
 		String[] lineArr = line.split(" ");
 		String input = lineArr[0];
-		if (lineArr.length > 1) {
+		if (input.equals("addattribute")){
+			addAttribute(lineArr);
+			return;
+		} else if (lineArr.length > 1) {
 			multiArgCommand(lineArr);
 			return;
 		}
@@ -146,6 +149,10 @@ public class Console {
 			save();
 		} else if (input.toLowerCase().equals("edit")) {
 			edit();
+		} else if (input.toLowerCase().equals("editattribute")) {
+			editAttribute();
+		} else if (input.toLowerCase().equals("deleteattribute")) {
+			deleteAttribute();
 		} else if (input.toLowerCase().equals("help")) {
 			help();
 		} else if (input.toLowerCase().equals("help2")) {
@@ -199,63 +206,86 @@ public class Console {
 			System.out.println("Please confirm (y/n).");
 		}
 	}
+	
+	public void addAttribute(String[] args) throws IOException {
+		// args looks like [addattributes, [className], [newAttribute]
+		// args[1] == [className]
+		
+		if(args.length != 3){
+			System.out.println("Invalid: addattribute [Class] [Attribute]");
+			return;
+		}
+		//check that class exists
+		UMLItem addAttr = AddClass.getItem(env, args[1]);
+		if(addAttr == null ) {
+			System.out.println("check help for synax");
+			return;
+		} else if (addAttr.getAttributes().contains(args[2])) {
+			System.out.println("Attribute " + args[2] + " already exists.");
+			return;
+		}
+		//class exists - add the attribute to the class
+		addAttr.addAttribute(args[2]);
+		listAttributes(addAttr);
+	}
+	
+	
 	/**
-	 * prompts user for input and calls addAttribute function to add a new attribute in
-	 * environment then gives a list of the attributes currently in the environment
+	 * delete an attribute currently in the environment
 	 * 
 	 * @param env
-	 *            the UMLEvnironment
+	 *            the UMLEnvironment
 	 * @throws IOException
 	 *             signals that an I/O exception has occurred
 	 */
-	public void addAttribute() throws IOException{
-		System.out.print("Enter class name to add attribute: ");
+	public void deleteAttribute() throws IOException {
+		System.out.print("Enter class name: ");
 		final Scanner console = ReplScanner.getInstance();
-		String findClass = console.next();
+		String whatClass = console.next();
 		// Check if class exists
-		if (AddClass.getItem(env, findClass) == null){
-			System.out.println("Class " + findClass+ " does not exist. Please choose an existing class.");
+		UMLItem theClass = AddClass.getItem(env, whatClass);
+		if (theClass == null){
+			System.out.println("Class " +whatClass+ " does not exist. Please choose an existing class.");
 			console.nextLine();
 			list();
+			//recall deleteAttribtue so they do not have to go back to the main console
+			deleteAttribute();
 			return;
 		}
-		System.out.print("Enter new attribute name: ");
-		String newAttribute = console.next();
-		System.out.print("Add " + newAttribute + " to " + findClass + "? (y/n): ");
+		
+		//check if attribute exists	
+		System.out.print("Enter attribute name: ");
+		String oldAttribute = console.next();
+		if (!theClass.existingAttribute(oldAttribute)){
+			System.out.println("Attribute " + oldAttribute+ " does not exist. Please choose an existing attribute.");
+			console.nextLine();
+			listAttributes(theClass);
+			deleteAttribute();
+			return;
+		}
+		
+		System.out.print("Delete " + oldAttribute + "? (y/n): ");
 		while(true){
 			String answer = console.next();
 			if (answer.equals("y")) {
-			//	AddClass.editItem(env, oldClass, newClass);
-				System.out.println("Attribute " + newAttribute + " added to " + findClass+ ".");
-				list();
+				theClass.removeAttribute(oldAttribute);
+				System.out.println("Attribute " + oldAttribute + " deleted.");
+				listAttributes(theClass);
 				console.nextLine();
 				return;
 			} else if (answer.equals("n")){
-				System.out.println("Add Attribute cancelled.");
+				System.out.println("Delete cancelled.");
 				list();
 				console.nextLine();
 				return;
 			// Force them to conform to our prompts demands
 			} else {
 				System.out.println("Please confirm (y/n).");
-			}
+				}
 			
+			}
 		}
-		/*
 	
-		final Scanner console = ReplScanner.getInstance();
-		
-		UMLItem isNull = AddAttribute.getItem(env, newAttribute);
-		if (isNull != null){
-			System.out.println("Attribute " + newAttribute + " is already added. Use \"edit\" to modify this attribute.");
-			console.nextLine();
-			list();
-			return;
-		}
-		
-		*/
-	}
-
 	/**
 	 * gives a list of the classes currently in the environment
 	 * 
@@ -271,6 +301,23 @@ public class Console {
 		}
 		System.out.print("]\n");
 	}
+	
+	/**
+	 * gives a list of the attributes currently in the environment
+	 * 
+	 * @param env
+	 *            the UMLEnvironment
+	 * @throws IOException
+	 *             signals that an I/O exception has occurred
+	 */
+	public void listAttributes(UMLItem item) throws IOException {
+		System.out.print("List of attributes in " + item.getName()+ ": [ ");
+		for(String i : item.getAttributes()) {
+			System.out.print(i + " ");
+		}
+		System.out.print("]\n");
+	}
+
 
 	/**
 	 * loads an existing file into the environment if user wishes to save
@@ -391,11 +438,80 @@ public class Console {
 			
 		}
 	}
-
+	
+	/**
+	 * prompts user for input and calls edit function to edit an existing attribute in
+	 * environment 
+	 * 
+	 * @param env
+	 *            the UMLEvnironment
+	 * @throws IOException
+	 *             signals that an I/O exception has occurred
+	 */
+	public void editAttribute() throws IOException {
+		System.out.print("Enter class name: ");
+		final Scanner console = ReplScanner.getInstance();
+		String whatClass = console.next();
+		// Check if class exists
+		UMLItem theClass = AddClass.getItem(env, whatClass);
+		if (theClass == null){
+			System.out.println("Class " +whatClass+ " does not exist. Please choose an existing class.");
+			console.nextLine();
+			list();
+			//recall attribute so they do not have to go back to the main console
+			editAttribute();
+			return;
+		}
+		//check if attribute exists	
+		System.out.print("Enter old attribute name: ");
+		String oldAttribute = console.next();
+		if (!theClass.existingAttribute(oldAttribute)){
+			System.out.println("Attribute " + oldAttribute+ " does not exist. Please choose an existing attribute.");
+			console.nextLine();
+			//list();
+			return;
+		}
+		System.out.print("Enter new attribute name: ");
+		String newAttr = console.next();
+		// check if new attribute is not already an attribute
+		if (theClass.existingAttribute(newAttr)){
+			System.out.println("Attribute " + newAttr + " already exists. Please choose another attribute.");
+			console.nextLine();
+			//list();
+			return;
+		}
+		
+		System.out.print("Change " + oldAttribute + " to " + newAttr + "? (y/n): ");
+		while(true){
+			String answer = console.next();
+			if (answer.equals("y")) {
+				theClass.editAttribute(oldAttribute, newAttr);
+				System.out.println("Attribute " + oldAttribute + " changed to " + newAttr+ ".");
+				listAttributes(theClass);
+				console.nextLine();
+				return;
+			} else if (answer.equals("n")){
+				System.out.println("Edit cancelled.");
+				list();
+				console.nextLine();
+				return;
+			// Force them to conform to our prompts demands
+			} else {
+				System.out.println("Please confirm (y/n).");
+			}
+			
+		}
+	}
+	/**
+	 * tells user what commands are valid 
+	 */
 	public void help() {
 		System.out.println("To add a class type \"add\" ");
+		System.out.println("To add an attribute type \"addattribute\" ");
 		System.out.println("To list a class type \"list\" ");
 		System.out.println("To edit a class type \"edit\" ");
+		System.out.println("To edit an attribute type \"editattibute\" ");
+		System.out.println("To delete an attribute type \"deleteattibute\" ");
 		System.out.println("To find if class exists type \"find\" ");
 		System.out.println("To save your project \"save\" ");
 		System.out.println("To load your project type \"load\" ");

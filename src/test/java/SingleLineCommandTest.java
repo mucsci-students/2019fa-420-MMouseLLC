@@ -63,6 +63,8 @@ public class SingleLineCommandTest {
 	  assertEquals("[ Eric ]", list());
   }
   
+
+  
   /**
    * Running this exact chain of inputs in the actual cmd line
    * 	interface works. This test will not properly load a file 
