@@ -92,7 +92,7 @@ public class LocalFile {
    * @return the UMLEnvironment
    * @throws IOException Signals that an I/O exception has occurred.
    */
-  public UMLEnvironment loadFile() throws IOException {
+  public UMLEnvironment loadFile() {
   long startTime = System.nanoTime();
     ObjectMapper objectMapper = new ObjectMapper(new YAMLFactory());
     logger.info("Loading file in loadFile()");
@@ -100,7 +100,13 @@ public class LocalFile {
     /** Gives the duration to execute the load in ms */
     long duration = (endTime - startTime) / 1000000;
     logger.info("Load completed in: " + duration + " ms.");
-    return objectMapper.readValue(new File(SAVE_DIR + "/" + fileName + ".yaml"), UMLEnvironment.class);
+    UMLEnvironment loadedEnv = null;
+    try {
+      loadedEnv = objectMapper.readValue(new File(SAVE_DIR + "/" + fileName + ".yaml"), UMLEnvironment.class);      
+    } catch(IOException e) {
+      logger.severe("IOException occurred in loadFile.");
+    }
+    return loadedEnv;
   }
   
   /**
