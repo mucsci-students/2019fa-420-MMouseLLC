@@ -120,24 +120,82 @@ public class Console {
 			file.setFileName(buildUp);
 			env = file.loadFile();
 		} else if (input[0].equals("addchild")) {
+			if (input.length < 3) {
+				System.out.println("Invalid: addchild [child] [parent]");
+				return;
+			}
 			UMLItem c = AddClass.getItem(env, input[1]);
 			UMLItem p = AddClass.getItem(env, input[2]);
 			if (c == null || p == null) {
 				System.out.println("Invalid: addchild [child] [parent], both must be from current class list");
+				return;
+			} else if (c.getParents().contains(p) && p.getChildren().contains(c)) {
+				System.out.print("child already linked to parent.\n");
+				return;
+			} else if (c == p) {
+				System.out.print("child cannot be the same as parent\n");
+				return;
 			} else {
 				p.addChild(c);
 				c.addParent(p);
 			}
-		} else if (input[0].equals("removechild")) {
+
+		} else if (input[0].equals("removechild"))
+
+		{
+			if (input.length < 3) {
+				System.out.println("Invalid: addchild [child] [parent]");
+				return;
+			}
 			UMLItem c = AddClass.getItem(env, input[1]);
 			UMLItem p = AddClass.getItem(env, input[2]);
 			if (c == null || p == null) {
 				System.out.println("Invalid: removechild [child] [parent], both must be from current class list");
+				return;
+			} else if (!c.getParents().contains(p) && !p.getChildren().contains(c)) {
+				System.out.print("child not linked to parent.\n");
+				return;
 			} else {
+
 				p.removeChild(c);
 				c.removeParent(p);
+
 			}
-		} else {
+		} else if (input[0].equals("listchildren")) {
+			if (input.length < 2) {
+				System.out.println("Invalid: listchildren [parent]");
+				return;
+			} else {
+				UMLItem p = AddClass.getItem(env, input[1]);
+				if (p == null) {
+					System.out.print("parent not in list.\n");
+				} else {
+					System.out.print("List of chrildren [ ");
+					for (UMLItem i : p.getChildren()) {
+						System.out.print(i.getName() + " ");
+					}
+					System.out.print("]\n");
+				}
+			}
+		} else if (input[0].equals("listparents")) {
+			if (input.length < 2) {
+				System.out.println("Invalid: listparents [child]");
+				return;
+			} else {
+				UMLItem p = AddClass.getItem(env, input[1]);
+				if (p == null) {
+					System.out.print("child not in list.\n");
+				} else {
+					System.out.print("List of chrildren [ ");
+					for (UMLItem i : p.getChildren()) {
+						System.out.print(i.getName() + " ");
+					}
+					System.out.print("]\n");
+				}
+			}
+		} else
+
+		{
 
 			System.out.println("Invalid Command");
 		}
@@ -180,6 +238,10 @@ public class Console {
 			addChild();
 		} else if (input.toLowerCase().equals("removechild")) {
 			removeChild();
+		} else if (input.toLowerCase().equals("listchildren")) {
+			multiArgCommand(lineArr);
+		} else if (input.toLowerCase().equals("listparents")) {
+			multiArgCommand(lineArr);
 		}
 
 		else {
@@ -363,6 +425,8 @@ public class Console {
 		System.out.println("To load your project type \"load\" ");
 		System.out.println("To quit your project type \"quit\" ");
 		System.out.println("To list commands type \"help\" ");
+		System.out.println("To add a child to a class type \"addchild\" ");
+		System.out.println("To remove a child from a class type \"removechild\" ");
 		System.out.println("To view single-lined command syntax type \"help2\" ");
 		System.out.println(" ");
 	}
@@ -374,6 +438,9 @@ public class Console {
 		System.out.println("find [className]");
 		System.out.println("save [flag \"-f\" to overwrite] [filename]");
 		System.out.println("load [flag \"-f\" confirms unsaved changes lost] [filename] ");
+		System.out.println("addchild [child] [parent]");
+		System.out.println("removechild [child] [parent]");
+		System.out.println("listchildren [parent]");
 		System.out.println(" ");
 	}
 
@@ -459,9 +526,16 @@ public class Console {
 			p = AddClass.getItem(env, parName);
 		}
 
-		p.addChild(c);
-		c.addParent(p);
-		System.out.print("child added.\n");
+		if (c.getParents().contains(p) && p.getChildren().contains(c)) {
+			System.out.print("Child already linked to parent.\n");
+		} else if (c == p) {
+			System.out.print("child cannot be the same as parent\n");
+		} else {
+
+			p.addChild(c);
+			c.addParent(p);
+			System.out.print("child added.\n");
+		}
 	}
 
 	public void removeChild() throws IOException {
@@ -490,11 +564,18 @@ public class Console {
 			parName = console.nextLine();
 			p = AddClass.getItem(env, parName);
 		}
+		// To see if UMLItem child is a child of UMLItem parent:
+		// if (child.getParents().contains(parent) ) //then parent is a parent of child
+		// if (parent.getChildren().contains(child) // then child is a child of parent
+		//
+		if (!c.getParents().contains(p) && !p.getChildren().contains(c)) {
+			System.out.print("child not linked to parent.\n");
+		} else {
 
-		p.removeChild(c);
-		c.removeParent(p);
-		System.out.println(c.getParents());
-		System.out.print("child removed.\n");
+			p.removeChild(c);
+			c.removeParent(p);
+			System.out.print("child removed.\n");
+		}
 	}
 
 }
