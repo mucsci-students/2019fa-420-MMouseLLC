@@ -18,8 +18,6 @@ This should successfully build and test the project and then open the CLI.
 
 In the root project directory, run
 
-> mvn clean <br>
-> mvn compile <br>
+> mvn clean install <br>
 > mvn package <br>
-> mvn assembly:single <br>
-> java -cp target/mmouse-uml-0.0.1-SNAPSHOT.jar:target/mmouse-uml-0.0.1-SNAPSHOT-jar-with-dependencies.jar Main
+> java -cp target/mmouse-uml-0.0.2-SNAPSHOT-jar-with-dependencies.jar utility.Main
