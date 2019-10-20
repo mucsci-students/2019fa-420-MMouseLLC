@@ -1,6 +1,5 @@
 package data;
 
-import java.util.List;
 import java.util.ArrayList;
 
 /*
@@ -13,11 +12,11 @@ import java.util.ArrayList;
  */
 public class UMLEnvironment {
     
-    List<UMLItem> Items = new ArrayList<UMLItem>();
+    ArrayList<UMLItem> items = new ArrayList<UMLItem>();
     int size;
     
     public int getSize() {
-    	return Items.size();
+    	return items.size();
     }
     
     public UMLEnvironment() {
@@ -25,23 +24,38 @@ public class UMLEnvironment {
     }
     
     public UMLEnvironment(UMLItem item) {
-        this.Items.add(item);
+        this.items.add(item);
         this.size++;
     }
     
-    public List<UMLItem> getItems() {
-        return this.Items;
+    public ArrayList<UMLItem> getItems() {
+        return this.items;
+    }
+    
+    /**
+     * if a UMLItem with name itemName exists in this environment then returns that item
+     *   else return null
+     * @param itemName
+     * @return
+     */
+    public UMLItem findItem(String itemName){
+    		for (UMLItem i : items){
+    			if (i.getName().equals(itemName)){
+    				return i;
+    			}
+    		}
+    		return null;
     }
     
     public boolean addItem(UMLItem item) {
-        if(!this.Items.isEmpty()) {
-            for(int i = 0; i < this.Items.size(); i++) {
-                if(item.getName().equals(this.Items.get(i).getName())) {
+        if(!this.items.isEmpty()) {
+            for(int i = 0; i < this.items.size(); i++) {
+                if(item.getName().equals(this.items.get(i).getName())) {
                     return false;
                 }
             }
         }
-        this.Items.add(item);
+        this.items.add(item);
         this.size++;
         return true;
     }

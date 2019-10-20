@@ -1,7 +1,5 @@
 package utility;
 
-import java.io.IOException;
-
 import data.UMLEnvironment;
 
 public class Main {
