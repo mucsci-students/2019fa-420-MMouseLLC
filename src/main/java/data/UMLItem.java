@@ -73,6 +73,10 @@ public class UMLItem {
     public UMLItem(int id, String name){
         this.id = id;
         this.name = name;
+        
+        attributes = new ArrayList<>();
+        parents = new ArrayList<>();
+        children = new ArrayList<>();
     }
     /**
      * Name Constructor

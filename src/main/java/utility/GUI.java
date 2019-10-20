@@ -151,6 +151,7 @@ public class GUI extends Application {
                 		t.edit.setVisible(true);
                 		t.remove.setVisible(true);
                 		t.addAttr.setVisible(true);
+                		t.removeAttr.setVisible(true);
                         t.pane.setMaxHeight(230);
                         t.pane.setMinHeight(230);
                         t.pane.getChildren().remove(t.add);
@@ -254,13 +255,13 @@ public class GUI extends Application {
             		if(answer.isPresent()) {
             			UMLItem found = AddClass.getItem(env, t.nameBox.getText());
                 		if(found != null) {
-                			//found.addAttribute(answer.get().toString());
                 				String newAttr = t.displayAttr.getText() + "\u2022" + answer.get() + "\n";
                     			t.displayAttr.setText(newAttr);
                     			t.pane.setMinHeight(t.pane.getHeight() + 17);
                     			t.pane.setMaxHeight(t.pane.getHeight() + 17);
                     			t.edit.setLayoutY(t.edit.getLayoutY() + 17);
                     			t.addAttr.setLayoutY(t.addAttr.getLayoutY() + 17);
+                    			t.removeAttr.setLayoutY(t.removeAttr.getLayoutY() + 17);
                     			t.remove.setLayoutY(t.remove.getLayoutY() + 17);
                 		}
             		} else {
@@ -289,6 +290,7 @@ public class GUI extends Application {
          * stage holding the scene.
          */
         
+        ScrollBar s = new ScrollBar();
         addButton.setLayoutX(10);
         addButton.setLayoutY(10);
         addButton.setOnAction(clickAddEvent);
@@ -300,6 +302,7 @@ public class GUI extends Application {
 		primary.setMaxWidth(winLength);
 		layout.getChildren().add(addButton);
 		layout.getChildren().add(resetAll);
+		layout.getChildren().add(s);
 		Scene scene = new Scene(layout, winLength, winHeight);
 		primary.setScene(scene);
 		primary.show();
