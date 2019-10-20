@@ -8,13 +8,13 @@ public class GUITile extends Pane {
 
 	//TilePane tile = new TilePane();
 	TextField textBox = new TextField("Enter Text");
-	TextField nameBox = new TextField("Enter Name");
+	TextField nameBox = new TextField("EnterName");
 	Label nameLabel = new Label(this.nameBox.getText());
 	TextArea textArea = new TextArea();
 	Pane pane = new Pane();
 	Button add = new Button("Add Class");
     Button edit = new Button("Edit Name");
-    Button remove = new Button("Remove");
+    Button remove = new Button("Remove Class");
     Button addAttr = new Button("Add Attribute");
     Button removeAttr = new Button("Remove Attribute");
     Label displayAttr = new Label("");

@@ -134,7 +134,7 @@ public class UMLItem {
      * @return true if attr is found in ArrayList<String> attributes, else false
      */
     public boolean removeAttribute(String attr){
-        return this.attributes.remove(attr);
+    	return this.attributes.remove(attr);
     }
     
     /**

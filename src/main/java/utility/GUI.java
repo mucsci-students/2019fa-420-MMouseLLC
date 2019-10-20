@@ -1,5 +1,6 @@
 package utility;
 
+import java.util.ArrayList;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -255,20 +256,96 @@ public class GUI extends Application {
             		if(answer.isPresent()) {
             			UMLItem found = AddClass.getItem(env, t.nameBox.getText());
                 		if(found != null) {
-                				String newAttr = t.displayAttr.getText() + "\u2022" + answer.get() + "\n";
+                			ArrayList testName = new ArrayList<String>(found.getAttributes());
+                			for(int i = 0; i < testName.size(); i++) {
+                				if(answer.get().equals(testName.get(i))) {
+                        			Alert a = new Alert(Alert.AlertType.ERROR, "Attribute " + testName.get(i).toString() + " already exists. Please enter an original name.");
+                        			a.show();
+                        			return;
+                				}
+                			}
+                			t.displayAttr.setText("");
+                			String newAttr = "";
+                			found.addAttribute(answer.get());
+                			ArrayList test = new ArrayList<>(found.getAttributes());
+                			for(int i = 0; i < test.size(); i++) {
+                				newAttr = t.displayAttr.getText() + "\u2022" + test.get(i).toString() + "\n";
                     			t.displayAttr.setText(newAttr);
-                    			t.pane.setMinHeight(t.pane.getHeight() + 17);
-                    			t.pane.setMaxHeight(t.pane.getHeight() + 17);
-                    			t.edit.setLayoutY(t.edit.getLayoutY() + 17);
-                    			t.addAttr.setLayoutY(t.addAttr.getLayoutY() + 17);
-                    			t.removeAttr.setLayoutY(t.removeAttr.getLayoutY() + 17);
-                    			t.remove.setLayoutY(t.remove.getLayoutY() + 17);
+                			}
+                			t.pane.setMinHeight(t.pane.getHeight() + 17);
+                			t.pane.setMaxHeight(t.pane.getHeight() + 17);
+                			t.edit.setLayoutY(t.edit.getLayoutY() + 17);
+                			t.addAttr.setLayoutY(t.addAttr.getLayoutY() + 17);
+                			t.removeAttr.setLayoutY(t.removeAttr.getLayoutY() + 17);
+                			t.remove.setLayoutY(t.remove.getLayoutY() + 17);
+            			    newAttr = t.displayAttr.getText() + "\u2022" + answer.get() + "\n";
+                		} else {
+                			Alert a = new Alert(Alert.AlertType.ERROR, "Something went wrong finding the class.");
+                			a.show();
                 		}
             		} else {
             			Alert a = new Alert(Alert.AlertType.ERROR, "Attribute cannot be blank.");
             		}
             		
             	});
+            	t.removeAttr.setOnAction((event) -> {
+            		TextInputDialog input = new TextInputDialog();
+            		input.setHeaderText("Enter attribute to remove for " + t.nameBox.getText() + ".");
+            		input.setHeight(50);
+            		input.setWidth(120);
+            		Optional<String> answer = input.showAndWait();
+            		String[] attrTest = answer.toString().split(" ");
+            		
+            		if(attrTest.length > 1) {
+            			Alert a = new Alert(Alert.AlertType.ERROR, "Attribute cannot contain spaces.\nExample: New Attr should be NewAttr");
+            			a.show();
+            			return;
+            		}
+            		
+            		boolean isWhitespace = answer.get().matches("^\\s*$"); //checks if name entered is only whitespace.
+            		
+            		if(isWhitespace) {
+            			Alert a = new Alert(Alert.AlertType.ERROR, "Attribute cannot be only whitespace.\nExample: NewAttr");
+            			a.show();
+            			return;
+            		}
+            		if(answer.isPresent()) {
+            			UMLItem found = AddClass.getItem(env, t.nameBox.getText());
+            			if(found != null) {
+            				ArrayList testName = new ArrayList<String>(found.getAttributes());
+            				boolean isFound = false;
+                			for(int i = 0; i < testName.size(); i++) {
+                				if(answer.get().equals(testName.get(i))) {
+                					isFound = true;
+                					found.removeAttribute(answer.get());
+                					Alert a = new Alert(Alert.AlertType.CONFIRMATION, "Attribute " + answer.get() + " removed from " + t.nameBox.getText() + ".");
+                					a.show();
+                					break;
+                				}
+                			}
+                			if(!isFound) {
+                				Alert a = new Alert(Alert.AlertType.ERROR, "Attribute " + answer.get() + " not found in list of attributes.");
+                				a.show();
+                				return;
+                			}
+                			t.displayAttr.setText("");
+                			ArrayList testArr = new ArrayList<String>(found.getAttributes());
+                			String newAttr = "";
+                			for(int i = 0; i < testArr.size(); i++) {
+                				newAttr += "\u2022" + testArr.get(i).toString() + "\n";
+                			}
+                			t.displayAttr.setText(newAttr);
+                			t.pane.setMinHeight(t.pane.getHeight() - 17);
+                			t.pane.setMaxHeight(t.pane.getHeight() - 17);
+                			t.edit.setLayoutY(t.edit.getLayoutY() - 17);
+                			t.addAttr.setLayoutY(t.addAttr.getLayoutY() - 17);
+                			t.removeAttr.setLayoutY(t.removeAttr.getLayoutY() - 17);
+                			t.remove.setLayoutY(t.remove.getLayoutY() - 17);
+            			}
+            		}
+            	});
+            	
+            	
             } 
         }; 
         
@@ -290,19 +367,18 @@ public class GUI extends Application {
          * stage holding the scene.
          */
         
-        ScrollBar s = new ScrollBar();
         addButton.setLayoutX(10);
         addButton.setLayoutY(10);
         addButton.setOnAction(clickAddEvent);
         resetAll.setLayoutX(110);
         resetAll.setLayoutY(10);
+        resetAll.setVisible(false);
 		primary.setMinHeight(winHeight);
 		primary.setMaxHeight(winHeight);
 		primary.setMinWidth(winLength);
 		primary.setMaxWidth(winLength);
 		layout.getChildren().add(addButton);
 		layout.getChildren().add(resetAll);
-		layout.getChildren().add(s);
 		Scene scene = new Scene(layout, winLength, winHeight);
 		primary.setScene(scene);
 		primary.show();
