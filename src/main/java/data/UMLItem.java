@@ -2,6 +2,8 @@ package data;
 
 import java.util.ArrayList;
 
+import utility.GUITile;
+
 /*
  * UMLItem is a class that represents a single item in the UML Environment.
  * Getters and Setters are created here to define Id, Name, Parent, Children
@@ -13,6 +15,7 @@ import java.util.ArrayList;
 public class UMLItem {
     private int id;
     private String name;
+    private GUITile tile;
     private ArrayList<String> attributes;
     private ArrayList<UMLItem> parents;
     private ArrayList<UMLItem> children;
@@ -90,6 +93,14 @@ public class UMLItem {
      */
     public int getId() {
         return this.id;
+    }
+    
+    public GUITile getTile(){
+    		return tile;
+    }
+    
+    public void setTile(GUITile t){
+    		tile = t;
     }
     
     /**

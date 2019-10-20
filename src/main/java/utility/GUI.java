@@ -8,10 +8,13 @@ import data.UMLEnvironment;
 import data.UMLItem;
 import javafx.application.Application;
 import javafx.event.*;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.stage.*;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
+import javafx.scene.input.MouseEvent;
+
 /*
  * @author eric 
  * @author grant
@@ -110,7 +113,7 @@ public class GUI extends Application {
             		t.pane.setLayoutX(0);
             		t.pane.setStyle("-fx-background-color: cyan");
             		t.pane.setStyle("-fx-border-color: black");
-            	}else {
+            	} else {
                 	t.pane.setLayoutX(getSize() * 160);
             		t.pane.setStyle("-fx-background-color: cyan");
             		t.pane.setStyle("-fx-border-color: black");
@@ -151,9 +154,12 @@ public class GUI extends Application {
                 		t.edit.setVisible(true);
                 		t.remove.setVisible(true);
                 		t.addAttr.setVisible(true);
-                        t.pane.setMaxHeight(230);
-                        t.pane.setMinHeight(230);
-                        t.pane.getChildren().remove(t.add);
+                		t.addChild.setVisible(true);
+                		t.move.setVisible(true);
+                    t.pane.setMaxHeight(310);
+                    t.pane.setMinHeight(310);
+                    t.pane.getChildren().remove(t.add);
+                    AddClass.getItem(env, t.nameBox.getText()).setTile(t);
                         
                 	} else
                 	{
@@ -268,6 +274,65 @@ public class GUI extends Application {
             		}
             		
             	});
+            	
+            	t.addChild.setOnAction((event) -> {
+            		// prompt search for text input
+            		// locate the panel containing that text
+            		// move that panel down under the currentPanel
+            		TextInputDialog input = new TextInputDialog();
+            		input.setHeaderText("Enter name of Child Class");
+            		input.setHeight(50);
+            		input.setWidth(120);
+            		Optional<String> answer = input.showAndWait();
+            		String[] nameTest = answer.get().split(" ");
+            		
+            		if(nameTest.length > 1) {
+            			Alert a = new Alert(Alert.AlertType.ERROR, "Name cannot contain spaces.\nExample: New Class should be NewClass");
+            			a.show();
+            			return;
+            		}
+            		
+            		boolean isWhitespace = t.nameBox.getText().matches("^\\s*$");
+            		
+            		if(isWhitespace) {
+            			Alert a = new Alert(Alert.AlertType.ERROR, "Name cannot be only whitespace.\nInput example: NewClass");
+            			a.show();
+            			return;
+            		}
+            		// text in prompt matches our specs
+            		
+            		UMLItem child = AddClass.getItem(env, nameTest[0]);
+            		UMLItem parent = AddClass.getItem(env, t.nameBox.getText());
+            		if (child == null){
+            			Alert a = new Alert(Alert.AlertType.ERROR, nameTest[0] + " does not exist.");
+                		a.show();        
+                		return;
+            		}
+            		child = AddClass.getItem(env, nameTest[0]);
+            		child.getTile().pane.setLayoutX(parent.getTile().pane.getLayoutX());
+            		child.getTile().pane.setLayoutY(parent.getTile().pane.getLayoutY()+300.0);
+            		//child.addParent(parent);
+            		
+            		//parent.addChild(child);
+            		Alert a = new Alert(Alert.AlertType.CONFIRMATION, t.nameBox.getText() + "Child added successfully!");
+            		a.show();
+            	});
+         	t.move.setOnAction((event) -> {
+         		//Alert a = new Alert(Alert.AlertType.CONFIRMATION, "Click where you would like to move.");
+         		//a.show();
+         		
+         		layout.setOnMouseClicked(new EventHandler<MouseEvent>() {
+         		    @Override
+         		    public void handle(MouseEvent event) {
+         		        System.out.println(event.getSceneX());
+         		        System.out.println(event.getSceneY());
+         		        t.pane.setLayoutX(event.getSceneX());
+         		       t.pane.setLayoutY(event.getSceneY());
+         		    }
+         		});
+
+         	});
+            
             } 
         }; 
         
