@@ -1,5 +1,7 @@
 package utility;
 
+import java.util.HashMap;
+import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -268,6 +270,10 @@ public class GUI extends Application {
                     			t.edit.setLayoutY(t.edit.getLayoutY() + 17);
                     			t.addAttr.setLayoutY(t.addAttr.getLayoutY() + 17);
                     			t.remove.setLayoutY(t.remove.getLayoutY() + 17);
+                    			t.addChild.setLayoutY(t.addChild.getLayoutY() + 17);
+                    			t.move.setLayoutY(t.move.getLayoutY() + 17);
+                    			UMLItem p = AddClass.getItem(env, t.nameBox.getText());
+                    			
                 		}
             		} else {
             			Alert a = new Alert(Alert.AlertType.ERROR, "Attribute cannot be blank.");
@@ -308,28 +314,62 @@ public class GUI extends Application {
                 		a.show();        
                 		return;
             		}
-            		child = AddClass.getItem(env, nameTest[0]);
             		child.getTile().pane.setLayoutX(parent.getTile().pane.getLayoutX());
-            		child.getTile().pane.setLayoutY(parent.getTile().pane.getLayoutY()+300.0);
-            		//child.addParent(parent);
+            		child.getTile().pane.setLayoutY(parent.getTile().pane.getLayoutY()+340.0);
+            		child.addParent(parent);
+            		parent.addChild(child);
+            		double[] parentCoords = {parent.getTile().pane.getLayoutX(), parent.getTile().pane.getLayoutY()};
+            		double[] childCoords = {child.getTile().pane.getLayoutX(), child.getTile().pane.getLayoutY()};
             		
-            		//parent.addChild(child);
+            		parentCoords[0] += parent.getTile().pane.getWidth() / 2.0;
+            		parentCoords[1] += parent.getTile().pane.getHeight();
+            		childCoords[0] += parent.getTile().pane.getWidth() / 2.0;
+            		
+            		Arrow arr = new Arrow(parentCoords[0], parentCoords[1], childCoords[0], childCoords[1], 5);
+         		layout.getChildren().add(arr);
+            		parent.addArrow(arr, child);
             		Alert a = new Alert(Alert.AlertType.CONFIRMATION, t.nameBox.getText() + "Child added successfully!");
             		a.show();
             	});
+            	
          	t.move.setOnAction((event) -> {
-         		//Alert a = new Alert(Alert.AlertType.CONFIRMATION, "Click where you would like to move.");
-         		//a.show();
+         		Alert a = new Alert(Alert.AlertType.CONFIRMATION, "Click where you would like to move.");
+         		a.show();
          		
          		layout.setOnMouseClicked(new EventHandler<MouseEvent>() {
          		    @Override
          		    public void handle(MouseEvent event) {
-         		        System.out.println(event.getSceneX());
-         		        System.out.println(event.getSceneY());
+         		        
          		        t.pane.setLayoutX(event.getSceneX());
-         		       t.pane.setLayoutY(event.getSceneY());
+         		        t.pane.setLayoutY(event.getSceneY());
+         		        UMLItem parent = AddClass.getItem(env, t.nameBox.getText());
+         		        for (UMLItem i : parent.getChildren()){
+	         		        	double[] parentCoords = {parent.getTile().pane.getLayoutX(), parent.getTile().pane.getLayoutY()};
+	                    		double[] childCoords = {i.getTile().pane.getLayoutX(), i.getTile().pane.getLayoutY()};
+	                    		
+	                    		parentCoords[0] += parent.getTile().pane.getWidth() / 2.0;
+	                    		parentCoords[1] += parent.getTile().pane.getHeight();
+	                    		childCoords[0] += parent.getTile().pane.getWidth() / 2.0;
+	                    		layout.getChildren().remove(parent.getArrowByItem(i));
+         		        		parent.setArrowByItem(i, new Arrow(parentCoords[0], parentCoords[1], childCoords[0], childCoords[1], 5));
+         		        		layout.getChildren().add(parent.getArrowByItem(i));
+         		        }
+         		       UMLItem child = AddClass.getItem(env, t.nameBox.getText());
+         		        for (UMLItem p : child.getParents()){
+         		        		layout.getChildren().remove(p.getArrowByItem(child));
+         		        		double[] parentCoords = {p.getTile().pane.getLayoutX(), p.getTile().pane.getLayoutY()};
+	                    		double[] childCoords = {child.getTile().pane.getLayoutX(), child.getTile().pane.getLayoutY()};
+	                    		
+	                    		parentCoords[0] += parent.getTile().pane.getWidth() / 2.0;
+	                    		parentCoords[1] += parent.getTile().pane.getHeight();
+	                    		childCoords[0] += parent.getTile().pane.getWidth() / 2.0;
+	                    		
+	                    		p.setArrowByItem(child, new Arrow(parentCoords[0], parentCoords[1], childCoords[0], childCoords[1], 5));
+         		        		layout.getChildren().add(p.getArrowByItem(child));
+         		        }
          		    }
          		});
+
 
          	});
             
