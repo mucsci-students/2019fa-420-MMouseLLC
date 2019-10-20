@@ -274,6 +274,7 @@ public class GUI extends Application {
                     			t.move.setLayoutY(t.move.getLayoutY() + 17);
                     			UMLItem p = AddClass.getItem(env, t.nameBox.getText());
                     			
+                    			//layout.setOnMouseClicked(new EventHandler<MouseEvent>() 
                 		}
             		} else {
             			Alert a = new Alert(Alert.AlertType.ERROR, "Attribute cannot be blank.");
