@@ -41,11 +41,11 @@ public class UMLItem {
         this.name = name;
         
         this.attributes = new ArrayList<>();
-    this.parents    = new ArrayList<>();
-    this.children   = new ArrayList<>();
+        this.parents    = new ArrayList<>();
+        this.children   = new ArrayList<>();
     
-    this.parents.add(parent);
-    this.children.add(child);
+        this.parents.add(parent);
+        this.children.add(child);
     }
     
     /**
@@ -74,6 +74,10 @@ public class UMLItem {
     public UMLItem(int id, String name){
         this.id = id;
         this.name = name;
+        
+        attributes = new ArrayList<>();
+        parents = new ArrayList<>();
+        children = new ArrayList<>();
     }
     
     /**
