@@ -163,8 +163,6 @@ public class GUI extends Application {
                     	t.pane.getChildren().remove(t.add);
                     	AddClass.getItem(env, t.nameBox.getText()).setTile(t);
                 		t.removeAttr.setVisible(true);
-                        t.pane.setMaxHeight(230);
-                        t.pane.setMinHeight(230);
                         t.pane.getChildren().remove(t.add);
                 	} else
                 	{
@@ -287,6 +285,9 @@ public class GUI extends Application {
                 			t.addAttr.setLayoutY(t.addAttr.getLayoutY() + 17);
                 			t.removeAttr.setLayoutY(t.removeAttr.getLayoutY() + 17);
                 			t.remove.setLayoutY(t.remove.getLayoutY() + 17);
+                			t.addChild.setLayoutY(t.addChild.getLayoutY() + 17);
+                			t.move.setLayoutY(t.move.getLayoutY() + 17);
+                			
             			    newAttr = t.displayAttr.getText() + "\u2022" + answer.get() + "\n";
                 		} else {
                 			Alert a = new Alert(Alert.AlertType.ERROR, "Something went wrong finding the class.");
@@ -440,6 +441,8 @@ public class GUI extends Application {
                 			t.addAttr.setLayoutY(t.addAttr.getLayoutY() - 17);
                 			t.removeAttr.setLayoutY(t.removeAttr.getLayoutY() - 17);
                 			t.remove.setLayoutY(t.remove.getLayoutY() - 17);
+                			t.addChild.setLayoutY(t.addChild.getLayoutY() - 17);
+                			t.move.setLayoutY(t.move.getLayoutY() - 17);
             			}
             		}
             	});
@@ -471,9 +474,7 @@ public class GUI extends Application {
         resetAll.setLayoutY(10);
         resetAll.setVisible(false);
 		primary.setMinHeight(winHeight);
-		primary.setMaxHeight(winHeight);
 		primary.setMinWidth(winLength);
-		primary.setMaxWidth(winLength);
 		layout.getChildren().add(addButton);
 		layout.getChildren().add(resetAll);
 		Scene scene = new Scene(layout, winLength, winHeight);
