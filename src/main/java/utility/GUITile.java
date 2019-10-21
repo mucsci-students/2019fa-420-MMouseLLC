@@ -8,16 +8,17 @@ public class GUITile extends Pane {
 
 	//TilePane tile = new TilePane();
 	TextField textBox = new TextField("Enter Text");
-	TextField nameBox = new TextField("Enter Name");
+	TextField nameBox = new TextField("EnterName");
 	Label nameLabel = new Label(this.nameBox.getText());
 	TextArea textArea = new TextArea();
 	Pane pane = new Pane();
 	Button add = new Button("Add Class");
     Button edit = new Button("Edit Name");
-    Button remove = new Button("Remove");
+    Button remove = new Button("Remove Class");
     Button addAttr = new Button("Add Attribute");
     Button addChild = new Button("Add Child");
     Button move = new Button("Move");
+    Button removeAttr = new Button("Remove Attribute");
     Label displayAttr = new Label("");
     boolean hasAttr = false;
 	
@@ -26,7 +27,8 @@ public class GUITile extends Pane {
             buildNameBox();
             buildNamePanel();
             //buildTextArea();
-            buildAttrButton();
+            buildAddAttrButton();
+            buildRemAttrButton();
             buildAttrLabel();
             buildEditButton();
             buildAddButton();
@@ -70,13 +72,22 @@ public class GUITile extends Pane {
         this.pane.getChildren().add(this.textArea);
 	}
 	
-	public void buildAttrButton() {
+	public void buildAddAttrButton() {
 		this.addAttr.setLayoutX(10);
-		this.addAttr.setLayoutY(110);
+		this.addAttr.setLayoutY(70);
 		this.addAttr.setVisible(false);
         this.addAttr.setMaxSize(120, 30);
         this.addAttr.setMinSize(120, 30);
 		this.pane.getChildren().add(this.addAttr);
+	}
+	
+	public void buildRemAttrButton() {
+		this.removeAttr.setLayoutX(10);
+		this.removeAttr.setLayoutY(110);
+		this.removeAttr.setVisible(false);
+        this.removeAttr.setMaxSize(120, 30);
+        this.removeAttr.setMinSize(120, 30);
+		this.pane.getChildren().add(this.removeAttr);
 	}
 	
 	public void buildAttrLabel() {
