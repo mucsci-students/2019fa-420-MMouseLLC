@@ -24,7 +24,7 @@ public class UMLItem {
     public UMLItem() {
         id = -1;
         name = "";
-        attributes = new ArrayList<>();
+        attributes = new ArrayList<String>();
         parents    = new ArrayList<>();
         children   = new ArrayList<>();
     }
@@ -44,7 +44,6 @@ public class UMLItem {
 
         this.parents    = new ArrayList<>();
         this.children   = new ArrayList<>();
-    
         this.parents.add(parent);
         this.children.add(child);
 
@@ -82,7 +81,17 @@ public class UMLItem {
         children = new ArrayList<>();
 
     }
-    
+    /**
+     * Name Constructor
+     * Only assigns Name
+     * @param name
+     */
+    public UMLItem(String name){
+        this.name = name;
+        this.attributes = new ArrayList<>();
+        this.parents    = new ArrayList<>();
+        this.children   = new ArrayList<>();
+    }
     /**
      * @return unique ID assigned to this UMLItem
      */
@@ -128,7 +137,7 @@ public class UMLItem {
      * @return true if attr is found in ArrayList<String> attributes, else false
      */
     public boolean removeAttribute(String attr){
-        return this.attributes.remove(attr);
+    	return this.attributes.remove(attr);
     }
     
     /**
