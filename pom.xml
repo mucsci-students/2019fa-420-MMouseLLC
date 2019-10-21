@@ -6,8 +6,8 @@
   <name>mmouse-uml-editor</name>
   <description>UML Editor created by MMouse LLC</description>
   <properties>
- 	<maven.compiler.source>1.7</maven.compiler.source>
-   	<maven.compiler.target>1.7</maven.compiler.target>
+     <maven.compiler.source>11</maven.compiler.source>
+     <maven.compiler.target>11</maven.compiler.target>
   </properties>
   <build>
     <plugins>
@@ -16,8 +16,8 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.8.1</version>
         <configuration>
-          <source>1.8</source>
-          <target>1.8</target>
+          <source>11</source>
+          <target>11</target>
         </configuration>        
       </plugin>
       <plugin>
