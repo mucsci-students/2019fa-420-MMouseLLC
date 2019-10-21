@@ -153,6 +153,28 @@ public class Console {
   }
   
   /**
+	 * gives a list of the attributes currently in the environment
+	 *
+	 */
+	  public void listAttributes(UMLItem item) {
+			StringBuilder builder = new StringBuilder();
+			    builder.append("List of attributes in " + item.getName());
+			    for (UMLItem i : env.getItems()) {
+			      if (i.getName().equals(item.getName())) {
+			    	  builder.append("[");
+			    	  for(String s : i.getAttributes()) {
+			    		  builder.append("{" + s +  "}");
+			    		  if(i.getAttributes().indexOf(s) != i.getAttributes().size() - 1)
+			    			  builder.append(" ");
+			    	  }
+			    	  builder.append("]");
+			    	  break;
+			      }
+			    }
+			    logger.info(builder.toString());
+		}
+  
+  /**
    * loads an existing file into the environment if user wishes to save
    * unsaved work, directed to save otherwise load function is called, then
    * returned to homescreen.
@@ -227,6 +249,98 @@ public class Console {
   }
   
   /**
+	 *	add a new attribute in an exisiting class 
+	 *  then gives a list of the attributes currently in the class
+	 * 
+	 */
+	public void addAttribute(String[] args) {
+		// args looks like [add_attribute, [className], [newAttribute]
+		// args[1] == [className]
+		
+		if(args.length != 3){
+			logger.warning("Invalid: addattribute [Class] [Attribute]");
+			return;
+		}
+		//check that class exists
+		UMLItem addAttr = AddClass.getItem(env, args[1]);
+		if(addAttr == null ) {
+			logger.warning("check help for synax");
+			return;
+		} else if (addAttr.getAttributes().contains(args[2])) {
+			logger.warning("Attribute " + args[2] + " already exists.");
+			return;
+		}
+		//class exists - add the attribute to the class
+		addAttr.addAttribute(args[2]);
+		listAttributes(addAttr);
+	}
+	
+	/**
+	 * edit an attribute currently in a class
+	 * gives list of attributes currently in the class 
+	
+	 */
+	public void editAttribute(String[] args)  {
+		// args looks like [edit_attributes, [className], [oldAttribute] [newAttribute]
+		// args[1] == [className]
+		
+		//check for 4 inputs
+		if(args.length != 4){
+			logger.warning("Invalid: editattribute [Class] [Old Attribute] [New Attribute]");
+			return;
+		}
+		
+		//check that class exists
+		UMLItem editAttr = AddClass.getItem(env, args[1]);
+		if(editAttr == null ) {
+			logger.warning("check help for synax");
+			return;
+			
+			//check to see if new attribute exists already 
+		}else if (editAttr.getAttributes().contains(args[3])){
+				logger.warning("Attribute " + args[3] + " already exists.");
+				listAttributes(editAttr);
+				return;
+		//check to see if oldAttribute exists
+		} else if (editAttr.getAttributes().contains(args[2])) {
+			editAttr.editAttribute(args[2], args[3]);
+			logger.info("Attribute " + args[2] + " changed to " + args[3] + ".");
+			listAttributes(editAttr);
+			return;
+			}
+		else {
+			logger.warning("Attribute " + args[2] + " doesn't exist.");
+			listAttributes(editAttr);
+			}
+	}
+	public void deleteAttribute(String[] args)  {
+		// args looks like [delete_attribute, [className], [attributeToDelete]
+		// args[1] == [className]
+		
+		if(args.length != 3){
+			logger.warning("Invalid: addattribute [Class] [AttributeToDelete]");
+			return;
+		}
+		//check that class exists
+		UMLItem deleteAttr = AddClass.getItem(env, args[1]);
+		if(deleteAttr == null ) {
+			logger.warning("check help for synax");
+			//check to see if attribute exists 
+		} else if (deleteAttr.getAttributes().contains(args[2])) {
+			deleteAttr.removeAttribute(args[2]);
+			logger.info("Attribute " + args[2] + " deleted.");
+			listAttributes(deleteAttr);
+			return;
+			}
+		else {
+			logger.warning("Attribute " + args[2] + " doesn't exist.");
+			listAttributes(deleteAttr);
+			}
+	}
+	
+	
+	
+  /**
    * The help menu.
    */
   public void help() {
@@ -249,6 +363,8 @@ public class Console {
     System.out.println("Here is a list of the commands executed in one line without prompts.");
     System.out.println("add  [className]");
     System.out.println("edit [originalClass] [newClass] ");
+    System.out.println("add_attribute  [className] [attributeName]");
+    System.out.println("edit_attribute  [className] [oldlAttributeName] [newAttributeName] ");
     System.out.println("find [className]");
     System.out.println("save [flag \"-f\" to overwrite] [filename]");
     System.out.println("load [flag \"-f\" confirms unsaved changes lost] [filename] ");
@@ -317,6 +433,12 @@ public class Console {
       multiArgAdd(input);
     } else if (command.equals("edit")) {
       multiArgEdit(input);
+    } else if (command.equals("edit_attribute")) {
+        editAttribute(input);
+    } else if (command.equals("add_attribute")) {
+    	addAttribute(input);
+    } else if (command.equals("delete_attribute")) {
+    	deleteAttribute(input);
     } else if (command.equals("find")) {
       multiArgFind(input);
     } else if (command.equals("save")){

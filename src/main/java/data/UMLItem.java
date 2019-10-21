@@ -129,6 +129,32 @@ public class UMLItem {
     }
     
     /**
+     * Get the ArrayList of attribute Strings
+     * @param existingAttribute
+     * @return true if attr is found in ArrayList<String> attributes, else false
+     */
+    public boolean existingAttribute(String existingAttribute) {
+    	return this.attributes.contains(existingAttribute);
+    }
+
+    /**
+     * Edit a single String attribute to the ArrayList<String> attributes
+     * @params oldAttr, newAttr
+     */
+    public boolean editAttribute(String oldAttr, String newAttr) {
+    	if (!existingAttribute(oldAttr))
+    	{
+    		return false;
+    	}
+    	else if (existingAttribute(newAttr))
+    	{
+    		return false;
+    	}
+    	attributes.remove(oldAttr);
+    	attributes.add(newAttr);
+		return true;
+    }
+    /**
      * If String attr is found in the attributes list then remove
      * @param attr
      * @return true if attr is found in ArrayList<String> attributes, else false
