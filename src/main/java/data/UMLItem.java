@@ -1,10 +1,6 @@
 package data;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-
-import utility.Arrow;
-import utility.GUITile;
 
 /*
  * UMLItem is a class that represents a single item in the UML Environment.
@@ -17,11 +13,9 @@ import utility.GUITile;
 public class UMLItem {
     private int id;
     private String name;
-    private GUITile tile;
     private ArrayList<String> attributes;
     private ArrayList<UMLItem> parents;
     private ArrayList<UMLItem> children;
-    private HashMap<UMLItem, Arrow> arrows;
     
     /**
      * Default Constructor
@@ -33,7 +27,6 @@ public class UMLItem {
         attributes = new ArrayList<String>();
         parents    = new ArrayList<>();
         children   = new ArrayList<>();
-        arrows = new HashMap<UMLItem, Arrow>();
     }
     
     /**
@@ -53,26 +46,8 @@ public class UMLItem {
         this.children   = new ArrayList<>();
         this.parents.add(parent);
         this.children.add(child);
-        arrows = new HashMap<UMLItem, Arrow>();
     }
     
-    /**
-     * Verbose Constructor, every field is added
-     * @param Id
-     * @param Name
-     * @param p
-     * @param c
-     * @param attr
-     */
-    public UMLItem (int id, String name, ArrayList<UMLItem> p, 
-        ArrayList<UMLItem> c, ArrayList<String> attr, HashMap<UMLItem, Arrow> a){
-        this.id = id;
-        this.name = name;
-        this.parents = p;
-        this.children = c;
-        this.attributes = attr;
-        arrows = a;
-    }
     
     /**
      * Simple Constructor
@@ -86,7 +61,6 @@ public class UMLItem {
         this.attributes = new ArrayList<>();
         this.parents    = new ArrayList<>();
         this.children   = new ArrayList<>();
-        arrows = new HashMap<UMLItem, Arrow>();
     }
     /**
      * Name Constructor
@@ -98,7 +72,6 @@ public class UMLItem {
         this.attributes = new ArrayList<>();
         this.parents    = new ArrayList<>();
         this.children   = new ArrayList<>();
-        arrows = new HashMap<UMLItem, Arrow>();
     }
     /**
      * @return unique ID assigned to this UMLItem
@@ -107,29 +80,6 @@ public class UMLItem {
         return this.id;
     }
     
-    public void addArrow(Arrow arr, UMLItem child){
-    		arrows.put(child, arr);
-    }
-    
-    public Arrow getArrowByItem(UMLItem child){
-    		return arrows.get(child);
-    }
-    
-    public void setArrowByItem(UMLItem child, Arrow a){
-    		arrows.replace(child, a);
-    }
-    
-    public HashMap<UMLItem, Arrow> getArrows(){
-    		return arrows;
-    }
-    
-    public GUITile getTile(){
-    		return tile;
-    }
-    
-    public void setTile(GUITile t){
-    		tile = t;
-    }
     
     /**
      * Set new ID

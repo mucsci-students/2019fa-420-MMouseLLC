@@ -3,7 +3,6 @@ package utility;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 
-@SuppressWarnings({ "restriction" })
 public class GUITile extends Pane {
 
 	//TilePane tile = new TilePane();
@@ -60,16 +59,6 @@ public class GUITile extends Pane {
         this.nameLabel.setMinWidth(120);
         this.nameLabel.setVisible(false);
         this.pane.getChildren().add(this.nameLabel);
-	}
-	
-	private void buildTextArea() {
-		this.textArea.setLayoutY(45);
-        this.textArea.setLayoutX(10);
-        this.textArea.setPrefRowCount(2);
-        this.textArea.setMaxWidth(120);
-        this.textArea.setMinWidth(120);
-        this.textArea.setText("Test");
-        this.pane.getChildren().add(this.textArea);
 	}
 	
 	public void buildAddAttrButton() {
