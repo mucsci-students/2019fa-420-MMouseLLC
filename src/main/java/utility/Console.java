@@ -596,6 +596,7 @@ public class Console {
 
 	/**
 	 * Lists the children of a given parent class
+	 * 
 	 * @param input
 	 */
 	public void multiArgListChildren(String[] input) {
@@ -619,7 +620,8 @@ public class Console {
 	}
 
 	/**
-	 * Lists the parents of a given child class 
+	 * Lists the parents of a given child class
+	 * 
 	 * @param input
 	 */
 	public void multiArgListParents(String[] input) {

@@ -54,7 +54,7 @@ public class ChildTest {
 		assertEquals(parent.getName(), "Kasey");
 
 		input = new String[3];
-		input[0] = "addchild";
+		input[0] = "add_child";
 		input[1] = "Matt";
 		input[2] = "Kasey";
 		c.checkInput(input);
@@ -84,7 +84,7 @@ public class ChildTest {
 		c.checkInput(input);
 
 		input = new String[3];
-		input[0] = "addchild";
+		input[0] = "add_child";
 		input[1] = "DummyP";
 		input[2] = "DummyC";
 		c.checkInput(input);
@@ -97,7 +97,7 @@ public class ChildTest {
 	 */
 	@Test
 	public void testAddNoClasses() {
-		String[] input = { "addchild", "NotPar", "NotChi" };
+		String[] input = { "add_child", "NotPar", "NotChi" };
 		c.checkInput(input);
 		String[] otherInput = { "add", "NoPar" };
 		c.checkInput(otherInput);
@@ -127,7 +127,7 @@ public class ChildTest {
 		assertEquals(parent.getName(), "Dan");
 
 		input = new String[3];
-		input[0] = "addchild";
+		input[0] = "add_child";
 		input[1] = "Eric";
 		input[2] = "Dan";
 		c.checkInput(input);
@@ -135,19 +135,19 @@ public class ChildTest {
 		assertEquals(env.findItem("Dan").getChildren().get(0).getName(), "Eric");
 		assertEquals(env.findItem("Eric").getParents().get(0).getName(), "Dan");
 
-		input[0] = "removechild";
+		input[0] = "remove_child";
 		input[1] = "Lauren";
 		c.checkInput(input);
 
 		assertEquals(env.findItem("Dan").getChildren().size(), 1);
 
-		input[0] = "addchild";
+		input[0] = "add_child";
 		c.checkInput(input);
 
 		assertEquals(env.findItem("Dan").getChildren().size(), 2);
 		assertEquals(env.findItem("Dan").getChildren().get(1).getName(), "Lauren");
 
-		input[0] = "removechild";
+		input[0] = "remove_child";
 		input[1] = "Lauren";
 		c.checkInput(input);
 
@@ -171,7 +171,7 @@ public class ChildTest {
 		c.checkInput(input);
 
 		input = new String[3];
-		input[0] = "removechild";
+		input[0] = "remove_child";
 		input[1] = "DummyP";
 		input[2] = "DummyC";
 		c.checkInput(input);
@@ -184,7 +184,7 @@ public class ChildTest {
 	 */
 	@Test
 	public void testRemoveNoClasses() {
-		String[] input = { "removechild", "NotPar", "NotChi" };
+		String[] input = { "remove_child", "NotPar", "NotChi" };
 		c.checkInput(input);
 		String[] otherInput = { "add", "NoPar" };
 		c.checkInput(otherInput);
@@ -209,7 +209,7 @@ public class ChildTest {
 		c.list();
 
 		input = new String[3];
-		input[0] = "addchild";
+		input[0] = "add_child";
 		input[1] = "Oreo";
 		input[2] = "Maggie";
 		c.checkInput(input);
@@ -218,14 +218,14 @@ public class ChildTest {
 		assertEquals(env.findItem("Oreo").getParents().get(0).getName(), "Maggie");
 
 		input = new String[2];
-		input[0] = "listChidlren";
+		input[0] = "list_chidlren";
 		input[1] = "Maggie";
 		c.checkInput(input);
 
 		assertEquals("[ Oreo ]", printContainer(getItem("Maggie").getChildren()));
-		
+
 		input = new String[3];
-		input[0] = "addchild";
+		input[0] = "add_child";
 		input[1] = "Goober";
 		input[2] = "Maggie";
 		c.checkInput(input);
@@ -234,7 +234,7 @@ public class ChildTest {
 		assertEquals(env.findItem("Goober").getParents().get(0).getName(), "Maggie");
 
 		input = new String[2];
-		input[0] = "listChidlren";
+		input[0] = "list_chidlren";
 		input[1] = "Maggie";
 		c.checkInput(input);
 
@@ -242,28 +242,28 @@ public class ChildTest {
 
 		input[1] = "Oreo";
 		c.checkInput(input);
-		
+
 		assertEquals("[ ]", printContainer(getItem("Oreo").getChildren()));
-		
+
 		input = new String[1];
-		input[0] = "listchildren";
-		
+		input[0] = "list_children";
+
 		assertTrue(true);
 	}
-	
+
 	/**
 	 * Testing list children functionality when no classes exist
 	 */
 	@Test
 	public void testListChildrenNoClasses() {
-		String[] input = { "listchildren", "NoClass" };
+		String[] input = { "list_children", "NoClass" };
 		c.checkInput(input);
 		String[] otherInput = { "add", "NoClass" };
 		c.checkInput(otherInput);
 		c.checkInput(input);
 		assertTrue(true);
 	}
-	
+
 	/**
 	 * Test functionality of listing parent classes given a child class
 	 */
@@ -280,7 +280,7 @@ public class ChildTest {
 		c.list();
 
 		input = new String[3];
-		input[0] = "addchild";
+		input[0] = "add_child";
 		input[1] = "Patches";
 		input[2] = "Biscotti";
 		c.checkInput(input);
@@ -289,27 +289,27 @@ public class ChildTest {
 		assertEquals(env.findItem("Patches").getParents().get(0).getName(), "Biscotti");
 
 		input = new String[2];
-		input[0] = "listParents";
+		input[0] = "list_parents";
 		input[1] = "Patches";
 		c.checkInput(input);
 
 		assertEquals("[ Biscotti ]", printContainer(getItem("Patches").getParents()));
-		
+
 		input = new String[3];
-		input[0] = "addchild";
+		input[0] = "add_child";
 		input[1] = "Patches";
 		input[2] = "Sauron";
 		c.checkInput(input);
-		
+
 		input = new String[2];
-		input[0] = "listParents";
+		input[0] = "list_parents";
 		input[1] = "Patches";
 		c.checkInput(input);
 
 		assertEquals("[ Biscotti Sauron ]", printContainer(getItem("Patches").getParents()));
-		
+
 		input = new String[3];
-		input[0] = "addchild";
+		input[0] = "add_child";
 		input[1] = "Sauron";
 		input[2] = "Biscotti";
 		c.checkInput(input);
@@ -318,7 +318,7 @@ public class ChildTest {
 		assertEquals(env.findItem("Sauron").getParents().get(0).getName(), "Biscotti");
 
 		input = new String[2];
-		input[0] = "listParents";
+		input[0] = "list_parents";
 		input[1] = "Sauron";
 		c.checkInput(input);
 
@@ -326,21 +326,21 @@ public class ChildTest {
 
 		input[1] = "Biscotti";
 		c.checkInput(input);
-		
+
 		assertEquals("[ ]", printContainer(getItem("Biscotti").getParents()));
-		
+
 		input = new String[1];
-		input[0] = "listparents";
-		
+		input[0] = "list_parents";
+
 		assertTrue(true);
 	}
-	
+
 	/**
 	 * Testing list parents functionality when no classes exist
 	 */
 	@Test
 	public void testListParentsNoClasses() {
-		String[] input = { "listparents", "NoClass" };
+		String[] input = { "list_parents", "NoClass" };
 		c.checkInput(input);
 		String[] otherInput = { "add", "NoClass" };
 		c.checkInput(otherInput);
