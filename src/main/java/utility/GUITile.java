@@ -70,19 +70,19 @@ public class GUITile extends Pane {
 	
 	public void buildAddAttrButton() {
 		this.addAttr.setLayoutX(10);
-		this.addAttr.setLayoutY(110);
+		this.addAttr.setLayoutY(70);
 		this.addAttr.setVisible(false);
-        this.addAttr.setMaxSize(60, 30);
-        this.addAttr.setMinSize(60, 30);
+        this.addAttr.setMaxSize(120, 30);
+        this.addAttr.setMinSize(120, 30);
 		this.pane.getChildren().add(this.addAttr);
 	}
 	
 	public void buildRemAttrButton() {
-		this.removeAttr.setLayoutX(70);
+		this.removeAttr.setLayoutX(10);
 		this.removeAttr.setLayoutY(110);
 		this.removeAttr.setVisible(false);
-        this.removeAttr.setMaxSize(60, 30);
-        this.removeAttr.setMinSize(60, 30);
+        this.removeAttr.setMaxSize(120, 30);
+        this.removeAttr.setMinSize(120, 30);
 		this.pane.getChildren().add(this.removeAttr);
 	}
 	
