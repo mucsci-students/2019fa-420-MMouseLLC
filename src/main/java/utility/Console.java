@@ -365,6 +365,7 @@ public class Console {
     System.out.println("edit [originalClass] [newClass] ");
     System.out.println("add_attribute  [className] [attributeName]");
     System.out.println("edit_attribute  [className] [oldlAttributeName] [newAttributeName] ");
+    System.out.println("delete_attribute  [className] [attributeName]");
     System.out.println("find [className]");
     System.out.println("save [flag \"-f\" to overwrite] [filename]");
     System.out.println("load [flag \"-f\" confirms unsaved changes lost] [filename] ");
