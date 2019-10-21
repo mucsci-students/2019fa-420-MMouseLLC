@@ -48,6 +48,7 @@ public class UMLItem {
         this.name = name;
         
         this.attributes = new ArrayList<>();
+
         this.parents    = new ArrayList<>();
         this.children   = new ArrayList<>();
         this.parents.add(parent);
@@ -200,7 +201,7 @@ public class UMLItem {
      * @param i
      * @return true if item exists in list else false
      */
-    boolean removeParent(UMLItem i){
+    public boolean removeParent(UMLItem i){
         return parents.remove(i);
     }
     
