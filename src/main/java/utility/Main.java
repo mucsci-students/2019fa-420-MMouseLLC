@@ -9,10 +9,16 @@ public class Main {
 	}
 
   public static void run() {
-	  ReplScanner.initialize();
-		UMLEnvironment env = new UMLEnvironment();
+	  	ReplScanner.initialize();
+  		UMLEnvironment env = new UMLEnvironment();
 		Console console = new Console(env);
-		console.run();
+		try{
+			console.run();
+		} catch (org.jline.reader.EndOfFileException e){
+			System.exit(0);
+		} catch (org.jline.reader.UserInterruptException e){
+			System.exit(0);
+		}
 	}
 
 }
