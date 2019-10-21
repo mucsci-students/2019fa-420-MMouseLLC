@@ -256,7 +256,7 @@ public class GUI extends Application {
             		if(answer.isPresent()) {
             			UMLItem found = AddClass.getItem(env, t.nameBox.getText());
                 		if(found != null) {
-                			ArrayList testName = new ArrayList<String>(found.getAttributes());
+                			ArrayList<String> testName = new ArrayList<String>(found.getAttributes());
                 			for(int i = 0; i < testName.size(); i++) {
                 				if(answer.get().equals(testName.get(i))) {
                         			Alert a = new Alert(Alert.AlertType.ERROR, "Attribute " + testName.get(i).toString() + " already exists. Please enter an original name.");
@@ -285,6 +285,7 @@ public class GUI extends Application {
                 		}
             		} else {
             			Alert a = new Alert(Alert.AlertType.ERROR, "Attribute cannot be blank.");
+            			a.show();
             		}
             		
             	});
