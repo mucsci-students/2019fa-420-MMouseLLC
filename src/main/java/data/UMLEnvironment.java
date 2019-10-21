@@ -62,16 +62,17 @@ public class UMLEnvironment {
     
     public boolean removeItem(UMLItem item) {
         if(!this.items.isEmpty()) {
-            for(int i = 0; i < this.items.size(); i++) {
-            if(item.getId() == this.items.get(i).getId()) {
-                this.items.remove(i);
-                this.size--;
-                return true;
+        	for(int i = 0; i < this.items.size(); i++) {
+                if(item.getName().equals(this.items.get(i).getName())) {
+                    this.items.remove(i);
+                    this.size--;
+                    return true;
+                }
             }
-        }
         } else {
             return false;
         }
         return false;
     }
+    
 }

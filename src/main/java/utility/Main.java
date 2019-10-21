@@ -3,9 +3,10 @@ package utility;
 import data.UMLEnvironment;
 
 public class Main {
-
 	public static void main(String[] args) {
-		run();
+			//GUITest(args);
+			run();
+		
 	}
 
   public static void run() {
@@ -21,4 +22,7 @@ public class Main {
 		}
 	}
 
+  public static void GUITest(String[] args) {
+	  GUI.main(args);
+  }
 }
