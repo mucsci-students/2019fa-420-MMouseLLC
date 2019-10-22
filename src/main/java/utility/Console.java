@@ -368,6 +368,7 @@ public class Console {
 	public void helpMultipleArgs() {
 		System.out.println("Here is a list of the commands executed in one line without prompts.");
 		System.out.println("add  [className]");
+		System.out.println("delete [flag \"-f\" to confirm] [className]");
 		System.out.println("edit [originalClass] [newClass] ");
 		System.out.println("find [className]");
 		System.out.println("save [flag \"-f\" to overwrite] [filename]");
@@ -530,6 +531,8 @@ public class Console {
 		String command = input[0].toLowerCase();
 		if (command.equals("add")) {
 			multiArgAdd(input);
+		} else if (command.contentEquals("delete")) {
+			multiArgDelete(input);
 		} else if (command.equals("edit")) {
 			multiArgEdit(input);
 		} else if (command.equals("find")) {
@@ -575,6 +578,28 @@ public class Console {
 				logger.info("Class successfully added: " + newClass);
 			}
 		}
+	}
+	
+	public void multiArgDelete(String[] input) {
+		if (input.length < 3) {
+			logger.warning("Usage: delete [flag \"-f\" to confirm delete] [className]");
+			return;
+		}
+		
+		if (!input[1].equals("-f")){
+			logger.warning("Usage: delete [flag \"-f\" to confirm delete] [className]");
+			return;
+		}
+		
+		UMLItem i = env.findItem(input[2]);
+		if (i==null) {
+			logger.warning("Class "+ input[2] + " does not exist.");
+			return;
+		}
+		
+		env.removeItem(i);
+		logger.info("Classname " + input[2] + " removed successfully.");
+		
 	}
 
 	/**
