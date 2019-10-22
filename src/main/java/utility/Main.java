@@ -3,10 +3,14 @@ package utility;
 import data.UMLEnvironment;
 
 public class Main {
-	public static void main(String[]	 args) {
+	public static void main(String[] args) {
+		// If we have a command line arg run the GUI environment
+		if (args.length > 0) {
 			GUITest(args);
-			//run();
-		
+		} else {
+			// run CLI
+			run();
+		}
 	}
 
   public static void run() {
