@@ -15,6 +15,7 @@ import javafx.scene.input.MouseEvent;
 /*
  * @author eric 
  * @author grant
+ * @author Matt
  * GUI extends Application to create a window for user to make UML with 
  * graphical user interface. It keeps track of a local Environment and also
  * a size of how many windows are open in the app. Not all windows will be saved 
@@ -130,6 +131,8 @@ public class GUI extends Application {
 					if (AddClass.addClass(env, t.nameBox.getText())) {
 						Alert a = new Alert(Alert.AlertType.CONFIRMATION, t.nameBox.getText() + " added successfully!");
 						a.show();
+						
+						// Update the name and add buttons 
 						t.nameBox.setVisible(false);
 						t.nameLabel.setVisible(true);
 						t.nameLabel.setText(t.nameBox.getText());
@@ -225,7 +228,7 @@ public class GUI extends Application {
 						}
 					}
 				});
-
+				// Adds an attribute as text to the tile clicked
 				t.addAttr.setOnAction((event) -> {
 					TextInputDialog input = new TextInputDialog();
 					input.setHeaderText("Enter attribute to add for " + t.nameBox.getText()
@@ -290,6 +293,8 @@ public class GUI extends Application {
 					}
 
 				});
+				
+				// Moves the child specified under tile t and links with arrow
 				t.addChild.setOnAction((event) -> {
 					// prompt search for text input
 					// locate the panel containing that text
@@ -345,6 +350,7 @@ public class GUI extends Application {
 					a.show();
 				});
 
+				// Moves tile t to location specified by a click
 				t.move.setOnAction((event) -> {
 					Alert a = new Alert(Alert.AlertType.CONFIRMATION, "Click where you would like to move.");
 					a.show();
@@ -382,6 +388,8 @@ public class GUI extends Application {
 					});
 
 				});
+				
+				// Removes attribute from text field in tile t
 				t.removeAttr.setOnAction((event) -> {
 					TextInputDialog input = new TextInputDialog();
 					input.setHeaderText("Enter attribute to remove for " + t.nameBox.getText() + ".");

@@ -11,10 +11,15 @@ import java.util.ArrayList;
  * Date: August 29, 2019
  */
 public class UMLItem {
+
 	private int id;
+	/** Unique class name **/
 	private String name;
+	/** List of attributes associated with this class **/
 	private ArrayList<String> attributes;
+	/** List of parents that this class inherits from **/
 	private ArrayList<UMLItem> parents;
+	/** List of children that inherit from this class **/
 	private ArrayList<UMLItem> children;
 
 	/**
@@ -41,9 +46,9 @@ public class UMLItem {
 		this.name = name;
 
 		this.attributes = new ArrayList<>();
-
 		this.parents = new ArrayList<>();
 		this.children = new ArrayList<>();
+
 		this.parents.add(parent);
 		this.children.add(child);
 	}
@@ -90,10 +95,20 @@ public class UMLItem {
 		this.id = id;
 	}
 
+	/**
+	 * Return name associated with this class
+	 * 
+	 * @return
+	 */
 	public String getName() {
 		return this.name;
 	}
 
+	/**
+	 * Change name associated with this class
+	 * 
+	 * @param name
+	 */
 	public void setName(String name) {
 		this.name = name;
 	}
@@ -153,7 +168,7 @@ public class UMLItem {
 	}
 
 	/**
-	 * Getter
+	 * Getter for parents list
 	 * 
 	 * @return
 	 */
