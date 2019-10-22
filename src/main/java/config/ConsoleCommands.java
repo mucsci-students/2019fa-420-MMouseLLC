@@ -25,6 +25,10 @@ package config;
    /** The add. */
    ADD, 
    /** The delete. */
-   DELETE;
+   DELETE,
+   /** The remove child */
+   REMOVE_CHILD,
+   /** The add child */
+   ADD_CHILD;
     
   }
