@@ -4,8 +4,8 @@ import data.UMLEnvironment;
 
 public class Main {
 	public static void main(String[]	 args) {
-			GUITest(args);
-			//run();
+			//GUITest(args);
+			run();
 		
 	}
 

@@ -95,7 +95,7 @@ public class Console {
 		} else if (input.equalsIgnoreCase("edit")) {
 			edit();
 		} else if (input.equalsIgnoreCase("help")) {
-			help();
+			helpMultipleArgs();
 		} else if (input.equalsIgnoreCase("help_multi_arg")) {
 			helpMultipleArgs();
 		} else if (input.equalsIgnoreCase("find")) {
@@ -370,6 +370,8 @@ public class Console {
 		System.out.println("add_attribute  [className] [attributeName]");
 		System.out.println("edit_attribute  [className] [oldlAttributeName] [newAttributeName] ");
 		System.out.println("delete_attribute  [className] [attributeName]");
+		System.out.println("list_attributes [className]");
+		
 		System.out.println(" ");
 	}
 
@@ -541,6 +543,8 @@ public class Console {
 			addAttribute(input);
 		} else if (command.equals("delete_attribute")) {
 			deleteAttribute(input);
+		} else if(command.contentEquals("list_attributes")) {
+			listAttributes(input);
 		} else {
 			logger.warning("Invalid Command");
 		}
@@ -764,6 +768,37 @@ public class Console {
 		}
 	}
 
+	/**
+	 * Given command list_attributes  [className], log the attributes of given class
+	 * @param input
+	 */
+	public void listAttributes(String[] input) {
+		//System.out.println("list_attributes  [className]");
+		if (input.length < 2) {
+			logger.warning("Usage: list_attributes [className]");
+			return;
+		}
+		
+		UMLItem i = env.findItem(input[1]);
+		if (i == null) {
+			logger.warning("Class " + input[1] + " does not exist.");
+			return;
+		}
+		
+		if (i.getAttributes().size() == 0) {
+			logger.info("[ ]");
+		}
+		
+		StringBuilder str = new StringBuilder();
+		str.append("[ ");
+		for (String attr : i.getAttributes()) {
+			str.append("{" + attr + "} ");
+		}
+		str.append("]");
+		logger.info(str.toString());
+	}
+	
+	
 	////////////////////////////////////////////////
 	//////////////// HELPER METHODS ////////////////
 	////////////////////////////////////////////////
@@ -875,4 +910,6 @@ public class Console {
 		}
 		return false;
 	}
+	
+	
 }

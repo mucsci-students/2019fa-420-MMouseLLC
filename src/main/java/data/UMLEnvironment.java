@@ -12,7 +12,7 @@ import java.util.ArrayList;
  */
 public class UMLEnvironment {
     
-    ArrayList<UMLItem> items = new ArrayList<UMLItem>();
+    ArrayList<UMLItem> items;
     int size;
     
     public int getSize() {
@@ -21,10 +21,12 @@ public class UMLEnvironment {
     
     public UMLEnvironment() {
         this.size = 0;
+        this.items = new ArrayList<>();
     }
     
     public UMLEnvironment(UMLItem item) {
-        this.items.add(item);
+        this.items = new ArrayList<>();
+    	this.items.add(item);
         this.size++;
     }
     
