@@ -218,7 +218,7 @@ public class UMLItem {
 
 	/**
 	 * if UMLItem is found in children list then it will be removed
-	 * 
+	 *
 	 * @param remove
 	 * @return true if item found in children, else false
 	 */
