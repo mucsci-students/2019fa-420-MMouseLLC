@@ -155,6 +155,7 @@ public class Console {
 	/**
 	 * gives a list of the attributes currently in the environment
 	 *
+	 *@params item
 	 */
 	public void listAttributes(UMLItem item) {
 		StringBuilder builder = new StringBuilder();
@@ -247,9 +248,10 @@ public class Console {
 	}
 
 	/**
-	 * add a new attribute in an exisiting class then gives a list of the attributes
-	 * currently in the class
+	 * add a new attribute in an exisiting class
+	 * and gives a list of the attributes currently in the class
 	 * 
+	 * @param args
 	 */
 	public void addAttribute(String[] args) {
 		// args looks like [add_attribute, [className], [newAttribute]
@@ -274,9 +276,10 @@ public class Console {
 	}
 
 	/**
-	 * edit an attribute currently in a class gives list of attributes currently in
-	 * the class
+	 * edit an attribute currently in a class
+	 * and  gives list of attributes currently in the class
 	 * 
+	 * @param args
 	 */
 	public void editAttribute(String[] args) {
 		// args looks like [edit_attributes, [className], [oldAttribute] [newAttribute]
@@ -311,6 +314,12 @@ public class Console {
 		}
 	}
 
+	/**
+	 * delete an attribute currently in a class gives 
+	 * and gives list of attributes remaining in the class
+	 * 
+	 * @param args
+	 */
 	public void deleteAttribute(String[] args) {
 		// args looks like [delete_attribute, [className], [attributeToDelete]
 		// args[1] == [className]
@@ -368,7 +377,7 @@ public class Console {
 		System.out.println("list_children [parentClass]");
 		System.out.println("list_parents [childClass]");
 		System.out.println("add_attribute  [className] [attributeName]");
-		System.out.println("edit_attribute  [className] [oldlAttributeName] [newAttributeName] ");
+		System.out.println("edit_attribute  [className] [oldAttributeName] [newAttributeName] ");
 		System.out.println("delete_attribute  [className] [attributeName]");
 		System.out.println("list_attributes [className]");
 		
