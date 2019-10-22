@@ -46,25 +46,8 @@ public class UMLItem {
         this.children   = new ArrayList<>();
         this.parents.add(parent);
         this.children.add(child);
-
     }
     
-    /**
-     * Verbose Constructor, every field is added
-     * @param Id
-     * @param Name
-     * @param p
-     * @param c
-     * @param attr
-     */
-    public UMLItem (int id, String name, ArrayList<UMLItem> p, 
-        ArrayList<UMLItem> c, ArrayList<String> attr){
-        this.id = id;
-        this.name = name;
-        this.parents = p;
-        this.children = c;
-        this.attributes = attr;
-    }
     
     /**
      * Simple Constructor
@@ -75,11 +58,9 @@ public class UMLItem {
     public UMLItem(int id, String name){
         this.id = id;
         this.name = name;
-
-        attributes = new ArrayList<>();
-        parents = new ArrayList<>();
-        children = new ArrayList<>();
-
+        this.attributes = new ArrayList<>();
+        this.parents    = new ArrayList<>();
+        this.children   = new ArrayList<>();
     }
     /**
      * Name Constructor
@@ -98,6 +79,7 @@ public class UMLItem {
     public int getId() {
         return this.id;
     }
+    
     
     /**
      * Set new ID

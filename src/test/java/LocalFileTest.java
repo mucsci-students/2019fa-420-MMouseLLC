@@ -1,10 +1,6 @@
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertThat;
-
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-
 import org.junit.Test;
 
 import data.UMLEnvironment;
