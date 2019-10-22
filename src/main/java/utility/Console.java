@@ -875,5 +875,4 @@ public class Console {
 		}
 		return false;
 	}
-
 }
