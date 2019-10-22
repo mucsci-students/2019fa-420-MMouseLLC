@@ -11,10 +11,15 @@ import java.util.ArrayList;
  * Date: August 29, 2019
  */
 public class UMLItem {
+
 	private int id;
+	/** Unique class name **/
 	private String name;
+	/** List of attributes associated with this class **/
 	private ArrayList<String> attributes;
+	/** List of parents that this class inherits from **/
 	private ArrayList<UMLItem> parents;
+	/** List of children that inherit from this class **/
 	private ArrayList<UMLItem> children;
 
 	/**
@@ -23,7 +28,7 @@ public class UMLItem {
 	public UMLItem() {
 		id = -1;
 		name = "";
-		attributes = new ArrayList<>();
+		attributes = new ArrayList<String>();
 		parents = new ArrayList<>();
 		children = new ArrayList<>();
 	}
@@ -49,23 +54,6 @@ public class UMLItem {
 	}
 
 	/**
-	 * Verbose Constructor, every field is added
-	 * 
-	 * @param Id
-	 * @param Name
-	 * @param p
-	 * @param c
-	 * @param attr
-	 */
-	public UMLItem(int id, String name, ArrayList<UMLItem> p, ArrayList<UMLItem> c, ArrayList<String> attr) {
-		this.id = id;
-		this.name = name;
-		this.parents = p;
-		this.children = c;
-		this.attributes = attr;
-	}
-
-	/**
 	 * Simple Constructor Only assigns ID and Name
 	 * 
 	 * @param Id
@@ -74,7 +62,18 @@ public class UMLItem {
 	public UMLItem(int id, String name) {
 		this.id = id;
 		this.name = name;
-		
+		this.attributes = new ArrayList<>();
+		this.parents = new ArrayList<>();
+		this.children = new ArrayList<>();
+	}
+
+	/**
+	 * Name Constructor Only assigns Name
+	 * 
+	 * @param name
+	 */
+	public UMLItem(String name) {
+		this.name = name;
 		this.attributes = new ArrayList<>();
 		this.parents = new ArrayList<>();
 		this.children = new ArrayList<>();
@@ -96,10 +95,20 @@ public class UMLItem {
 		this.id = id;
 	}
 
+	/**
+	 * Return name associated with this class
+	 * 
+	 * @return
+	 */
 	public String getName() {
 		return this.name;
 	}
 
+	/**
+	 * Change name associated with this class
+	 * 
+	 * @param name
+	 */
 	public void setName(String name) {
 		this.name = name;
 	}
@@ -123,6 +132,32 @@ public class UMLItem {
 	}
 
 	/**
+	 * Get the ArrayList of attribute Strings
+	 * 
+	 * @param existingAttribute
+	 * @return true if attr is found in ArrayList<String> attributes, else false
+	 */
+	public boolean existingAttribute(String existingAttribute) {
+		return this.attributes.contains(existingAttribute);
+	}
+
+	/**
+	 * Edit a single String attribute to the ArrayList<String> attributes
+	 * 
+	 * @params oldAttr, newAttr
+	 */
+	public boolean editAttribute(String oldAttr, String newAttr) {
+		if (!existingAttribute(oldAttr)) {
+			return false;
+		} else if (existingAttribute(newAttr)) {
+			return false;
+		}
+		attributes.remove(oldAttr);
+		attributes.add(newAttr);
+		return true;
+	}
+
+	/**
 	 * If String attr is found in the attributes list then remove
 	 * 
 	 * @param attr
@@ -133,7 +168,7 @@ public class UMLItem {
 	}
 
 	/**
-	 * Getter
+	 * Getter for parents list
 	 * 
 	 * @return
 	 */
@@ -165,7 +200,7 @@ public class UMLItem {
 	 * @param i
 	 * @return true if item exists in list else false
 	 */
-	boolean removeParent(UMLItem i) {
+	public boolean removeParent(UMLItem i) {
 		return parents.remove(i);
 	}
 
@@ -198,7 +233,7 @@ public class UMLItem {
 
 	/**
 	 * if UMLItem is found in children list then it will be removed
-	 * 
+	 *
 	 * @param remove
 	 * @return true if item found in children, else false
 	 */

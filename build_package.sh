@@ -1,6 +1,4 @@
 #!/bin/bash
 
-mvn clean
-mvn compile
+mvn clean install
 mvn package
-mvn assembly:single
