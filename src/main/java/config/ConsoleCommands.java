@@ -25,6 +25,24 @@ package config;
    /** The add. */
    ADD, 
    /** The delete. */
-   DELETE;
+   DELETE,
+   /** The remove child */
+   REMOVE_CHILD,
+   /** The add child */
+   ADD_CHILD,
+   /** The list children */
+   LIST_CHILDREN,
+   /** The list parents */
+   LIST_PARENTS,
+   /** the edit attribute */
+   EDIT_ATTRIBUTE,
+   /** The add attribute */
+   ADD_ATTRIBUTE,
+   /** The delete attribute */
+   DELETE_ATTRIBUTE,
+   /** The list attributes */
+   LIST_ATTRIBUTES;
     
   }
+  
+ 
