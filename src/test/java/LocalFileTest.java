@@ -75,10 +75,10 @@ public class LocalFileTest {
     String fileName = "test_file";
     LocalFile fileTest = new LocalFile(fileName);
     
-    fileTest.deleteFile();
+    fileTest.deleteAllFiles();
     
     /** directory size should be 1 due to .gitignore in directory */
-    assertTrue("saved_file directory still has contents.", fileTest.getDirectory().list().length == 1);
+    assertTrue("saved_file directory still has contents. Size is: " + fileTest.getDirectory().list().length, fileTest.getDirectory().list().length == 0);
   }
  
   /**

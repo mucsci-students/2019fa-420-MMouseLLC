@@ -1,4 +1,4 @@
-package utility;
+package deprecated;
 
 import data.UMLEnvironment;
 import data.UMLItem;
@@ -13,6 +13,7 @@ import data.UMLItem;
  * @author Matt Fossett, Grant Hartenstine
  */
 
+@Deprecated
 public class AddClass {
 
 	/**

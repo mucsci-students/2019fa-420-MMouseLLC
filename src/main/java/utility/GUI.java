@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Optional;
 import data.GUIEnvironment;
 import data.UMLItem;
+import deprecated.AddClass;
 import javafx.application.Application;
 import javafx.event.*;
 import javafx.scene.Scene;

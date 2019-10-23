@@ -14,7 +14,7 @@ import utility.Console;
 /**
  * The Class SingleLineCommandTest
  */
-public class attribute_test {
+public class AttributeTest {
 
 	/** The UMLEnvironment. */
 	private UMLEnvironment env = new UMLEnvironment();

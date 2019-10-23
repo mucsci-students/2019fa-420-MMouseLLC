@@ -3,7 +3,7 @@ package data;
 import java.util.ArrayList;
 import java.util.logging.Logger;
 
-import utility.AddClass;
+import deprecated.AddClass;
 
 /*
  * UMLEnvironment is an object meant to keep track of all the UMLItems that 
@@ -49,23 +49,31 @@ public class UMLEnvironment {
   public UMLItem findItem(String itemName) {
     for (UMLItem i : items) {
       if (i.getName().equals(itemName)) {
+        logger.info("Class " + itemName + " found.");
         return i;
       }
     }
+    logger.warning("Class " + itemName + " not found.");
     return null;
   }
 
   public void addItem(UMLItem item) {
-    if (!itemExists(item)) {
+    if (item == null || !itemExists(item)) {
       this.items.add(item);
       this.size++;
+      logger.info("Class successfully added: " + item.getName());
+    } else {
+      logger.warning(item.getName() + " is already a class.");
     }
   }
 
   public void removeItem(UMLItem item) {
-    if (!itemExists(item)) {
+    if (item != null && itemExists(item)) {
       this.items.remove(item);
       this.size--;
+      logger.info("Class " + item.getName() + " removed successfully.");        
+    } else {
+      logger.warning("Class "+ item.getName() + " does not exist.");
     }
   }
 
@@ -78,9 +86,6 @@ public class UMLEnvironment {
     }
   }
 
-  /**
-   * gives a list of the classes currently in the environment.
-   */
   public String listClasses() {
     StringBuilder builder = new StringBuilder();
     builder.append("List of classes: [ ");
@@ -121,7 +126,11 @@ public class UMLEnvironment {
     }
   }
 
-  public String listChildren(String parentName, UMLItem parentItem) {
+  public String listChildren(String parentName) {
+    UMLItem parentItem = findItem(parentName);
+    if (parentItem == null || !itemExists(parentItem)) {
+      logger.warning("Parent class " + parentName + " does not exist. List children cancelled.");
+    }
     StringBuilder builder = new StringBuilder();
     builder.append("List of children [ ");
     for (UMLItem i : parentItem.getChildren()) {
@@ -131,7 +140,11 @@ public class UMLEnvironment {
     return builder.toString();
   }
 
-  public String listParents(String childName, UMLItem childItem) {
+  public String listParents(String childName) {
+    UMLItem childItem = findItem(childName);
+    if (childItem == null || itemExists(childItem)) {
+      logger.warning("Child class " + childName + " does not exist. List parents cancelled.");
+    }
     StringBuilder builder = new StringBuilder();
     builder.append("List of parents [ ");
     for (UMLItem i : childItem.getParents()) {

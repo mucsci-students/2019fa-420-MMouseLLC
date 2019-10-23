@@ -6,6 +6,8 @@ import org.jline.reader.LineReader;
 
 import data.UMLEnvironment;
 import data.UMLItem;
+import deprecated.AddClass;
+import mapper.AttributeMapper;
 
 /**
  * The Class ConsoleEnum.
@@ -78,14 +80,14 @@ public class Console {
       listChildren(input);
     } else if (command.equals("list_parents")) {
       listParents(input);
+    } else if(command.equals("list_attributes")) {
+      listAttributes(input);
     } else if (command.equals("edit_attribute")) {
       editAttribute(input);
     } else if (command.equals("add_attribute")) {
       addAttribute(input);
     } else if (command.equals("delete_attribute")) {
       deleteAttribute(input);
-    } else if(command.equals("list_attributes")) {
-      listAttributes(input);
     } else if(command.equals("quit")) {
       quit();
     } else if(command.equals("help")) {
@@ -102,16 +104,10 @@ public class Console {
    * @param input The input
    */
   private void add(String[] input) {
-    // Adds class or promts that it is taken.
     for (int i = 1; i < input.length; i++) {
       String newClass = input[i];
       UMLItem item = new UMLItem(newClass);
-      if (env.itemExists(item)) {
-        logger.warning(newClass + " is already a class.");
-      } else {
-        env.addItem(item);
-        logger.info("Class successfully added: " + newClass);
-      }
+      env.addItem(item);
     }
   }
   
@@ -125,15 +121,9 @@ public class Console {
       logger.warning("Usage: delete [flag \"-f\" to confirm delete] [className]");
       return;
     }
-    
     for(int i = 2; i < input.length; i++) {
       UMLItem item = env.findItem(input[i]);
-      if (item == null || !env.itemExists(item)) {
-        logger.warning("Class "+ item + " does not exist.");
-      } else {
-        env.removeItem(item);
-        logger.info("Class " + item + " removed successfully.");            
-      }
+      env.removeItem(item);
     } 
   }
   
@@ -149,7 +139,6 @@ public class Console {
       logger.warning("Invalid: edit [oldClass] [newClass] - 3 fields required, " + input.length + " found.");
       return;
     }
-    
     String oldClass = input[1];
     String newClass = input[2];
     UMLItem item = env.findItem(oldClass);
@@ -166,12 +155,7 @@ public class Console {
    */
   public void find(String[] input) {
     for (int i = 1; i < input.length; i++) {
-      UMLItem item = env.findItem(input[i]);
-      if (item != null && env.itemExists(item)) {
-        logger.info(i + " exists.");
-      } else {
-        logger.warning(i + " does not exist.");
-      }
+      env.findItem(input[i]);
     }
   }
   
@@ -270,18 +254,11 @@ public class Console {
   public void listChildren(String[] input) {
     if (input.length != 2) {
       logger.warning("Invalid: listchildren [parentClass] - 2 fields required, " + input.length + " found.");
-    }
-    
-    String parentName = input[1];
-    UMLItem parentItem = env.findItem(parentName);
-    
-    if (parentItem == null || !env.itemExists(parentItem)) {
-      logger.warning("Parent class " + parentName + " does not exist. List children cancelled.");
     } else {
-      String childList = env.listChildren(parentName, parentItem);      
-      System.out.println(childList);
+      String parentName = input[1];
+      String childList = env.listChildren(parentName);      
+      System.out.println(childList); 
     }
-    System.out.println(env.listClasses());
   }
   
   /**
@@ -292,44 +269,63 @@ public class Console {
   public void listParents(String[] input) {
     if (input.length != 2) {
       logger.warning("Invalid: listparents [childClass] - 2 fields required, " + input.length + " found.");
+    } else {
+      String childName = input[1];
+      String parentList = env.listParents(childName);
+      System.out.println(parentList);
+    }
+  }
+  
+  /**
+   * Given command list_attributes  [className], log the attributes of given class
+   * @param input
+   */
+  public void listAttributes(String[] input) {
+    if (input.length != 2) {
+      logger.warning("Invalid: list_attributes [className] - 2 fields required, " + input.length + " found.");
+    } else {
+      String itemName = input[1];
+      AttributeMapper mapper = new AttributeMapper(env);
+      String attributes = mapper.listAttributes(itemName);
+      System.out.println(attributes);      
+    }
+
+  }
+  
+  /**
+   * edit an attribute currently in a class
+   * and  gives list of attributes currently in the class
+   * 
+   * @param args
+   */
+  public void editAttribute(String[] input) {
+    if (input.length != 4) {
+      logger.warning("Invalid: editattribute [Class] [Old Attribute] [New Attribute] - 4 fields requierd, " + input.length + " found");
       return;
     }
-    
-    String childName = input[1];
-    UMLItem childItem = env.findItem(childName);
-    
-    if (childItem == null || env.itemExists(childItem)) {
-      logger.warning("Child class " + childName + " does not exist. List parents cancelled.");
+
+    String className = input[1];
+    String oldAttr = input[2];
+    String newAttr = input[3];
+    UMLItem editAttr = env.findItem(className);
+    if (editAttr == null) {
+      logger.warning("Class name " + className + " does not exist.");
+      return;
+    } else if (editAttr.getAttributes().contains(input[3])) {
+      logger.warning("Attribute " + input[3] + " already exists.");
+      listAttributes(editAttr);
+      return;
+      // check to see if oldAttribute exists
+    } else if (editAttr.getAttributes().contains(input[2])) {
+      editAttr.editAttribute(input[2], input[3]);
+      logger.info("Attribute " + input[2] + " changed to " + input[3] + ".");
+      listAttributes(editAttr);
+      return;
     } else {
-      String parents = env.listParents(childName, childItem);
-      System.out.println(parents);
+      logger.warning("Attribute " + input[2] + " doesn't exist.");
+      listAttributes(editAttr);
     }
-    System.out.println(env.listClasses());
   }
-
-	/**
-	 * gives a list of the attributes currently in the environment
-	 *
-	 *@params item
-	 */
-	public void listAttributes(UMLItem item) {
-		StringBuilder builder = new StringBuilder();
-		builder.append("List of attributes in " + item.getName());
-		for (UMLItem i : env.getItems()) {
-			if (i.getName().equals(item.getName())) {
-				builder.append(" [ ");
-				for (String s : i.getAttributes()) {
-					builder.append("{" + s + "} ");
-					if (i.getAttributes().indexOf(s) != i.getAttributes().size() - 1)
-						builder.append(" ");
-				}
-				builder.append("]");
-				break;
-			}
-		}
-		logger.info(builder.toString());
-	}
-
 
 	/**
 	 * add a new attribute in an exisiting class
@@ -357,45 +353,6 @@ public class Console {
 		// class exists - add the attribute to the class
 		addAttr.addAttribute(args[2]);
 		listAttributes(addAttr);
-	}
-
-	/**
-	 * edit an attribute currently in a class
-	 * and  gives list of attributes currently in the class
-	 * 
-	 * @param args
-	 */
-	public void editAttribute(String[] args) {
-		// args looks like [edit_attributes, [className], [oldAttribute] [newAttribute]
-		// args[1] == [className]
-
-		// check for 4 inputs
-		if (args.length != 4) {
-			logger.warning("Invalid: editattribute [Class] [Old Attribute] [New Attribute]");
-			return;
-		}
-
-		// check that class exists
-		UMLItem editAttr = AddClass.getItem(env, args[1]);
-		if (editAttr == null) {
-			logger.warning("check help for synax");
-			return;
-
-			// check to see if new attribute exists already
-		} else if (editAttr.getAttributes().contains(args[3])) {
-			logger.warning("Attribute " + args[3] + " already exists.");
-			listAttributes(editAttr);
-			return;
-			// check to see if oldAttribute exists
-		} else if (editAttr.getAttributes().contains(args[2])) {
-			editAttr.editAttribute(args[2], args[3]);
-			logger.info("Attribute " + args[2] + " changed to " + args[3] + ".");
-			listAttributes(editAttr);
-			return;
-		} else {
-			logger.warning("Attribute " + args[2] + " doesn't exist.");
-			listAttributes(editAttr);
-		}
 	}
 
 	/**
@@ -486,35 +443,7 @@ public class Console {
 		}
 	}
 
-	/**
-	 * Given command list_attributes  [className], log the attributes of given class
-	 * @param input
-	 */
-	public void listAttributes(String[] input) {
-		//System.out.println("list_attributes  [className]");
-		if (input.length < 2) {
-			logger.warning("Usage: list_attributes [className]");
-			return;
-		}
-		
-		UMLItem i = env.findItem(input[1]);
-		if (i == null) {
-			logger.warning("Class " + input[1] + " does not exist.");
-			return;
-		}
-		
-		if (i.getAttributes().size() == 0) {
-			logger.info("[ ]");
-		}
-		
-		StringBuilder str = new StringBuilder();
-		str.append("[ ");
-		for (String attr : i.getAttributes()) {
-			str.append("{" + attr + "} ");
-		}
-		str.append("]");
-		logger.info(str.toString());
-	}
+
 	
 	
 	////////////////////////////////////////////////
