@@ -15,10 +15,11 @@ import utility.Console;
 public class SingleLineCommandTest {
   
   /** The UMLEnvironment. */
-  private UMLEnvironment env = new UMLEnvironment();
+ // private UMLEnvironment env = new UMLEnvironment();
   private Console c = new Console();
   
   public String list(){
+    UMLEnvironment env = c.getUMLEnvironment();
 	  String buildUp = "[ ";
 	  for (UMLItem i : env.getItems()){
 		  buildUp += i.getName() + " ";

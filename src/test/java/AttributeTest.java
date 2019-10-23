@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import java.util.ArrayList;
 
+import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -17,8 +18,13 @@ import utility.Console;
 public class AttributeTest {
 
 	/** The UMLEnvironment. */
-	private UMLEnvironment env = new UMLEnvironment();
+	private UMLEnvironment env;
 	private Console c = new Console();
+	
+	@Before
+	public void setEnv() {
+	  env = c.getUMLEnvironment();
+	}
 
 	public String list() {
 		String buildUp = "[ ";

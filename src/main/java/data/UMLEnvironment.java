@@ -69,11 +69,11 @@ public class UMLEnvironment {
 
   public void removeItem(UMLItem item) {
     if (item != null && itemExists(item)) {
+      logger.info("Class " + item.getName() + " being removed.");   
       this.items.remove(item);
       this.size--;
-      logger.info("Class " + item.getName() + " removed successfully.");        
     } else {
-      logger.warning("Class "+ item.getName() + " does not exist.");
+      logger.warning("Class does not exist.");
     }
   }
 
@@ -97,9 +97,9 @@ public class UMLEnvironment {
   }
 
   public void addChild(String childName, String parentName, UMLItem childItem, UMLItem parentItem) {
-    if (childItem == null || itemExists(childItem)) {
+    if (childItem == null || !itemExists(childItem)) {
       logger.warning("Child class " + childName + " does not exist. Add child cancelled.");
-    } else if (parentItem == null || itemExists(parentItem)) {
+    } else if (parentItem == null || !itemExists(parentItem)) {
       logger.warning("Parent class " + parentName + " does not exist. Add child cancelled.");
     } else if (childItem == parentItem) {
       logger.warning("Child name cannot be the same as parent: " + parentName + ". Add child cancelled.");
@@ -113,9 +113,9 @@ public class UMLEnvironment {
   }
 
   public void removeChild(String childName, String parentName, UMLItem childItem, UMLItem parentItem) {
-    if (childItem == null || itemExists(childItem)) {
+    if (childItem == null || !itemExists(childItem)) {
       logger.warning("Child class " + childName + " does not exist. Remove child cancelled.");
-    } else if (parentItem == null || itemExists(parentItem)) {
+    } else if (parentItem == null || !itemExists(parentItem)) {
       logger.warning("Parent class " + parentName + " does not exist. Remove child cancelled.");
     } else if (!childItem.getParents().contains(parentItem) && !parentItem.getChildren().contains(childItem)) {
       logger.warning("Child " + childName + " not linked to parent " + parentName + ". Remove child cancelled.");
@@ -128,29 +128,31 @@ public class UMLEnvironment {
 
   public String listChildren(String parentName) {
     UMLItem parentItem = findItem(parentName);
+    StringBuilder builder = new StringBuilder();
     if (parentItem == null || !itemExists(parentItem)) {
       logger.warning("Parent class " + parentName + " does not exist. List children cancelled.");
+    } else {
+      builder.append("List of children [ ");
+      for (UMLItem i : parentItem.getChildren()) {
+        builder.append("{" + i.getName() + "} ");
+      }
+      builder.append("]");      
     }
-    StringBuilder builder = new StringBuilder();
-    builder.append("List of children [ ");
-    for (UMLItem i : parentItem.getChildren()) {
-      builder.append("{" + i.getName() + "} ");
-    }
-    builder.append("]");
     return builder.toString();
   }
 
   public String listParents(String childName) {
+    StringBuilder builder = new StringBuilder();
     UMLItem childItem = findItem(childName);
     if (childItem == null || itemExists(childItem)) {
       logger.warning("Child class " + childName + " does not exist. List parents cancelled.");
+    } else {
+      builder.append("List of parents [ ");
+      for (UMLItem i : childItem.getParents()) {
+        builder.append("{" + i.getName() + "} ");
+      }
+      builder.append("]");      
     }
-    StringBuilder builder = new StringBuilder();
-    builder.append("List of parents [ ");
-    for (UMLItem i : childItem.getParents()) {
-      builder.append("{" + i.getName() + "} ");
-    }
-    builder.append("]");
     return builder.toString();
   }
 

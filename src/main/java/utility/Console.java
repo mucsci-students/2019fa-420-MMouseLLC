@@ -482,4 +482,8 @@ public class Console {
 		return false;
 	}
 	
+	public UMLEnvironment getUMLEnvironment() {
+	  return env;
+	}
+	
 }
