@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import utility.Arrow;
 import utility.GUITile;
 
 /**

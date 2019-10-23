@@ -12,14 +12,26 @@ import org.jline.terminal.TerminalBuilder;
 
 import config.ConsoleCommands;
 
+/**
+ * The Class ConsoleBuilder.
+ */
 public class ConsoleBuilder {
   
-  Logger logger = Logger.getLogger(ConsoleBuilder.class.getName());
+  /** The logger. */
+  private static final Logger logger = Logger.getLogger(ConsoleBuilder.class.getName());
 
+  /**
+   * Instantiates a new console builder.
+   */
   public ConsoleBuilder() {
     super();
   }
   
+  /**
+   * Builds the console.
+   *
+   * @return reader The LineReader
+   */
   public LineReader buildConsole() {
     TerminalBuilder builder = TerminalBuilder.builder();
     Completer completer = new EnumCompleter(ConsoleCommands.class);

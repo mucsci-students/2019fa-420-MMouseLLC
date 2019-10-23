@@ -2,6 +2,8 @@ package utility;
 
 import java.util.ArrayList;
 import java.util.Optional;
+
+import data.Arrow;
 import data.GUIEnvironment;
 import data.UMLItem;
 import deprecated.AddClass;

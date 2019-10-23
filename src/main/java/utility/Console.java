@@ -29,7 +29,7 @@ public class Console {
 
 	/**
 	 * The run command. This sets up the initial instance of the Console and builds
-	 * the TerminalBuilder, which creates the tools for tab completion in the
+	 * the console, which creates the tools for tab completion in the
 	 * terminal, along with a reader that takes user input.
 	 */
 	public void run() {
@@ -51,7 +51,7 @@ public class Console {
 	
 	 /**
    * Processes commands in single-line format to skip prompts. Commands taken are
-   * add, edit, find, save and load. Check the help_multi_args command to see
+   * add, edit, find, save and load. Check the "help" command to see
    * exact specs for each.
    *
    * @param input The input
@@ -109,6 +109,7 @@ public class Console {
       UMLItem item = new UMLItem(newClass);
       env.addItem(item);
     }
+    env.listClasses();
   }
   
   /**
@@ -159,6 +160,9 @@ public class Console {
     }
   }
   
+  /**
+   * Lists all classes in the environment
+   */
   public void list() {
     System.out.println(env.listClasses());
   }
@@ -207,29 +211,28 @@ public class Console {
    * Adds a child class to another class given the input of child and parent to be
    * linked
    * 
-   * @param input
+   * @param input The input
    */
   public void addChild(String[] input) {
     if (input.length != 3) {
       logger.warning(
           "Invalid: addchild [childClass] [parentClass] - 3 fields required, " + input.length + " found.");
-      return;
+    } else {
+      String childName = input[1];
+      String parentName = input[2];
+      UMLItem childItem = env.findItem(childName);
+      UMLItem parentItem = env.findItem(parentName);
+      
+      env.addChild(childName, parentName, childItem, parentItem);
+      System.out.println(env.listClasses()); 
     }
-    
-    String childName = input[1];
-    String parentName = input[2];
-    UMLItem childItem = env.findItem(childName);
-    UMLItem parentItem = env.findItem(parentName);
-    
-    env.addChild(childName, parentName, childItem, parentItem);
-    System.out.println(env.listClasses());
   }
   
   /**
    * Removes a child class from another class given the input of child and parent
    * to be unlinked
    * 
-   * @param input
+   * @param input The input
    */
   public void removeChild(String[] input) {
     if (input.length != 3) {
@@ -264,7 +267,7 @@ public class Console {
   /**
    * Lists the parents of a given child class
    * 
-   * @param input
+   * @param input The input
    */
   public void listParents(String[] input) {
     if (input.length != 2) {
@@ -278,7 +281,8 @@ public class Console {
   
   /**
    * Given command list_attributes  [className], log the attributes of given class
-   * @param input
+   * 
+   * @param input The input
    */
   public void listAttributes(String[] input) {
     if (input.length != 2) {
@@ -289,14 +293,13 @@ public class Console {
       String attributes = mapper.listAttributes(itemName);
       System.out.println(attributes);      
     }
-
   }
   
   /**
    * edit an attribute currently in a class
    * and  gives list of attributes currently in the class
    * 
-   * @param args
+   * @param input The input
    */
   public void editAttribute(String[] input) {
     if (input.length != 4) {
@@ -317,7 +320,7 @@ public class Console {
 	 * add a new attribute in an exisiting class
 	 * and gives a list of the attributes currently in the class
 	 * 
-	 * @param args
+	 * @param input The input
 	 */
 	public void addAttribute(String[] input) {
 		if (input.length != 3) {
@@ -337,7 +340,7 @@ public class Console {
 	 * delete an attribute currently in a class gives 
 	 * and gives list of attributes remaining in the class
 	 * 
-	 * @param args
+	 * @param input The input
 	 */
 	public void deleteAttribute(String[] input) {
 		if (input.length != 3) {
@@ -354,7 +357,7 @@ public class Console {
 	}
 
 	/**
-	 * The help with multiple arguments menu.
+	 * The help menu,
 	 */
 	public void help() {
 	  HelpScreenConfig.printHelpScreen();
@@ -482,6 +485,10 @@ public class Console {
 		return false;
 	}
 	
+	/**
+	 * Gets the UMLEnvironment
+	 * @return env The UMLEnvironment
+	 */
 	public UMLEnvironment getUMLEnvironment() {
 	  return env;
 	}
