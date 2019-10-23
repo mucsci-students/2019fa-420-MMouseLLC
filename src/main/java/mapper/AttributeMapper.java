@@ -4,6 +4,7 @@ import java.util.logging.Logger;
 
 import data.UMLEnvironment;
 import data.UMLItem;
+import deprecated.AddClass;
 
 public class AttributeMapper {
   
@@ -38,5 +39,41 @@ public class AttributeMapper {
     return str.toString();
   }
   
+  public void editAttribute(String className, String oldAttr, String newAttr) {
+    UMLItem item = env.findItem(className);
+    if (item == null) {
+      logger.warning("Class name " + className + " does not exist.");
+    } else if (item.getAttributes().contains(newAttr)) {
+      logger.warning("Attribute " + newAttr + " already exists.");
+    } else if (item.getAttributes().contains(oldAttr)) {
+      item.editAttribute(oldAttr, newAttr);
+      logger.info("Attribute " + oldAttr + " changed to " + newAttr + ".");
+    } else {
+      logger.warning("Attribute " + oldAttr + " doesn't exist.");
+    }
+  }
+  
+  public void addAttribute(String className, String attributeName) {
+    UMLItem item = env.findItem(className);
+    if (item == null) {
+      logger.warning("Class name " + className + " does not exist.");
+    } else if (item.getAttributes().contains(attributeName)) {
+      logger.warning("Attribute " + attributeName + " already exists.");
+    } else {
+      item.addAttribute(attributeName);
+    }
+  }
+  
+  public void deleteAttribute(String className, String attributeName) {
+    UMLItem deleteAttr = env.findItem(className);
+    if (deleteAttr == null) {
+      logger.warning("Class name " + className + " does not exist.");
+    } else if (deleteAttr.getAttributes().contains(attributeName)) {
+      deleteAttr.removeAttribute(attributeName);
+      logger.info("Attribute " + attributeName + " deleted.");
+    } else {
+      logger.warning("Attribute " + attributeName + " doesn't exist.");
+    }
+  }
 
 }

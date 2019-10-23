@@ -4,9 +4,9 @@ import java.util.logging.Logger;
 
 import org.jline.reader.LineReader;
 
+import config.HelpScreenConfig;
 import data.UMLEnvironment;
 import data.UMLItem;
-import deprecated.AddClass;
 import mapper.AttributeMapper;
 
 /**
@@ -45,7 +45,7 @@ public class Console {
 		System.out.println("For a list of commands please type \"help\"  ");
 		while (true) {
 			String[] input = reader.readLine("Please input a command: ").split(" ");
-			multiArgCommand(input);
+			checkInput(input);
 		}
 	}
 	
@@ -56,7 +56,7 @@ public class Console {
    *
    * @param input The input
    */
-  public void multiArgCommand(String[] input) {
+  public void checkInput(String[] input) {
     String command = input[0].toLowerCase();
     if (command.equals("add")) {
       add(input);
@@ -301,29 +301,15 @@ public class Console {
   public void editAttribute(String[] input) {
     if (input.length != 4) {
       logger.warning("Invalid: editattribute [Class] [Old Attribute] [New Attribute] - 4 fields requierd, " + input.length + " found");
-      return;
-    }
-
-    String className = input[1];
-    String oldAttr = input[2];
-    String newAttr = input[3];
-    UMLItem editAttr = env.findItem(className);
-    if (editAttr == null) {
-      logger.warning("Class name " + className + " does not exist.");
-      return;
-    } else if (editAttr.getAttributes().contains(input[3])) {
-      logger.warning("Attribute " + input[3] + " already exists.");
-      listAttributes(editAttr);
-      return;
-      // check to see if oldAttribute exists
-    } else if (editAttr.getAttributes().contains(input[2])) {
-      editAttr.editAttribute(input[2], input[3]);
-      logger.info("Attribute " + input[2] + " changed to " + input[3] + ".");
-      listAttributes(editAttr);
-      return;
     } else {
-      logger.warning("Attribute " + input[2] + " doesn't exist.");
-      listAttributes(editAttr);
+      String className = input[1];
+      String oldAttr = input[2];
+      String newAttr = input[3];
+      
+      AttributeMapper mapper = new AttributeMapper(env);
+      mapper.editAttribute(className, oldAttr, newAttr);
+      String attributes = mapper.listAttributes(className);
+      System.out.println(attributes);      
     }
   }
 
@@ -333,26 +319,18 @@ public class Console {
 	 * 
 	 * @param args
 	 */
-	public void addAttribute(String[] args) {
-		// args looks like [add_attribute, [className], [newAttribute]
-		// args[1] == [className]
-
-		if (args.length != 3) {
-			logger.warning("Invalid: addattribute [Class] [Attribute]");
-			return;
+	public void addAttribute(String[] input) {
+		if (input.length != 3) {
+			logger.warning("Invalid: addattribute [Class] [Attribute] - 3 fields requierd, " + input.length + " found");
+		} else {
+	    String className = input[1];
+	    String attributeName = input[2];
+	    
+	    AttributeMapper mapper = new AttributeMapper(env);
+	    mapper.addAttribute(className, attributeName);
+	    String attributes = mapper.listAttributes(className);
+	    System.out.println(attributes);		  
 		}
-		// check that class exists
-		UMLItem addAttr = AddClass.getItem(env, args[1]);
-		if (addAttr == null) {
-			logger.warning("check help for synax");
-			return;
-		} else if (addAttr.getAttributes().contains(args[2])) {
-			logger.warning("Attribute " + args[2] + " already exists.");
-			return;
-		}
-		// class exists - add the attribute to the class
-		addAttr.addAttribute(args[2]);
-		listAttributes(addAttr);
 	}
 
 	/**
@@ -361,27 +339,17 @@ public class Console {
 	 * 
 	 * @param args
 	 */
-	public void deleteAttribute(String[] args) {
-		// args looks like [delete_attribute, [className], [attributeToDelete]
-		// args[1] == [className]
-
-		if (args.length != 3) {
-			logger.warning("Invalid: addattribute [Class] [AttributeToDelete]");
-			return;
-		}
-		// check that class exists
-		UMLItem deleteAttr = AddClass.getItem(env, args[1]);
-		if (deleteAttr == null) {
-			logger.warning("check help for synax");
-			// check to see if attribute exists
-		} else if (deleteAttr.getAttributes().contains(args[2])) {
-			deleteAttr.removeAttribute(args[2]);
-			logger.info("Attribute " + args[2] + " deleted.");
-			listAttributes(deleteAttr);
-			return;
+	public void deleteAttribute(String[] input) {
+		if (input.length != 3) {
+      logger.warning("Invalid: addattribute [Class] [Attribute] - 3 fields requierd, " + input.length + " found");
 		} else {
-			logger.warning("Attribute " + args[2] + " doesn't exist.");
-			listAttributes(deleteAttr);
+		  String className = input[1];
+		  String attributeName = input[2];
+		  
+		  AttributeMapper mapper = new AttributeMapper(env);
+		  mapper.deleteAttribute(className, attributeName);
+		  String attributes = mapper.listAttributes(className);
+		  System.out.println(attributes);
 		}
 	}
 
@@ -389,23 +357,7 @@ public class Console {
 	 * The help with multiple arguments menu.
 	 */
 	public void help() {
-		System.out.println("Here is a list of the commands executed in one line without prompts.");
-		System.out.println("add  [className]");
-		System.out.println("delete [flag \"-f\" to confirm] [className]");
-		System.out.println("edit [originalClass] [newClass] ");
-		System.out.println("find [className]");
-		System.out.println("save [flag \"-f\" to overwrite] [filename]");
-		System.out.println("load [flag \"-f\" confirms unsaved changes lost] [filename] ");
-		System.out.println("add_child [childClass] [parentClass]");
-		System.out.println("remove_child [childClass] [parentClass]");
-		System.out.println("list_children [parentClass]");
-		System.out.println("list_parents [childClass]");
-		System.out.println("add_attribute  [className] [attributeName]");
-		System.out.println("edit_attribute  [className] [oldAttributeName] [newAttributeName] ");
-		System.out.println("delete_attribute  [className] [attributeName]");
-		System.out.println("list_attributes [className]");
-		
-		System.out.println(" ");
+	  HelpScreenConfig.printHelpScreen();
 	}
 
 
@@ -449,35 +401,6 @@ public class Console {
 	////////////////////////////////////////////////
 	//////////////// HELPER METHODS ////////////////
 	////////////////////////////////////////////////
-
-	/**
-	 * Checks if a class name exists.
-	 * 
-	 * @return boolean If the class name exists
-	 */
-	public boolean classNameExists(String className) {
-		return (AddClass.getItem(env, className) != null);
-	}
-
-	/**
-	 * Gets a new class name.
-	 * 
-	 * @return newClass The new class name
-	 */
-	public String getNewClassName() {
-		boolean newClassNamed = false;
-		String newClass = "";
-		while (!newClassNamed) {
-			newClass = reader.readLine("Enter a new class name: ");
-			if (AddClass.getItem(env, newClass) != null) {
-				logger.warning("Class " + newClass + " already exists. Please choose another class name.");
-	      env.listClasses();
-			} else {
-				newClassNamed = true;
-			}
-		}
-		return newClass;
-	}
 
 	/**
 	 * Checks if the user has confirmed that a class can be overwritten.
@@ -558,6 +481,5 @@ public class Console {
 		}
 		return false;
 	}
-	
 	
 }

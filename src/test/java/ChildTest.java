@@ -10,7 +10,7 @@ import utility.Console;
 
 public class ChildTest {
 	private UMLEnvironment env = new UMLEnvironment();
-	private Console c = new Console(env);
+	private Console c = new Console();
 
 	public String printContainer(ArrayList<UMLItem> arr) {
 		String build = "[ ";

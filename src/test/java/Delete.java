@@ -9,7 +9,7 @@ import utility.Console;
 public class Delete {
 	/** The UMLEnvironment. */
 	  private UMLEnvironment env = new UMLEnvironment();
-	  private Console c = new Console(env);
+	  private Console c = new Console();
 	
 	  public String list(){
 		  String buildUp = "[ ";

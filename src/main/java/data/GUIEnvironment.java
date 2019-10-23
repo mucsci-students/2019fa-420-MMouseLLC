@@ -61,10 +61,9 @@ public class GUIEnvironment extends UMLEnvironment {
 	/**
 	 * removes mapping of key item from tileMapping member and env
 	 */
-	public boolean removeItem(UMLItem item) {
+	public void removeItem(UMLItem item) {
 		boolean result = this.items.remove(item);
 		this.tileMapping.remove(item);
-		return result;
 	}
 
 	/**
