@@ -31,12 +31,12 @@ public class UMLEnvironment {
    * that item else return null
    * 
    * @param itemName
-   * @return
+   * @return The UMLItem
    */
   public UMLItem findItem(String itemName) {
     for (UMLItem i : items) {
       if (i.getName().equals(itemName)) {
-        logger.info("Class " + itemName + " found.");
+        System.out.println("Class " + itemName + " found.");
         return i;
       }
     }
@@ -44,33 +44,56 @@ public class UMLEnvironment {
     return null;
   }
 
+  /**
+   * Adds a UMLItem to the environment if it is not already in it.
+   * 
+   * @param item The UMLItem
+   */
   public void addItem(UMLItem item) {
     if (item == null || !itemExists(item)) {
       this.items.add(item);
-      logger.info("Class successfully added: " + item.getName());
+      System.out.println("Class successfully added: " + item.getName());
     } else {
       logger.warning(item.getName() + " is already a class.");
     }
   }
 
+  /**
+   * Deletes a UMLItem from the environment if it exists in it.
+   * 
+   * @param item The UMLItem
+   */
   public void removeItem(UMLItem item) {
     if (item != null && itemExists(item)) {
-      logger.info("Class " + item.getName() + " being removed.");   
+      System.out.println("Class " + item.getName() + " being removed.");   
       this.items.remove(item);
     } else {
       logger.warning("Class does not exist.");
     }
   }
 
+  /**
+   * Checks if a class exists in the environment, and if so edits the name
+   * of the class to the new one
+   * 
+   * @param oldClass The old class name
+   * @param newClass The new class name
+   * @param item the UMLItem
+   */
   public void editItem(String oldClass, String newClass, UMLItem item) {
     if (item == null || !itemExists(item)) {
       logger.warning("Class " + oldClass + " does not exist. Edit cancelled.");
     } else {
       item.setName(newClass);
-      logger.info("Class " + oldClass + " changed to " + newClass + ".");
+      System.out.println("Class " + oldClass + " changed to " + newClass + ".");
     }
   }
 
+  /**
+   * Gets all classes in the environment.
+   * 
+   * @return builder the String of all classes
+   */
   public String listClasses() {
     StringBuilder builder = new StringBuilder();
     builder.append("List of classes: [ ");
@@ -81,6 +104,16 @@ public class UMLEnvironment {
     return builder.toString();
   }
 
+  /**
+   * Adds a child to a parent in the environment. Checks if the child/parent
+   * exists, and if the child is not already linked to the parent. If so add
+   * the child to the parent.
+   * 
+   * @param childName The child name
+   * @param parentName The parent name
+   * @param childItem The child UMLItem
+   * @param parentItem The parent UMLItem
+   */
   public void addChild(String childName, String parentName, UMLItem childItem, UMLItem parentItem) {
     if (childItem == null || !itemExists(childItem)) {
       logger.warning("Child class " + childName + " does not exist. Add child cancelled.");
@@ -93,10 +126,20 @@ public class UMLEnvironment {
     } else {
       parentItem.addChild(childItem);
       childItem.addParent(parentItem);
-      logger.info("Child successfully added.");
+      System.out.println("Child successfully added.");
     }
   }
 
+  /**
+   * Removes a child from a parent in the environment.Checks if the child/parent
+   * exists, and if the child is not already linked to the parent. If so remove
+   * the child to the parent.
+   * 
+   * @param childName The child name
+   * @param parentName The parent name
+   * @param childItem The child UMLItem
+   * @param parentItem The parent UMLItem
+   */
   public void removeChild(String childName, String parentName, UMLItem childItem, UMLItem parentItem) {
     if (childItem == null || !itemExists(childItem)) {
       logger.warning("Child class " + childName + " does not exist. Remove child cancelled.");
@@ -107,10 +150,16 @@ public class UMLEnvironment {
     } else {
       parentItem.removeChild(childItem);
       childItem.removeParent(parentItem);
-      logger.info("Child successfully removed.");
+      System.out.println("Child successfully removed.");
     }
   }
 
+  /**
+   * Lists all children from a parent UMLItem
+   * 
+   * @param parentName The parent name
+   * @return builder The string of all children
+   */
   public String listChildren(String parentName) {
     UMLItem parentItem = findItem(parentName);
     StringBuilder builder = new StringBuilder();
@@ -126,6 +175,12 @@ public class UMLEnvironment {
     return builder.toString();
   }
 
+  /**
+   * Lists all parents from a child UMLItem
+   * 
+   * @param childName The child name
+   * @return builder The string of all parents
+   */
   public String listParents(String childName) {
     StringBuilder builder = new StringBuilder();
     UMLItem childItem = findItem(childName);
@@ -145,6 +200,12 @@ public class UMLEnvironment {
   ////////// HELPER METHODS //////////
   ////////////////////////////////////
 
+  /**
+   * Checks if the UMLItem exists in the environment
+   * 
+   * @param item the UMLItem
+   * @return boolean If the item exists
+   */
   public boolean itemExists(UMLItem item) {
     if (!this.items.isEmpty()) {
       for (int i = 0; i < items.size(); i++) {
@@ -157,6 +218,11 @@ public class UMLEnvironment {
   }
  
 
+  /**
+   * Gets all list of all UMLItems
+   * 
+   * @return items the list of UMLItem
+   */
   public ArrayList<UMLItem> getItems() {
     return this.items;
   }

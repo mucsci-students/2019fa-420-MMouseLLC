@@ -30,7 +30,7 @@ public class HelpScreenConfig {
     try {
       props.load(inputStream);
     } catch (IOException e) {
-      logger.severe("HelpScreenConfig unable to read helpscreen.properties file from classpath");
+      logger.severe("HelpScreenConfig unable to read helpscreen.properties file from classpath: " + e.getMessage());
     }
     return props;
   }
