@@ -394,7 +394,7 @@ public class Console {
 				file.saveFile();
 			}
 		} else {
-			logger.info("Save canceled. Quitting program.");
+			System.out.println("Save canceled. Quitting program.");
 		}
 	}
 
@@ -441,7 +441,7 @@ public class Console {
 			if (answer.equalsIgnoreCase("y")) {
 				return true;
 			} else if (answer.equalsIgnoreCase("n")) {
-				logger.info("Save canceled.");
+				System.out.println("Save canceled.");
 				saveActionComplete = true;
 			} else {
 				logger.warning("Invalid response.");
