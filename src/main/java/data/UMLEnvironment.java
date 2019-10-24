@@ -184,7 +184,7 @@ public class UMLEnvironment {
   public String listParents(String childName) {
     StringBuilder builder = new StringBuilder();
     UMLItem childItem = findItem(childName);
-    if (childItem == null || itemExists(childItem)) {
+    if (childItem == null || !itemExists(childItem)) {
       logger.warning("Child class " + childName + " does not exist. List parents cancelled.");
     } else {
       builder.append("List of parents [ ");
