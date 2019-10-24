@@ -36,7 +36,7 @@ public class GUITile extends Pane {
             buildMoveButton();
 	}
 	
-	private void buildPane() {
+	public void buildPane() {
 		this.pane.setMaxWidth(150);
         this.pane.setMinWidth(150);
         this.pane.setMaxHeight(150);
@@ -44,7 +44,7 @@ public class GUITile extends Pane {
         this.pane.setLayoutY(100);
 	}
 	
-	private void buildNameBox() {
+	public void buildNameBox() {
 		this.nameBox.setLayoutX(10);
         this.nameBox.setLayoutY(10);
         this.nameBox.setMaxWidth(120);
@@ -52,7 +52,7 @@ public class GUITile extends Pane {
         this.pane.getChildren().add(this.nameBox);
 	}
 	
-	private void buildNamePanel() {
+	public void buildNamePanel() {
 		this.nameLabel.setLayoutX(10);
         this.nameLabel.setLayoutY(10);
         this.nameLabel.setMaxWidth(120);
@@ -95,7 +95,7 @@ public class GUITile extends Pane {
         this.pane.getChildren().add(this.edit);
 	}
 	
-	private void buildAddButton() {
+	public void buildAddButton() {
 		this.add.setLayoutY(110);
         this.add.setLayoutX(10);
         this.add.setMaxSize(120, 30);
@@ -103,7 +103,7 @@ public class GUITile extends Pane {
         this.pane.getChildren().add(this.add);
 	}
 	
-	private void buildRemoveButton() {
+	public void buildRemoveButton() {
 		this.remove.setLayoutY(190);
         this.remove.setLayoutX(10);
         this.remove.setMaxSize(120, 30);
@@ -112,7 +112,7 @@ public class GUITile extends Pane {
         this.pane.getChildren().add(this.remove);
 	}
 	
-	private void buildChildButton() {
+	public void buildChildButton() {
 		this.addChild.setLayoutY(230);
         this.addChild.setLayoutX(10);
         this.addChild.setMaxSize(120, 30);
@@ -121,7 +121,7 @@ public class GUITile extends Pane {
         this.pane.getChildren().add(this.addChild);
 	}
 	
-	private void buildMoveButton() {
+	public void buildMoveButton() {
 		this.move.setLayoutY(270);
         this.move.setLayoutX(10);
         this.move.setMaxSize(120, 30);

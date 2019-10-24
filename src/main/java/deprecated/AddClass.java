@@ -1,4 +1,4 @@
-package utility;
+package deprecated;
 
 import data.UMLEnvironment;
 import data.UMLItem;
@@ -13,6 +13,7 @@ import data.UMLItem;
  * @author Matt Fossett, Grant Hartenstine
  */
 
+@Deprecated
 public class AddClass {
 
 	/**
@@ -53,7 +54,7 @@ public class AddClass {
 	// Adds a Class with only name and uses the size of Env to create a unique ID
 	public static boolean addClass(UMLEnvironment umlEnv, String name) {
 		if (getItem(umlEnv, name) == null) {
-			UMLItem uml = new UMLItem((umlEnv.getSize() + 1), name);
+			UMLItem uml = new UMLItem((umlEnv.getItems().size() + 1), name);
 			umlEnv.addItem(uml);
 			return true;
 		}

@@ -146,15 +146,9 @@ public class UMLItem {
 	 * 
 	 * @params oldAttr, newAttr
 	 */
-	public boolean editAttribute(String oldAttr, String newAttr) {
-		if (!existingAttribute(oldAttr)) {
-			return false;
-		} else if (existingAttribute(newAttr)) {
-			return false;
-		}
+	public void editAttribute(String oldAttr, String newAttr) {
 		attributes.remove(oldAttr);
 		attributes.add(newAttr);
-		return true;
 	}
 
 	/**

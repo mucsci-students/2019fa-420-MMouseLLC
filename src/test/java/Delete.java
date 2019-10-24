@@ -1,5 +1,6 @@
 import static org.junit.Assert.*;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import data.UMLEnvironment;
@@ -8,8 +9,13 @@ import utility.Console;
 
 public class Delete {
 	/** The UMLEnvironment. */
-	  private UMLEnvironment env = new UMLEnvironment();
-	  private Console c = new Console(env);
+	  private UMLEnvironment env;
+	  private Console c = new Console();
+	  
+	  @Before
+	  public void setEnv() {
+	    env = c.getUMLEnvironment();
+	  }
 	
 	  public String list(){
 		  String buildUp = "[ ";

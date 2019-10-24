@@ -1,6 +1,9 @@
 import static org.junit.Assert.assertTrue;
+
 import java.io.File;
 import java.io.IOException;
+
+import org.junit.Before;
 import org.junit.Test;
 
 import data.UMLEnvironment;
@@ -16,8 +19,12 @@ public class LocalFileTest {
   private static final String SAVE_DIR = "saved_files";
   
   /** The UMLEnvironment. */
-  private UMLEnvironment env = new UMLEnvironment();
-  
+  private UMLEnvironment env;
+
+  @Before
+  public void beforeStart() {
+    env = new UMLEnvironment();
+  }
 
   /**
    * Test saveFile.
@@ -75,10 +82,10 @@ public class LocalFileTest {
     String fileName = "test_file";
     LocalFile fileTest = new LocalFile(fileName);
     
-    fileTest.deleteFile();
+    fileTest.deleteAllFiles();
     
-    /** directory size should be 1 due to .gitignore in directory */
-    assertTrue("saved_file directory still has contents.", fileTest.getDirectory().list().length == 1);
+    /** directory size should be 1 due to placeholder file in directory */
+    assertTrue("saved_file directory still has contents. Size is: " + fileTest.getDirectory().list().length, fileTest.getDirectory().list().length == 1);
   }
  
   /**
