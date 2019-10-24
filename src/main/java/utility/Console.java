@@ -104,8 +104,20 @@ public class Console {
    * @param input The input
    */
   private void add(String[] input) {
+	if (input.length < 2) {
+		logger.warning("Usage: add [className] [optionalAdditionalClass(es)]");
+		return;
+	} 
+	boolean foundSpace = false;
     for (int i = 1; i < input.length; i++) {
       String newClass = input[i];
+      if (newClass.isBlank() ) {
+    	  if (!foundSpace) {
+    		  logger.warning("Whitespace is not allowed for class name.");
+    	  }
+    	  foundSpace = true;
+    	  continue;
+      } 
       UMLItem item = new UMLItem(newClass);
       env.addItem(item);
     }
@@ -156,7 +168,9 @@ public class Console {
    */
   public void find(String[] input) {
     for (int i = 1; i < input.length; i++) {
-      env.findItem(input[i]);
+      if(env.findItem(input[i]) != null) {
+    	  System.out.println("Class " + input[i] + " found.");
+      } 
     }
   }
   

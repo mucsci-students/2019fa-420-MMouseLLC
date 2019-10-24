@@ -36,7 +36,7 @@ public class UMLEnvironment {
   public UMLItem findItem(String itemName) {
     for (UMLItem i : items) {
       if (i.getName().equals(itemName)) {
-        System.out.println("Class " + itemName + " found.");
+        //System.out.println("Class " + itemName + " found.");
         return i;
       }
     }
@@ -100,7 +100,7 @@ public class UMLEnvironment {
     for (UMLItem i : items) {
       builder.append("{" + i.getName() + "} ");
     }
-    builder.append("]\n");
+    builder.append("]");
     return builder.toString();
   }
 
