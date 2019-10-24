@@ -155,10 +155,7 @@ public class UMLEnvironment {
     }
     return false;
   }
-  
-//  public int getSize() {
-//    return items.size();
-//  }
+ 
 
   public ArrayList<UMLItem> getItems() {
     return this.items;
