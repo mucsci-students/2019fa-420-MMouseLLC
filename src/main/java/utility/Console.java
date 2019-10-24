@@ -44,7 +44,8 @@ public class Console {
 	private void homeScreen() {
 		System.out.println("For a list of commands please type \"help\"  ");
 		while (true) {
-			String[] input = reader.readLine("Please input a command: ").replaceAll("\\s+", " ").split(" ");
+		  String line = reader.readLine("Please input a command: ").replaceAll("\\s+", " ").trim();
+			String[] input = line.split(" ");
 			checkInput(input);
 		}
 	}
