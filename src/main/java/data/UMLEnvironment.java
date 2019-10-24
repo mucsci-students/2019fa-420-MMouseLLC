@@ -3,8 +3,6 @@ package data;
 import java.util.ArrayList;
 import java.util.logging.Logger;
 
-import deprecated.AddClass;
-
 /*
  * UMLEnvironment is an object meant to keep track of all the UMLItems that 
  * exist at any given point in the running of the program. The purpose of this 
@@ -18,25 +16,14 @@ public class UMLEnvironment {
   private static final Logger logger = Logger.getLogger(UMLEnvironment.class.getName());
 
   ArrayList<UMLItem> items;
-  int size;
-
-  public int getSize() {
-    return items.size();
-  }
 
   public UMLEnvironment() {
-    this.size = 0;
     this.items = new ArrayList<>();
   }
 
   public UMLEnvironment(UMLItem item) {
     this.items = new ArrayList<>();
     this.items.add(item);
-    this.size++;
-  }
-
-  public ArrayList<UMLItem> getItems() {
-    return this.items;
   }
 
   /**
@@ -60,7 +47,6 @@ public class UMLEnvironment {
   public void addItem(UMLItem item) {
     if (item == null || !itemExists(item)) {
       this.items.add(item);
-      this.size++;
       logger.info("Class successfully added: " + item.getName());
     } else {
       logger.warning(item.getName() + " is already a class.");
@@ -71,7 +57,6 @@ public class UMLEnvironment {
     if (item != null && itemExists(item)) {
       logger.info("Class " + item.getName() + " being removed.");   
       this.items.remove(item);
-      this.size--;
     } else {
       logger.warning("Class does not exist.");
     }
@@ -162,13 +147,21 @@ public class UMLEnvironment {
 
   public boolean itemExists(UMLItem item) {
     if (!this.items.isEmpty()) {
-      for (int i = 0; i < this.items.size(); i++) {
+      for (int i = 0; i < items.size(); i++) {
         if (item.getName().equals(this.items.get(i).getName())) {
           return true;
         }
       }
     }
     return false;
+  }
+  
+//  public int getSize() {
+//    return items.size();
+//  }
+
+  public ArrayList<UMLItem> getItems() {
+    return this.items;
   }
 
 }

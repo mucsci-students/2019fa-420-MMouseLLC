@@ -1,14 +1,17 @@
 package utility;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.util.logging.Logger;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 
 import data.UMLEnvironment;
@@ -24,6 +27,9 @@ public class LocalFile {
   
   /** The Constant SAVE_DIR. */
   private static final String SAVE_DIR = "saved_files";
+  
+  /** The Constant PLACEHOLDER */
+  private static final String PLACEHOLDER = "placeholder.txt";
   
   /** The UMLEnvironment. */
   UMLEnvironment env;
@@ -93,7 +99,7 @@ public class LocalFile {
    * @throws IOException Signals that an I/O exception has occurred.
    */
   public UMLEnvironment loadFile() {
-  long startTime = System.nanoTime();
+    long startTime = System.nanoTime();
     ObjectMapper objectMapper = new ObjectMapper(new YAMLFactory());
     logger.info("Loading file in loadFile()");
     long endTime = System.nanoTime();
@@ -127,6 +133,7 @@ public class LocalFile {
    */
   public void deleteAllFiles() throws IOException {
     FileUtils.cleanDirectory(directory);
+    createPlaceholderFile();
   }
   
 
@@ -145,6 +152,20 @@ public class LocalFile {
         return true;
     }
     return false;
+  }
+  
+  /**
+   * Creates a placeholder .txt file in saved_files directory after deleting
+   * all directory contents. This is created in order to keep the directory
+   * in the Github repository.
+   */
+  public void createPlaceholderFile() {
+    try(Writer writer = new BufferedWriter(new OutputStreamWriter(
+        new FileOutputStream(SAVE_DIR + "/" + PLACEHOLDER), "utf-8"))) {
+      writer.write("Placeholder to keep directory active for Github.");
+    } catch(IOException e) { 
+      logger.severe("Error. IOException occured in createPlaceholderFile()");
+    }
   }
   
   /**
