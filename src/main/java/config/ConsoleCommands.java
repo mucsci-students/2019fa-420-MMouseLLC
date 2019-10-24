@@ -27,7 +27,7 @@ package config;
    /** The delete. */
    DELETE,
    /** The remove child */
-   REMOVE_CHILD,
+   DELETE_CHILD,
    /** The add child */
    ADD_CHILD,
    /** The list children */
