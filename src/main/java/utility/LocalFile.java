@@ -89,7 +89,7 @@ public class LocalFile {
   } catch (IOException e) {
     logger.severe("LocalFile: IOException occured in saveFile: " + e.getCause());
   }
-    logger.info("File saved successfully");
+    System.out.println("File saved successfully");
   }
   
   /**
@@ -101,17 +101,17 @@ public class LocalFile {
   public UMLEnvironment loadFile() {
     long startTime = System.nanoTime();
     ObjectMapper objectMapper = new ObjectMapper(new YAMLFactory());
-    logger.info("Loading file in loadFile()");
-    long endTime = System.nanoTime();
-    /** Gives the duration to execute the load in ms */
-    long duration = (endTime - startTime) / 1000000;
-    logger.info("Load completed in: " + duration + " ms.");
+    System.out.println("Loading file in loadFile()");
     UMLEnvironment loadedEnv = null;
     try {
       loadedEnv = objectMapper.readValue(new File(SAVE_DIR + "/" + fileName + ".yaml"), UMLEnvironment.class);      
     } catch(IOException e) {
       logger.severe("IOException occurred in loadFile.");
     }
+    long endTime = System.nanoTime();
+    /** Gives the duration to execute the load in ms */
+    long duration = (endTime - startTime) / 1_000_000;
+    System.out.println("Load completed in: " + duration + " ms.");
     return loadedEnv;
   }
   
@@ -121,7 +121,7 @@ public class LocalFile {
   public void deleteFile() {
     File file = new File(SAVE_DIR + "/" + fileName + ".yaml");
     if(file.delete())
-      logger.info("File: " + fileName + " deleted successfully.");
+      System.out.println("File: " + fileName + " deleted successfully.");
     else
       logger.warning("File: " + fileName + " not deleted successfully.");
   }
