@@ -44,7 +44,7 @@ public class Console {
 	private void homeScreen() {
 		System.out.println("For a list of commands please type \"help\"  ");
 		while (true) {
-			String[] input = reader.readLine("Please input a command: ").split(" ");
+			String[] input = reader.readLine("Please input a command: ").replaceAll("\\s+", " ").split(" ");
 			checkInput(input);
 		}
 	}
@@ -108,16 +108,8 @@ public class Console {
 		logger.warning("Usage: add [className] [optionalAdditionalClass(es)]");
 		return;
 	} 
-	boolean foundSpace = false;
     for (int i = 1; i < input.length; i++) {
       String newClass = input[i];
-      if (newClass.isBlank() ) {
-    	  if (!foundSpace) {
-    		  logger.warning("Whitespace is not allowed for class name.");
-    	  }
-    	  foundSpace = true;
-    	  continue;
-      } 
       UMLItem item = new UMLItem(newClass);
       env.addItem(item);
     }
