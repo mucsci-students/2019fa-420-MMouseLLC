@@ -8,8 +8,6 @@ package config;
     
    /** The help. */
    HELP, 
-   /** The help multi arg. */
-   HELP_MULTI_ARG, 
    /** The edit. */
    EDIT, 
    /** The find. */
