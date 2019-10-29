@@ -1,6 +1,7 @@
 package utility;
 
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 
 public class GUITile extends Pane {
@@ -11,6 +12,7 @@ public class GUITile extends Pane {
 	Label nameLabel = new Label(this.nameBox.getText());
 	TextArea textArea = new TextArea();
 	Pane pane = new Pane();
+	Image plusButton = new Image("http://icons.iconarchive.com/icons/iconsmind/outline/256/Add-icon.png");
 	Button add = new Button("Add Class");
     Button edit = new Button("Edit Name");
     Button remove = new Button("Remove Class");
@@ -67,6 +69,7 @@ public class GUITile extends Pane {
 		this.addAttr.setVisible(false);
         this.addAttr.setMaxSize(120, 30);
         this.addAttr.setMinSize(120, 30);
+        this.addAttr.setStyle("-fx-background-image: url('http://icons.iconarchive.com/icons/iconsmind/outline/256/Add-icon.png')");
 		this.pane.getChildren().add(this.addAttr);
 	}
 	

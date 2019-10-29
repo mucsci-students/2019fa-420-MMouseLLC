@@ -49,12 +49,14 @@ public class UMLEnvironment {
    * 
    * @param item The UMLItem
    */
-  public void addItem(UMLItem item) {
+  public boolean addItem(UMLItem item) {
     if (item == null || !itemExists(item)) {
       this.items.add(item);
       System.out.println("Class successfully added: " + item.getName());
+      return true;
     } else {
       logger.warning(item.getName() + " is already a class.");
+      return false;
     }
   }
 
@@ -80,12 +82,14 @@ public class UMLEnvironment {
    * @param newClass The new class name
    * @param item the UMLItem
    */
-  public void editItem(String oldClass, String newClass, UMLItem item) {
+  public boolean editItem(String oldClass, String newClass, UMLItem item) {
     if (item == null || !itemExists(item)) {
       logger.warning("Class " + oldClass + " does not exist. Edit cancelled.");
+      return false;
     } else {
       item.setName(newClass);
       System.out.println("Class " + oldClass + " changed to " + newClass + ".");
+      return true;
     }
   }
 
