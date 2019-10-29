@@ -28,6 +28,8 @@ public class GUI extends Application {
 	int size = 0;
 	GUIEnvironment env;
 	boolean removed = false;
+	final int TILE_OFFSET = 160;
+	final int ADD_ATTR_OFFSET = 17;
 
 	/*
 	 * @author eric main calls the built in application function "launch" to create
@@ -98,7 +100,7 @@ public class GUI extends Application {
 					t.pane.setStyle("-fx-background-color: cyan");
 					t.pane.setStyle("-fx-border-color: black");
 				} else {
-					t.pane.setLayoutX(getSize() * 160);
+					t.pane.setLayoutX(getSize() * TILE_OFFSET);
 					t.pane.setStyle("-fx-background-color: cyan");
 					t.pane.setStyle("-fx-border-color: black");
 				}
@@ -168,13 +170,13 @@ public class GUI extends Application {
 			boolean isWhitespace = t.nameBox.getText().matches("^\\s*$");
 
 			if (isWhitespace) {
-				Alert a = new Alert(Alert.AlertType.ERROR,
-						"Name cannot be only whitespace.\nInput example: NewClass");
+				Alert a = new Alert(Alert.AlertType.ERROR, "Name cannot be only whitespace.\nInput example: NewClass");
 				a.show();
+				
 				return;
 			}
-
-			if (env.addItem(new UMLItem(t.nameBox.getText()))) {
+			env.addItem(new UMLItem(t.nameBox.getText()));
+			if (env.findItem(t.nameBox.getText()) != null) {
 				Alert a = new Alert(Alert.AlertType.CONFIRMATION, t.nameBox.getText() + " added successfully!");
 				a.show();
 				
@@ -238,7 +240,9 @@ public class GUI extends Application {
 			}
 
 			if (answer.isPresent()) {
-				if (env.editItem(t.nameBox.getText(), answer.get(), env.findItem(t.nameBox.getText()))){
+				env.editItem(t.nameBox.getText(), answer.get(), env.findItem(t.nameBox.getText()));
+				
+				if (env.findItem(answer.get()) != null){
 					Alert a = new Alert(Alert.AlertType.CONFIRMATION,
 							t.nameBox.getText() + " successsfully changed to " + answer.get());
 					a.show();
@@ -273,8 +277,10 @@ public class GUI extends Application {
 				UMLItem remove = new UMLItem(t.nameBox.getText());
 				env.removeItem(remove);
 				setSize(getSize() - 1);
+				//starts at 2 to avoid removing the add button and remove all button
+				//in the layout instance.
 				for (int i = 2; i < layout.getChildren().size(); i++) {
-					layout.getChildren().get(i).relocate((i - 2) * 160,
+					layout.getChildren().get(i).relocate((i - 2) * TILE_OFFSET,
 							layout.getChildren().get(i).getLayoutY());
 				}
 			}
@@ -327,14 +333,14 @@ public class GUI extends Application {
 						newAttr = t.displayAttr.getText() + "\u2022" + test.get(i).toString() + "\n";
 						t.displayAttr.setText(newAttr);
 					}
-					t.pane.setMinHeight(t.pane.getHeight() + 17);
-					t.pane.setMaxHeight(t.pane.getHeight() + 17);
-					t.edit.setLayoutY(t.edit.getLayoutY() + 17);
-					t.addAttr.setLayoutY(t.addAttr.getLayoutY() + 17);
-					t.removeAttr.setLayoutY(t.removeAttr.getLayoutY() + 17);
-					t.remove.setLayoutY(t.remove.getLayoutY() + 17);
-					t.addChild.setLayoutY(t.addChild.getLayoutY() + 17);
-					t.move.setLayoutY(t.move.getLayoutY() + 17);
+					t.pane.setMinHeight(t.pane.getHeight() + ADD_ATTR_OFFSET);
+					t.pane.setMaxHeight(t.pane.getHeight() + ADD_ATTR_OFFSET);
+					t.edit.setLayoutY(t.edit.getLayoutY() + ADD_ATTR_OFFSET);
+					t.addAttr.setLayoutY(t.addAttr.getLayoutY() + ADD_ATTR_OFFSET);
+					t.removeAttr.setLayoutY(t.removeAttr.getLayoutY() + ADD_ATTR_OFFSET);
+					t.remove.setLayoutY(t.remove.getLayoutY() + ADD_ATTR_OFFSET);
+					t.addChild.setLayoutY(t.addChild.getLayoutY() + ADD_ATTR_OFFSET);
+					t.move.setLayoutY(t.move.getLayoutY() + ADD_ATTR_OFFSET);
 
 					newAttr = t.displayAttr.getText() + "\u2022" + answer.get() + "\n";
 				} else {
@@ -500,14 +506,14 @@ public class GUI extends Application {
 						newAttr += "\u2022" + testArr.get(i).toString() + "\n";
 					}
 					t.displayAttr.setText(newAttr);
-					t.pane.setMinHeight(t.pane.getHeight() - 17);
-					t.pane.setMaxHeight(t.pane.getHeight() - 17);
-					t.edit.setLayoutY(t.edit.getLayoutY() - 17);
-					t.addAttr.setLayoutY(t.addAttr.getLayoutY() - 17);
-					t.removeAttr.setLayoutY(t.removeAttr.getLayoutY() - 17);
-					t.remove.setLayoutY(t.remove.getLayoutY() - 17);
-					t.addChild.setLayoutY(t.addChild.getLayoutY() - 17);
-					t.move.setLayoutY(t.move.getLayoutY() - 17);
+					t.pane.setMinHeight(t.pane.getHeight() - ADD_ATTR_OFFSET);
+					t.pane.setMaxHeight(t.pane.getHeight() - ADD_ATTR_OFFSET);
+					t.edit.setLayoutY(t.edit.getLayoutY() - ADD_ATTR_OFFSET);
+					t.addAttr.setLayoutY(t.addAttr.getLayoutY() - ADD_ATTR_OFFSET);
+					t.removeAttr.setLayoutY(t.removeAttr.getLayoutY() - ADD_ATTR_OFFSET);
+					t.remove.setLayoutY(t.remove.getLayoutY() - ADD_ATTR_OFFSET);
+					t.addChild.setLayoutY(t.addChild.getLayoutY() - ADD_ATTR_OFFSET);
+					t.move.setLayoutY(t.move.getLayoutY() - ADD_ATTR_OFFSET);
 				}
 			}
 		});

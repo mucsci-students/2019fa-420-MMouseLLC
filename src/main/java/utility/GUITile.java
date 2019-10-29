@@ -11,9 +11,7 @@ public class GUITile extends Pane {
 	TextField nameBox = new TextField("EnterName");
 	Label nameLabel = new Label(this.nameBox.getText());
 	TextArea textArea = new TextArea();
-	Pane pane = new Pane();
-	Image plusButton = new Image("http://icons.iconarchive.com/icons/iconsmind/outline/256/Add-icon.png");
-	Button add = new Button("Add Class");
+	Pane pane = new Pane();Button add = new Button("Add Class");
     Button edit = new Button("Edit Name");
     Button remove = new Button("Remove Class");
     Button addAttr = new Button("Add Attribute");
