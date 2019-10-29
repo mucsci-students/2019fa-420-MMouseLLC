@@ -16,7 +16,7 @@ public class GUITile extends Pane {
     Button remove = new Button("Remove Class");
     Button addAttr = new Button("Add Attribute");
     Button addChild = new Button("Add Child");
-    Button move = new Button("Move");
+    Button move = new Button("M");
     Button removeAttr = new Button("Remove Attribute");
     Label displayAttr = new Label("");
     boolean hasAttr = false;
@@ -46,7 +46,7 @@ public class GUITile extends Pane {
 	
 	public void buildNameBox() {
 		this.nameBox.setLayoutX(10);
-        this.nameBox.setLayoutY(10);
+        this.nameBox.setLayoutY(20);
         this.nameBox.setMaxWidth(120);
         this.nameBox.setMinWidth(120);
         this.pane.getChildren().add(this.nameBox);
@@ -54,7 +54,7 @@ public class GUITile extends Pane {
 	
 	public void buildNamePanel() {
 		this.nameLabel.setLayoutX(10);
-        this.nameLabel.setLayoutY(10);
+        this.nameLabel.setLayoutY(20);
         this.nameLabel.setMaxWidth(120);
         this.nameLabel.setMinWidth(120);
         this.nameLabel.setVisible(false);
@@ -122,11 +122,11 @@ public class GUITile extends Pane {
 	}
 	
 	public void buildMoveButton() {
-		this.move.setLayoutY(270);
-        this.move.setLayoutX(10);
-        this.move.setMaxSize(120, 30);
-        this.move.setMinSize(120, 30);
-        this.move.setVisible(false);
+		this.move.setLayoutY(1);
+        this.move.setLayoutX(1);
+        this.move.setMaxSize(15, 15);
+        this.move.setMinSize(15, 15);
+        this.move.setVisible(true);
         this.pane.getChildren().add(this.move);
 	}
 	

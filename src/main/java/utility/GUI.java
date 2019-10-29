@@ -340,7 +340,6 @@ public class GUI extends Application {
 					t.removeAttr.setLayoutY(t.removeAttr.getLayoutY() + ADD_ATTR_OFFSET);
 					t.remove.setLayoutY(t.remove.getLayoutY() + ADD_ATTR_OFFSET);
 					t.addChild.setLayoutY(t.addChild.getLayoutY() + ADD_ATTR_OFFSET);
-					t.move.setLayoutY(t.move.getLayoutY() + ADD_ATTR_OFFSET);
 
 					newAttr = t.displayAttr.getText() + "\u2022" + answer.get() + "\n";
 				} else {
@@ -415,17 +414,13 @@ public class GUI extends Application {
 	
 	public void setMoveTileAction(GUITile t, Pane layout) {
 		// Moves tile t to location specified by a click
-		t.move.setOnAction((event) -> {
-			Alert a = new Alert(Alert.AlertType.CONFIRMATION, "Click where you would like to move.");
-			a.show();
 
-			layout.setOnMouseClicked(new EventHandler<MouseEvent>() {
+			t.move.setOnMouseDragged(new EventHandler<MouseEvent>() {
 				@Override
 				public void handle(MouseEvent event) {
 
-					t.pane.setLayoutX(event.getSceneX());
-					t.pane.setLayoutY(event.getSceneY());
-					
+					t.pane.setTranslateX(event.getX() + t.pane.getTranslateX()-5);
+					t.pane.setTranslateY(event.getY() + t.pane.getTranslateY()-5);
 					
 					UMLItem item = env.findItem(t.nameBox.getText());
 					
@@ -446,12 +441,18 @@ public class GUI extends Application {
 						layout.getChildren().remove(arrow);
 						env.replaceArrow(pair, newArrow);
 						layout.getChildren().add(newArrow);
+						event.consume();
 					});
 					
 				}
 			});
-
-		});
+			
+			t.move.setOnMouseDragReleased(new EventHandler<MouseEvent>() {
+				@Override
+				public void handle(MouseEvent event) {
+				
+				}
+			});
 	}
 	
 	public void setRemoveAttrButton(GUITile t, Pane layout) {
@@ -513,10 +514,8 @@ public class GUI extends Application {
 					t.removeAttr.setLayoutY(t.removeAttr.getLayoutY() - ADD_ATTR_OFFSET);
 					t.remove.setLayoutY(t.remove.getLayoutY() - ADD_ATTR_OFFSET);
 					t.addChild.setLayoutY(t.addChild.getLayoutY() - ADD_ATTR_OFFSET);
-					t.move.setLayoutY(t.move.getLayoutY() - ADD_ATTR_OFFSET);
 				}
 			}
 		});
 	}
-
 }
