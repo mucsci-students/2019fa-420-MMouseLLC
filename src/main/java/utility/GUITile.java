@@ -67,8 +67,7 @@ public class GUITile extends Pane {
 		this.addAttr.setVisible(false);
         this.addAttr.setMaxSize(120, 30);
         this.addAttr.setMinSize(120, 30);
-        this.addAttr.setStyle("-fx-background-image: url('http://icons.iconarchive.com/icons/iconsmind/outline/256/Add-icon.png')");
-		this.pane.getChildren().add(this.addAttr);
+        this.pane.getChildren().add(this.addAttr);
 	}
 	
 	public void buildRemAttrButton() {
