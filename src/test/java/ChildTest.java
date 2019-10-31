@@ -1,17 +1,19 @@
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+import java.util.ArrayList;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.ArrayList;
-
 import data.UMLEnvironment;
 import data.UMLItem;
 import utility.Console;
+import utility.IConsole;
 
 public class ChildTest {
   private UMLEnvironment env;
-  private Console c = new Console();
+  private IConsole c = new Console();
 
   @Before
   public void setEnv() {

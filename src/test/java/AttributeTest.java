@@ -1,16 +1,15 @@
 import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
-
 import java.util.ArrayList;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import data.UMLEnvironment;
 import data.UMLItem;
 import utility.Console;
+import utility.IConsole;
 
 /**
  * The Class SingleLineCommandTest
@@ -19,7 +18,7 @@ public class AttributeTest {
 
 	/** The UMLEnvironment. */
 	private UMLEnvironment env;
-	private Console c = new Console();
+	private IConsole c = new Console();
 	
 	@Before
 	public void setEnv() {

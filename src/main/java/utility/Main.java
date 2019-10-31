@@ -13,7 +13,7 @@ public class Main {
 	}
 
   public static void run() {
-		Console console = new Console();
+		IConsole console = new Console();
 		try{
 			console.run();
 		} catch (org.jline.reader.EndOfFileException e){

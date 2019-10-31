@@ -12,7 +12,7 @@ import mapper.AttributeMapper;
 /**
  * The Class ConsoleEnum.
  */
-public class Console {
+public class Console implements IConsole {
 
 	/** The Constant logger. */
 	private static final Logger logger = Logger.getLogger(Console.class.getName());
@@ -464,7 +464,7 @@ public class Console {
 	 * @param input the input
 	 * @return String The String
 	 */
-	public String buildString(String[] input) {
+	private String buildString(String[] input) {
 		// build up string again to allow spaces in file save
 		StringBuilder buildUp = new StringBuilder();
 		for (int i = 1; i < input.length; i++) {

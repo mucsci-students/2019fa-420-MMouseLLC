@@ -1,4 +1,4 @@
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -6,11 +6,12 @@ import org.junit.Test;
 import data.UMLEnvironment;
 import data.UMLItem;
 import utility.Console;
+import utility.IConsole;
 
 public class Delete {
 	/** The UMLEnvironment. */
 	  private UMLEnvironment env;
-	  private Console c = new Console();
+	  private IConsole c = new Console();
 	  
 	  @Before
 	  public void setEnv() {
