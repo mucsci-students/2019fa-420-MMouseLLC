@@ -1,6 +1,8 @@
 package utility;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
@@ -90,6 +92,9 @@ public class GUI extends Application {
 		Button addButton = new Button();
 		Button resetAll = new Button("Start Over");
 		addButton.setText("Add Class");
+		
+		ScrollPane sp = new ScrollPane();
+		sp.setContent(mainLayout);
 
 		/*
 		 * @author eric this event listener is for the add button in the main menu the
@@ -118,6 +123,7 @@ public class GUI extends Application {
 				setAddChildButtonAction(t, layout);
 				setMoveTileAction(t, layout);
 				setRemoveAttrButton(t, layout);
+				sp.setContent(layout);
 				
 			}
 		};
@@ -151,7 +157,7 @@ public class GUI extends Application {
 		layout.getChildren().add(resetAll);
 		mainLayout.getChildren().add(arrowLayout);
 		mainLayout.getChildren().add(layout);
-		Scene scene = new Scene(mainLayout, winLength, winHeight);
+		Scene scene = new Scene(sp, winLength, winHeight);
 		primary.setScene(scene);
 		primary.show();
 	}
@@ -278,18 +284,14 @@ public class GUI extends Application {
 					ButtonType.YES, ButtonType.NO);
 			alert.showAndWait();
 			if (alert.getResult().getButtonData() == ButtonBar.ButtonData.YES) {
-				t.pane.setVisible(false);
+				UMLItem item = env.findItem(t.nameBox.getText());
+				System.out.println(env.getRelationshipsFor(item).size());
+				env.getRelationshipsFor(item).forEach(removeArrow());
 				layout.getChildren().remove(t.pane);
-				UMLItem remove = new UMLItem(t.nameBox.getText());
-				env.removeItem(remove);
-				setSize(getSize() - 1);
-				//starts at 2 to avoid removing the add button and remove all button
-				//in the layout instance.
-				for (int i = 2; i < layout.getChildren().size(); i++) {
-					layout.getChildren().get(i).relocate((i - 2) * TILE_OFFSET,
-							layout.getChildren().get(i).getLayoutY());
-				}
+				env.removeItem(item);
+				System.out.println(env.getRelationshipsFor(item).size());
 			}
+			
 		});
 	}
 	
@@ -412,7 +414,6 @@ public class GUI extends Application {
 			childCoords[0] += parentTile.pane.getWidth() / 2.0;
 
 			Arrow arr = new Arrow(parentCoords[0], parentCoords[1], childCoords[0], childCoords[1], 5);
-			arr.toBack();
 			layout.getChildren().add(arr);
 			env.addArrow(parent, child, arr);
 			Alert a = new Alert(Alert.AlertType.CONFIRMATION,
@@ -438,8 +439,7 @@ public class GUI extends Application {
 					t.pane.setTranslateY(offsetY);
 					
 					UMLItem item = env.findItem(t.nameBox.getText());
-					
-					env.getRelationshipsFor(item).forEach(updateArrowWithParent(layout));
+					env.getRelationshipsFor(item).forEach(updateArrowWithParent());
 			});
 			
 			t.pane.setOnMouseReleased(event -> {
@@ -519,7 +519,7 @@ public class GUI extends Application {
 		});
 	}
 	
-	private BiConsumer<? super ParentChildPair, ? super Arrow> updateArrowWithParent(Group layout) {
+	private BiConsumer<? super ParentChildPair, ? super Arrow> updateArrowWithParent() {
 		return (ParentChildPair pair, Arrow arrow) -> {
 		
 		UMLItem parent = pair.getParent();
@@ -538,7 +538,18 @@ public class GUI extends Application {
 		layout.getChildren().remove(arrow);
 		env.replaceArrow(pair, newArrow);
 		layout.getChildren().add(newArrow);
+		//mainLayout.getChildren().remove(arrowLayout);
+		//mainLayout.getChildren().add(arrowLayout);
 		
+		};
+	}
+	
+	private BiConsumer<? super ParentChildPair, ? super Arrow> removeArrow() {
+		return (ParentChildPair pair, Arrow arrow) -> {
+			layout.getChildren().remove(arrow);
+			env.removeArrow(pair.getParent(), pair.getChild());
+			env.removeArrow(pair.getChild(), pair.getParent());
+			//env.removeChild(pair.getChild().getName(), pair.getParent().getName(), pair.getChild(), pair.getParent());
 		};
 	}
 }
