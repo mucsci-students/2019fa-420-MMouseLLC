@@ -8,6 +8,7 @@ import config.HelpScreenConfig;
 import data.UMLEnvironment;
 import data.UMLItem;
 import mapper.AttributeMapper;
+import mapper.FieldMapper;
 
 /**
  * The Class ConsoleEnum.
@@ -85,10 +86,18 @@ public class Console {
       listAttributes(input);
     } else if (command.equals("edit_attribute")) {
       editAttribute(input);
+    } else if (command.equals("edit_field_type")) {
+      editFieldType(input);
+    } else if (command.equals("edit_field_var")) {
+        editFieldVar(input);
     } else if (command.equals("add_attribute")) {
       addAttribute(input);
+    } else if (command.equals("add_field")) {
+      addField(input);
     } else if (command.equals("delete_attribute")) {
       deleteAttribute(input);
+    } else if (command.equals("delete_field")) {
+        deleteField(input);
     } else if(command.equals("quit")) {
       quit();
     } else if(command.equals("help")) {
@@ -302,6 +311,8 @@ public class Console {
     }
   }
   
+ 
+  
   /**
    * edit an attribute currently in a class
    * and  gives list of attributes currently in the class
@@ -322,6 +333,85 @@ public class Console {
       System.out.println(attributes);      
     }
   }
+  /**
+   * edit a field type currently in a class
+   * and  gives list of fields currently in the class
+   * 
+   * @param input The input
+   */
+  public void editFieldType(String[] input) {
+    if (input.length != 5) {
+      logger.warning("Invalid: editfieldtype [Class] [Key] [Old Type] [New Type] - 5 fields requierd, " + input.length + " found");
+    } else {
+      String className = input[1];
+      String key = input[2];
+      String oldType = input[3];
+      String newType = input[4];
+      
+      UMLItem item = env.findItem(className);
+      if(item == null) {
+    	  logger.warning("Inavalid Class Name");
+      }
+      
+      FieldMapper mapper = new FieldMapper(env);
+      mapper.editFieldType(className, key, oldType, newType);
+      String fields = mapper.listMap(item.getFields());
+      System.out.println(fields);      
+    }
+  }
+  
+  /**
+   * edit a field variable and the type currently in a class
+   * and  gives list of fields currently in the class
+   * 
+   * @param input The input
+   */
+  public void editFieldVar(String[] input) {
+    if (input.length != 6) {
+      logger.warning("Invalid: editfieldtype [Class] [Old Key] [New Key] [Old Type] [New Type] - 6 fields requierd, " + input.length + " found");
+    } else {
+      String className = input[1];
+      String oldKey = input[2];
+      String newKey = input[3];
+      String oldType = input[4];
+      String newType = input[5];
+      
+      UMLItem item = env.findItem(className);
+      if(item == null) {
+    	  logger.warning("Inavalid Class Name");
+      }
+      
+      FieldMapper mapper = new FieldMapper(env);
+      mapper.editFieldVar(className, oldKey, newKey, oldType, newType);
+      String fields = mapper.listMap(item.getFields());
+      System.out.println(fields);      
+    }
+  }
+  /**
+	 * add a new field in an exisiting class
+	 * and gives a list of the field currently in the class
+	 * 
+	 * @param input The input
+	 */
+	public void addField(String[] input) {
+		if (input.length != 4) {
+			logger.warning("Invalid: addfield [Class] [type] [var] - 4 fields required, " + input.length + " found");
+		} else {
+	    String className = input[1];
+	    String type = input[2];
+	    String var = input[3];
+	    
+	    UMLItem item = env.findItem(className);
+	      if(item == null) {
+	    	  logger.warning("Inavalid Class Name");
+	      }
+	      
+	    FieldMapper mapper = new FieldMapper(env);
+	    mapper.addField(className, type, var);
+	    String fields = mapper.listMap(item.getFields());
+	    System.out.println(fields);		  
+		}
+	}
 
 	/**
 	 * add a new attribute in an exisiting class
@@ -351,7 +441,7 @@ public class Console {
 	 */
 	public void deleteAttribute(String[] input) {
 		if (input.length != 3) {
-      logger.warning("Invalid: addattribute [Class] [Attribute] - 3 fields requierd, " + input.length + " found");
+      logger.warning("Invalid: addattribute [Class] [Attribute] - 3 fields required, " + input.length + " found");
 		} else {
 		  String className = input[1];
 		  String attributeName = input[2];
@@ -360,6 +450,31 @@ public class Console {
 		  mapper.deleteAttribute(className, attributeName);
 		  String attributes = mapper.listAttributes(className);
 		  System.out.println(attributes);
+		}
+	}
+	
+	/**
+	 * delete a field currently in a class gives 
+	 * and gives list of fields remaining in the class
+	 * 
+	 * @param input The input
+	 */
+	public void deleteField(String[] input) {
+		if (input.length != 3) {
+      logger.warning("Invalid: addattribute [Class] [Field] - 3 fields requierd, " + input.length + " found");
+		} else {
+		  String className = input[1];
+		  String var = input[2];
+		  
+		  UMLItem item = env.findItem(className);
+	      if(item == null) {
+	    	  logger.warning("Inavalid Class Name");
+	      }
+	      
+	    FieldMapper mapper = new FieldMapper(env);
+	    mapper.deleteField(className, var);
+	    String fields = mapper.listMap(item.getFields());
+	    System.out.println(fields);		  
 		}
 	}
 
