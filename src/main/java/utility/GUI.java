@@ -83,6 +83,9 @@ public class GUI extends Application {
 		Button resetAll = new Button("Start Over");
 		addButton.setText("Add Class");
 		Pane layout = new Pane();
+		
+		ScrollPane sp = new ScrollPane();
+		sp.setContent(layout);
 
 		/*
 		 * @author eric this event listener is for the add button in the main menu the
@@ -114,6 +117,7 @@ public class GUI extends Application {
 				setAddChildButtonAction(t, layout);
 				setMoveTileAction(t, layout);
 				setRemoveAttrButton(t, layout);
+				sp.setContent(layout);
 				
 			}
 		};
@@ -145,7 +149,7 @@ public class GUI extends Application {
 		primary.setMinWidth(winLength);
 		layout.getChildren().add(addButton);
 		layout.getChildren().add(resetAll);
-		Scene scene = new Scene(layout, winLength, winHeight);
+		Scene scene = new Scene(sp, winLength, winHeight);
 		primary.setScene(scene);
 		primary.show();
 	}
@@ -446,6 +450,7 @@ public class GUI extends Application {
 						layout.getChildren().remove(arrow);
 						env.replaceArrow(pair, newArrow);
 						layout.getChildren().add(newArrow);
+						//sp.setContent(layout);
 					});
 					
 				}
