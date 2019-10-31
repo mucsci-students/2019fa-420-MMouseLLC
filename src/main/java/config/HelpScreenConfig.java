@@ -14,17 +14,17 @@ public class HelpScreenConfig {
   private static final Logger logger = Logger.getLogger(HelpScreenConfig.class.getName());
 
   /** The Constant HELP_SCREEN_FILE. */
-  public static final String HELP_SCREEN_FILE = "helpscreen.properties";
+  private static final String HELP_SCREEN_FILE = "helpscreen.properties";
 
   /** The Constant HELP_SCREEN_DATA. */
-  public static final String HELP_SCREEN_DATA = "help.message";
+  private static final String HELP_SCREEN_DATA = "help.message";
 
   /**
    * Gets the helpscreen properties file and loads it as a Properties object.
    *
    * @return props The helpscreen properties file
    */
-  public static Properties getHelpFileConfig() {
+  private static Properties getHelpFileConfig() {
     Properties props = new Properties();
     InputStream inputStream = HelpScreenConfig.class.getClassLoader().getResourceAsStream(HELP_SCREEN_FILE);
     try {

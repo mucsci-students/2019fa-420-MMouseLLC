@@ -122,7 +122,7 @@ public class Console {
    * 
    * @param input The input
    */
-  public void delete(String[] input) {
+  private void delete(String[] input) {
     if (input.length < 3 || !input[1].equals("-f")) {
       logger.warning("Usage: delete [flag \"-f\" to confirm delete] [className]");
       return;
@@ -140,7 +140,7 @@ public class Console {
    *
    * @param input The input
    */
-  public void edit(String[] input) {
+  private void edit(String[] input) {
     if (input.length != 3) {
       logger.warning("Invalid: edit [oldClass] [newClass] - 3 fields required, " + input.length + " found.");
       return;
@@ -159,7 +159,7 @@ public class Console {
    *
    * @param input The input
    */
-  public void find(String[] input) {
+  private void find(String[] input) {
     for (int i = 1; i < input.length; i++) {
       if(env.findItem(input[i]) != null) {
     	  System.out.println("Class " + input[i] + " found.");
@@ -180,7 +180,7 @@ public class Console {
    *
    * @param input The input
    */
-  public void save(String[] input) {
+  private void save(String[] input) {
     String builtFileName = buildString(input);
     LocalFile file = new LocalFile(env, builtFileName);
     // Only allow existing files to overwrite if -f flag
@@ -198,7 +198,7 @@ public class Console {
    *
    * @param input The input
    */
-  public void load(String[] input) {
+  private void load(String[] input) {
     // Force users to use -f flag to confirm awareness of not saving
     if (!hasOverwriteFlag(input)) {
       System.out.println("Use flag \"-f\" to confirm awareness that unsaved changes will be lost.");
@@ -220,7 +220,7 @@ public class Console {
    * 
    * @param input The input
    */
-  public void addChild(String[] input) {
+  private void addChild(String[] input) {
     if (input.length != 3) {
       logger.warning(
           "Invalid: addchild [childClass] [parentClass] - 3 fields required, " + input.length + " found.");
@@ -241,7 +241,7 @@ public class Console {
    * 
    * @param input The input
    */
-  public void removeChild(String[] input) {
+  private void removeChild(String[] input) {
     if (input.length != 3) {
       logger.warning(
           "Invalid: removechild [childClass] [parentClass] - 3 fields required, " + input.length + " found.");
@@ -261,7 +261,7 @@ public class Console {
    * 
    * @param input
    */
-  public void listChildren(String[] input) {
+  private void listChildren(String[] input) {
     if (input.length != 2) {
       logger.warning("Invalid: listchildren [parentClass] - 2 fields required, " + input.length + " found.");
     } else {
@@ -276,7 +276,7 @@ public class Console {
    * 
    * @param input The input
    */
-  public void listParents(String[] input) {
+  private void listParents(String[] input) {
     if (input.length != 2) {
       logger.warning("Invalid: listparents [childClass] - 2 fields required, " + input.length + " found.");
     } else {
@@ -291,7 +291,7 @@ public class Console {
    * 
    * @param input The input
    */
-  public void listAttributes(String[] input) {
+  private void listAttributes(String[] input) {
     if (input.length != 2) {
       logger.warning("Invalid: list_attributes [className] - 2 fields required, " + input.length + " found.");
     } else {
@@ -308,7 +308,7 @@ public class Console {
    * 
    * @param input The input
    */
-  public void editAttribute(String[] input) {
+  private void editAttribute(String[] input) {
     if (input.length != 4) {
       logger.warning("Invalid: editattribute [Class] [Old Attribute] [New Attribute] - 4 fields requierd, " + input.length + " found");
     } else {
@@ -329,7 +329,7 @@ public class Console {
 	 * 
 	 * @param input The input
 	 */
-	public void addAttribute(String[] input) {
+  private void addAttribute(String[] input) {
 		if (input.length != 3) {
 			logger.warning("Invalid: addattribute [Class] [Attribute] - 3 fields requierd, " + input.length + " found");
 		} else {
@@ -349,7 +349,7 @@ public class Console {
 	 * 
 	 * @param input The input
 	 */
-	public void deleteAttribute(String[] input) {
+  private void deleteAttribute(String[] input) {
 		if (input.length != 3) {
       logger.warning("Invalid: addattribute [Class] [Attribute] - 3 fields requierd, " + input.length + " found");
 		} else {
@@ -366,7 +366,7 @@ public class Console {
 	/**
 	 * The help menu,
 	 */
-	public void help() {
+  private void help() {
 	  HelpScreenConfig.printHelpScreen();
 	}
 
@@ -375,7 +375,7 @@ public class Console {
 	 * Quits out of the program. First, it prompts the user if they wish to save
 	 * prior to quitting. If so, they save and quit, if not it just quits.
 	 */
-	public void quit() {
+   private void quit() {
 		String answer = reader.readLine("Any unsaved work will be lost, do you want to save? (y/n): ");
 		if (answer.equalsIgnoreCase("y")) {
 			saveAndQuit();
@@ -388,7 +388,7 @@ public class Console {
 	/**
 	 * Saves the file and then quits out of the program.
 	 */
-	public void saveAndQuit() {
+   private void saveAndQuit() {
 		String fileName = reader.readLine("Please enter file name: ");
 		LocalFile file = new LocalFile(env, fileName);
 		String answer = reader.readLine("Use filename " + fileName + "? (y/n): ");
@@ -419,7 +419,7 @@ public class Console {
 	 * @param newClass The new class name
 	 * @return boolean If the class name can be overwritten
 	 */
-	public boolean canOverwriteEdit(String oldClass, String newClass) {
+   private boolean canOverwriteEdit(String oldClass, String newClass) {
 		boolean overwriteActionComplete = false;
 		while (!overwriteActionComplete) {
 			String answer = reader.readLine("Change " + oldClass + " to " + newClass + "? (y/n): ");
@@ -441,7 +441,7 @@ public class Console {
 	 * @param fileName the file name
 	 * @return true, if successful
 	 */
-	public boolean canOverwriteSave(String fileName) {
+   private boolean canOverwriteSave(String fileName) {
 		boolean saveActionComplete = false;
 		while (!saveActionComplete) {
 			String answer = reader.readLine(fileName + " is already a saved file. Do you wish to overwrite? (y/n): ");
@@ -483,7 +483,7 @@ public class Console {
 	 * @param input the input
 	 * @return boolean If the arg list has the overwrite flag.
 	 */
-	public boolean hasOverwriteFlag(String[] input) {
+	private boolean hasOverwriteFlag(String[] input) {
 		for (int i = 1; i < input.length; i++) {
 			if (input[i].equals("-f")) {
 				return true;

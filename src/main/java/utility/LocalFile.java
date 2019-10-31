@@ -32,13 +32,13 @@ public class LocalFile {
   private static final String PLACEHOLDER = "placeholder.txt";
   
   /** The UMLEnvironment. */
-  UMLEnvironment env;
+  private UMLEnvironment env;
   
   /** The File directory. */
-  File directory;
+  private File directory;
   
   /** The file name. */
-  String fileName;
+  private String fileName;
   
   /**
    * Default Constructor.
@@ -159,7 +159,7 @@ public class LocalFile {
    * all directory contents. This is created in order to keep the directory
    * in the Github repository.
    */
-  public void createPlaceholderFile() {
+  private void createPlaceholderFile() {
     try(Writer writer = new BufferedWriter(new OutputStreamWriter(
         new FileOutputStream(SAVE_DIR + "/" + PLACEHOLDER), "utf-8"))) {
       writer.write("Placeholder to keep directory active for Github.");
@@ -178,7 +178,7 @@ public class LocalFile {
   }
   
   /**
-   * sSets the file name
+   * Sets the file name
    * 
    * @param fileName
    */

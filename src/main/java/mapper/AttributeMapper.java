@@ -14,7 +14,7 @@ public class AttributeMapper {
   private static final Logger logger = Logger.getLogger(AttributeMapper.class.getName());
   
   /** The env. */
-  UMLEnvironment env;
+  private UMLEnvironment env;
   
   /**
    * Instantiates a new attribute mapper.

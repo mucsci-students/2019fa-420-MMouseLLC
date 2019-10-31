@@ -15,7 +15,7 @@ public class UMLEnvironment {
 
   private static final Logger logger = Logger.getLogger(UMLEnvironment.class.getName());
 
-  ArrayList<UMLItem> items;
+  protected ArrayList<UMLItem> items;
 
   public UMLEnvironment() {
     this.items = new ArrayList<>();
