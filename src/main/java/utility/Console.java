@@ -83,10 +83,6 @@ public class Console {
       listChildren(input);
     } else if (command.equals("list_parents")) {
       listParents(input);
-    } else if(command.equals("list_attributes")) {
-      listAttributes(input);
-    } else if (command.equals("edit_attribute")) {
-      editAttribute(input);
     } else if (command.equals("edit_field_type")) {
       editFieldType(input);
     } else if (command.equals("edit_function_type")) {
@@ -95,14 +91,10 @@ public class Console {
         editFieldVar(input);
     } else if (command.equals("edit_function_var")) {
         editFunctionVar(input);
-    } else if (command.equals("add_attribute")) {
-      addAttribute(input);
     } else if (command.equals("add_field")) {
       addField(input);
     } else if (command.equals("add_function")) {
         addFunction(input);
-    } else if (command.equals("delete_attribute")) {
-      deleteAttribute(input);
     } else if (command.equals("delete_field")) {
         deleteField(input);
     } else if (command.equals("delete_function")) {
@@ -303,45 +295,7 @@ public class Console {
       System.out.println(parentList);
     }
   }
-  
-  /**
-   * Given command list_attributes  [className], log the attributes of given class
-   * 
-   * @param input The input
-   */
-  public void listAttributes(String[] input) {
-    if (input.length != 2) {
-      logger.warning("Invalid: list_attributes [className] - 2 fields required, " + input.length + " found.");
-    } else {
-      String itemName = input[1];
-      AttributeMapper mapper = new AttributeMapper(env);
-      String attributes = mapper.listAttributes(itemName);
-      System.out.println(attributes);      
-    }
-  }
-  
  
-  
-  /**
-   * edit an attribute currently in a class
-   * and  gives list of attributes currently in the class
-   * 
-   * @param input The input
-   */
-  public void editAttribute(String[] input) {
-    if (input.length != 4) {
-      logger.warning("Invalid: editattribute [Class] [Old Attribute] [New Attribute] - 4 fields requierd, " + input.length + " found");
-    } else {
-      String className = input[1];
-      String oldAttr = input[2];
-      String newAttr = input[3];
-      
-      AttributeMapper mapper = new AttributeMapper(env);
-      mapper.editAttribute(className, oldAttr, newAttr);
-      String attributes = mapper.listAttributes(className);
-      System.out.println(attributes);      
-    }
-  }
   /**
    * edit a field type currently in a class
    * and  gives list of fields currently in the class
@@ -503,46 +457,6 @@ public class Console {
 			}
 		}
 
-	/**
-	 * add a new attribute in an exisiting class
-	 * and gives a list of the attributes currently in the class
-	 * 
-	 * @param input The input
-	 */
-	public void addAttribute(String[] input) {
-		if (input.length != 3) {
-			logger.warning("Invalid: addattribute [Class] [Attribute] - 3 fields requierd, " + input.length + " found");
-		} else {
-	    String className = input[1];
-	    String attributeName = input[2];
-	    
-	    AttributeMapper mapper = new AttributeMapper(env);
-	    mapper.addAttribute(className, attributeName);
-	    String attributes = mapper.listAttributes(className);
-	    System.out.println(attributes);		  
-		}
-	}
-
-	/**
-	 * delete an attribute currently in a class gives 
-	 * and gives list of attributes remaining in the class
-	 * 
-	 * @param input The input
-	 */
-	public void deleteAttribute(String[] input) {
-		if (input.length != 3) {
-      logger.warning("Invalid: deleteattribute [Class] [Attribute] - 3 fields required, " + input.length + " found");
-		} else {
-		  String className = input[1];
-		  String attributeName = input[2];
-		  
-		  AttributeMapper mapper = new AttributeMapper(env);
-		  mapper.deleteAttribute(className, attributeName);
-		  String attributes = mapper.listAttributes(className);
-		  System.out.println(attributes);
-		}
-	}
-	
 	/**
 	 * delete a field currently in a class gives 
 	 * and gives list of fields remaining in the class
