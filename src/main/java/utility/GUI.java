@@ -82,7 +82,121 @@ public class GUI extends Application {
 		Button addButton = new Button();
 		Button resetAll = new Button("Start Over");
 		addButton.setText("Add Class");
+
+		ToggleGroup group = new ToggleGroup();
+		ToggleButton displayMode = new ToggleButton("Display Mode");
+		ToggleButton editMode = new ToggleButton("Edit Mode");
+		displayMode.setToggleGroup(group);
+		editMode.setToggleGroup(group);
 		Pane layout = new Pane();
+		displayMode.setLayoutX(100);
+		displayMode.setLayoutY(10);
+		editMode.setLayoutX(210);
+		editMode.setLayoutY(10);
+		layout.getChildren().addAll(displayMode, editMode);
+		editMode.setSelected(true);
+
+		editMode.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent clickEditButton) {
+				if (!editMode.isSelected()) {
+					Alert a = new Alert(Alert.AlertType.ERROR, "Already in Edit Mode");
+					a.show();
+					displayMode.setSelected(false);
+					editMode.setSelected(true);
+					return;
+				} else {
+					Alert a = new Alert(Alert.AlertType.CONFIRMATION, "Move to edit mode?", ButtonType.YES,
+							ButtonType.NO);
+					a.showAndWait();
+					if (a.getResult().getButtonData() == ButtonBar.ButtonData.YES) {
+						for (UMLItem i : env.getItems()) {
+							GUITile tile = env.getTileFor(i);
+							UMLItem found = env.findItem(tile.nameBox.getText());
+							tile.nameBox.setVisible(false);
+							tile.nameLabel.setVisible(true);
+							tile.nameLabel.setText(tile.nameBox.getText());
+							tile.edit.setVisible(true);
+							tile.remove.setVisible(true);
+							tile.addAttr.setVisible(true);
+							tile.addChild.setVisible(true);
+							tile.move.setVisible(true);
+							int tileSize = found.getAttributes().size();
+							tile.pane.setMaxHeight(310 + (tileSize * ADD_ATTR_OFFSET));
+							tile.pane.setMinHeight(310 + (tileSize * ADD_ATTR_OFFSET));
+							tile.pane.getChildren().remove(tile.add);
+							UMLItem item = env.findItem(tile.nameBox.getText());
+							env.createMappingFor(item, tile);
+							tile.removeAttr.setVisible(true);
+							tile.pane.getChildren().remove(tile.add);
+						}
+						displayMode.setSelected(false);
+						editMode.setSelected(true);
+						addButton.setDisable(false);
+						return;
+					} else if (a.getResult().getButtonData() == ButtonBar.ButtonData.NO && !editMode.isSelected()) {
+						displayMode.setSelected(false);
+						editMode.setSelected(true);
+
+					} else {
+						displayMode.setSelected(true);
+						editMode.setSelected(false);
+					}
+				}
+			}
+		});
+
+		displayMode.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent clickDisplayButton) {
+				if (!displayMode.isSelected()) {
+					Alert a = new Alert(Alert.AlertType.ERROR, "Already in Display Mode");
+					a.show();
+					displayMode.setSelected(true);
+					editMode.setSelected(false);
+					return;
+				} else {
+					Alert a = new Alert(Alert.AlertType.CONFIRMATION, "Move to display mode?", ButtonType.YES,
+							ButtonType.NO);
+					a.showAndWait();
+					if (a.getResult().getButtonData() == ButtonBar.ButtonData.YES) {
+						for (UMLItem i : env.getItems()) {
+							GUITile tile = env.getTileFor(i);
+							UMLItem found = env.findItem(tile.nameBox.getText());
+							tile.nameBox.setVisible(false);
+							tile.nameLabel.setVisible(true);
+							tile.nameLabel.setText(tile.nameBox.getText());
+							tile.edit.setVisible(false);
+							tile.remove.setVisible(false);
+							tile.addAttr.setVisible(false);
+							tile.addChild.setVisible(false);
+							tile.move.setVisible(false);
+							int tileSize = found.getAttributes().size();
+							tile.pane.setMaxHeight(50 + (tileSize * ADD_ATTR_OFFSET));
+							tile.pane.setMinHeight(50 + (tileSize * ADD_ATTR_OFFSET));
+							tile.pane.getChildren().remove(tile.add);
+							UMLItem item = env.findItem(tile.nameBox.getText());
+							env.createMappingFor(item, tile);
+							tile.removeAttr.setVisible(false);
+							tile.pane.getChildren().remove(tile.add);
+
+						}
+						displayMode.setSelected(true);
+						editMode.setSelected(false);
+						addButton.setDisable(true);
+						return;
+					} else if (a.getResult().getButtonData() == ButtonBar.ButtonData.NO && !displayMode.isSelected()) {
+						displayMode.setSelected(true);
+						editMode.setSelected(false);
+
+					} else {
+						displayMode.setSelected(false);
+						editMode.setSelected(true);
+					}
+				}
+			}
+
+		});
 
 		/*
 		 * @author eric this event listener is for the add button in the main menu the
@@ -114,7 +228,7 @@ public class GUI extends Application {
 				setAddChildButtonAction(t, layout);
 				setMoveTileAction(t, layout);
 				setRemoveAttrButton(t, layout);
-				
+
 			}
 		};
 
@@ -125,6 +239,10 @@ public class GUI extends Application {
 				layout.getChildren().remove(i);
 			}
 			layout.getChildren().add(addButton);
+
+			// layout.getChildren().add(displayButton);
+			// layout.getChildren().add(editButton);
+
 			layout.getChildren().add(resetAll);
 		});
 
@@ -149,7 +267,7 @@ public class GUI extends Application {
 		primary.setScene(scene);
 		primary.show();
 	}
-	
+
 	public void setAddButtonAction(GUITile t) {
 		/*
 		 * @author eric t.add button event is a handler for saving an individual item
@@ -172,15 +290,15 @@ public class GUI extends Application {
 			if (isWhitespace) {
 				Alert a = new Alert(Alert.AlertType.ERROR, "Name cannot be only whitespace.\nInput example: NewClass");
 				a.show();
-				
+
 				return;
 			}
 			env.addItem(new UMLItem(t.nameBox.getText()));
 			if (env.findItem(t.nameBox.getText()) != null) {
 				Alert a = new Alert(Alert.AlertType.CONFIRMATION, t.nameBox.getText() + " added successfully!");
 				a.show();
-				
-				// Update the name and add buttons 
+
+				// Update the name and add buttons
 				t.nameBox.setVisible(false);
 				t.nameLabel.setVisible(true);
 				t.nameLabel.setText(t.nameBox.getText());
@@ -189,6 +307,8 @@ public class GUI extends Application {
 				t.addAttr.setVisible(true);
 				t.addChild.setVisible(true);
 				t.move.setVisible(true);
+				// t.displayMode.setVisible(true);
+				// t.editMode.setVisible(true);
 				t.pane.setMaxHeight(310);
 				t.pane.setMinHeight(310);
 				t.pane.getChildren().remove(t.add);
@@ -197,13 +317,13 @@ public class GUI extends Application {
 				t.removeAttr.setVisible(true);
 				t.pane.getChildren().remove(t.add);
 			} else {
-				Alert b = new Alert(Alert.AlertType.ERROR, t.nameBox.getText()
-						+ " could not be added. Name already exists.\nPlease choose another name.");
+				Alert b = new Alert(Alert.AlertType.ERROR,
+						t.nameBox.getText() + " could not be added. Name already exists.\nPlease choose another name.");
 				b.show();
 			}
 		});
 	}
-	
+
 	public void setEditButtonAction(GUITile t) {
 		/*
 		 * @author eric t.edit button event will appear after the confirmation of the
@@ -233,16 +353,15 @@ public class GUI extends Application {
 																			// whitespace.
 
 			if (isWhitespace) {
-				Alert a = new Alert(Alert.AlertType.ERROR,
-						"Name cannot be only whitespace.\nInput example: NewClass");
+				Alert a = new Alert(Alert.AlertType.ERROR, "Name cannot be only whitespace.\nInput example: NewClass");
 				a.show();
 				return;
 			}
 
 			if (answer.isPresent()) {
 				env.editItem(t.nameBox.getText(), answer.get(), env.findItem(t.nameBox.getText()));
-				
-				if (env.findItem(answer.get()) != null){
+
+				if (env.findItem(answer.get()) != null) {
 					Alert a = new Alert(Alert.AlertType.CONFIRMATION,
 							t.nameBox.getText() + " successsfully changed to " + answer.get());
 					a.show();
@@ -260,7 +379,7 @@ public class GUI extends Application {
 
 		});
 	}
-	
+
 	public void setRemoveButtonAction(GUITile t, Pane layout) {
 		/*
 		 * @author eric t.remove button event is set to remove an item from the
@@ -277,8 +396,8 @@ public class GUI extends Application {
 				UMLItem remove = new UMLItem(t.nameBox.getText());
 				env.removeItem(remove);
 				setSize(getSize() - 1);
-				//starts at 2 to avoid removing the add button and remove all button
-				//in the layout instance.
+				// starts at 2 to avoid removing the add button and remove all button
+				// in the layout instance.
 				for (int i = 2; i < layout.getChildren().size(); i++) {
 					layout.getChildren().get(i).relocate((i - 2) * TILE_OFFSET,
 							layout.getChildren().get(i).getLayoutY());
@@ -286,7 +405,7 @@ public class GUI extends Application {
 			}
 		});
 	}
-	
+
 	public void setAddAttributeAction(GUITile t, Pane layout) {
 		// Adds an attribute as text to the tile clicked
 		t.addAttr.setOnAction((event) -> {
@@ -308,8 +427,7 @@ public class GUI extends Application {
 			boolean isWhitespace = answer.get().matches("^\\s*$"); // checks if name entered is only whitespace.
 
 			if (isWhitespace) {
-				Alert a = new Alert(Alert.AlertType.ERROR,
-						"Attribute cannot be only whitespace.\nExample: NewAttr");
+				Alert a = new Alert(Alert.AlertType.ERROR, "Attribute cannot be only whitespace.\nExample: NewAttr");
 				a.show();
 				return;
 			}
@@ -354,7 +472,7 @@ public class GUI extends Application {
 
 		});
 	}
-	
+
 	public void setAddChildButtonAction(GUITile t, Pane layout) {
 		// Moves the child specified under tile t and links with arrow
 		t.addChild.setOnAction((event) -> {
@@ -377,8 +495,7 @@ public class GUI extends Application {
 			boolean isWhitespace = t.nameBox.getText().matches("^\\s*$");
 
 			if (isWhitespace) {
-				Alert a = new Alert(Alert.AlertType.ERROR,
-						"Name cannot be only whitespace.\nInput example: NewClass");
+				Alert a = new Alert(Alert.AlertType.ERROR, "Name cannot be only whitespace.\nInput example: NewClass");
 				a.show();
 				return;
 			}
@@ -407,12 +524,11 @@ public class GUI extends Application {
 			Arrow arr = new Arrow(parentCoords[0], parentCoords[1], childCoords[0], childCoords[1], 5);
 			layout.getChildren().add(arr);
 			env.addArrow(parent, child, arr);
-			Alert a = new Alert(Alert.AlertType.CONFIRMATION,
-					t.nameBox.getText() + "Child added successfully!");
+			Alert a = new Alert(Alert.AlertType.CONFIRMATION, t.nameBox.getText() + "Child added successfully!");
 			a.show();
 		});
 	}
-	
+
 	public void setMoveTileAction(GUITile t, Pane layout) {
 		// Moves tile t to location specified by a click
 		t.move.setOnAction((event) -> {
@@ -425,35 +541,34 @@ public class GUI extends Application {
 
 					t.pane.setLayoutX(event.getSceneX());
 					t.pane.setLayoutY(event.getSceneY());
-					
-					
+
 					UMLItem item = env.findItem(t.nameBox.getText());
-					
+
 					env.getRelationshipsFor(item).forEach((pair, arrow) -> {
 						UMLItem parent = pair.getParent();
 						UMLItem child = pair.getChild();
 						GUITile parentTile = env.getTileFor(parent);
 						GUITile childTile = env.getTileFor(child);
-						
+
 						double[] parentCoords = { parentTile.pane.getLayoutX(), parentTile.pane.getLayoutY() };
 						double[] childCoords = { childTile.pane.getLayoutX(), childTile.pane.getLayoutY() };
 
 						parentCoords[0] += parentTile.pane.getWidth() / 2.0;
-						parentCoords[1] += parentTile.pane.getHeight(); 
+						parentCoords[1] += parentTile.pane.getHeight();
 						childCoords[0] += parentTile.pane.getWidth() / 2.0;
-						
+
 						Arrow newArrow = new Arrow(parentCoords[0], parentCoords[1], childCoords[0], childCoords[1], 5);
 						layout.getChildren().remove(arrow);
 						env.replaceArrow(pair, newArrow);
 						layout.getChildren().add(newArrow);
 					});
-					
+
 				}
 			});
 
 		});
 	}
-	
+
 	public void setRemoveAttrButton(GUITile t, Pane layout) {
 		// Removes attribute from text field in tile t
 		t.removeAttr.setOnAction((event) -> {
@@ -473,8 +588,7 @@ public class GUI extends Application {
 			boolean isWhitespace = answer.get().matches("^\\s*$"); // checks if name entered is only whitespace.
 
 			if (isWhitespace) {
-				Alert a = new Alert(Alert.AlertType.ERROR,
-						"Attribute cannot be only whitespace.\nExample: NewAttr");
+				Alert a = new Alert(Alert.AlertType.ERROR, "Attribute cannot be only whitespace.\nExample: NewAttr");
 				a.show();
 				return;
 			}
