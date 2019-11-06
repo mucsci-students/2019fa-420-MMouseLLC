@@ -4,7 +4,6 @@ import java.util.logging.Logger;
 
 import data.UMLEnvironment;
 import data.UMLItem;
-import deprecated.AddClass;
 
 /**
  * The Class AttributeMapper.
