@@ -16,7 +16,7 @@ public class UMLEnvironment {
   private static final Logger logger = Logger.getLogger(UMLEnvironment.class.getName());
 
   ArrayList<UMLItem> items;
-  ArrayList<ParentChildPair> relationships;
+  ArrayList<Relationahip> relationships;
 
   public UMLEnvironment() {
     this.items = new ArrayList<>();
