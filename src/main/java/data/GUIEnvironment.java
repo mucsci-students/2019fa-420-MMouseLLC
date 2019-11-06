@@ -62,6 +62,7 @@ public class GUIEnvironment extends UMLEnvironment {
 	 */
 	public void removeItem(UMLItem item) {
 		boolean result = this.items.remove(item);
+		this.arrowMapping.remove(item);
 		this.tileMapping.remove(item);
 	}
 
@@ -72,7 +73,7 @@ public class GUIEnvironment extends UMLEnvironment {
 	 * @param arr
 	 */
 	public void addArrow(UMLItem parent, UMLItem child, Arrow arr) {
-		arrowMapping.put(new ParentChildPair(parent, child), arr);
+		this.arrowMapping.put(new ParentChildPair(parent, child), arr);
 	}
 	
 	/**
@@ -81,7 +82,7 @@ public class GUIEnvironment extends UMLEnvironment {
 	 * @param child
 	 */
 	public void removeArrow(UMLItem parent, UMLItem child) {
-		arrowMapping.remove(new ParentChildPair(parent, child));
+		this.arrowMapping.remove(new ParentChildPair(parent, child));
 	}
 	
 	/**
@@ -90,7 +91,7 @@ public class GUIEnvironment extends UMLEnvironment {
 	 * @param newArrow
 	 */
 	public void replaceArrow(ParentChildPair pair, Arrow newArrow) {
-		arrowMapping.replace(pair, newArrow);
+		this.arrowMapping.replace(pair, newArrow);
 	}
 
 	/**

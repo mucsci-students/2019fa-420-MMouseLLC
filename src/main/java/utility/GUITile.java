@@ -13,19 +13,19 @@ public class GUITile extends Pane {
 	TextArea textArea = new TextArea();
 	Pane pane = new Pane();Button add = new Button("Add Class");
     Button edit = new Button("Edit Name");
-    Button remove = new Button("Remove Class");
+    Button remove = new Button("X");
     Button addAttr = new Button("Add Attribute");
     Button addChild = new Button("Add Child");
-    Button move = new Button("Move");
+    Button move = new Button("M");
     Button removeAttr = new Button("Remove Attribute");
     Label displayAttr = new Label("");
     boolean hasAttr = false;
+    double sceneX, sceneY, layoutX, layoutY;
 	
 	public GUITile() {
             buildPane();
             buildNameBox();
             buildNamePanel();
-            //buildTextArea();
             buildAddAttrButton();
             buildRemAttrButton();
             buildAttrLabel();
@@ -33,7 +33,6 @@ public class GUITile extends Pane {
             buildAddButton();
             buildRemoveButton();
             buildChildButton();
-            buildMoveButton();
 	}
 	
 	public void buildPane() {
@@ -42,11 +41,12 @@ public class GUITile extends Pane {
         this.pane.setMaxHeight(150);
         this.pane.setMinHeight(150);
         this.pane.setLayoutY(100);
+        this.pane.setStyle("-fx-background-color: #eee; -fx-border-color: #000; -fx-border-width: 1;");
 	}
 	
 	public void buildNameBox() {
 		this.nameBox.setLayoutX(10);
-        this.nameBox.setLayoutY(10);
+        this.nameBox.setLayoutY(20);
         this.nameBox.setMaxWidth(120);
         this.nameBox.setMinWidth(120);
         this.pane.getChildren().add(this.nameBox);
@@ -54,7 +54,7 @@ public class GUITile extends Pane {
 	
 	public void buildNamePanel() {
 		this.nameLabel.setLayoutX(10);
-        this.nameLabel.setLayoutY(10);
+        this.nameLabel.setLayoutY(20);
         this.nameLabel.setMaxWidth(120);
         this.nameLabel.setMinWidth(120);
         this.nameLabel.setVisible(false);
@@ -104,11 +104,12 @@ public class GUITile extends Pane {
 	}
 	
 	public void buildRemoveButton() {
-		this.remove.setLayoutY(190);
-        this.remove.setLayoutX(10);
-        this.remove.setMaxSize(120, 30);
-        this.remove.setMinSize(120, 30);
-        this.remove.setVisible(false);
+        this.remove.setLayoutY(1);
+        this.remove.setLayoutX(1);
+        this.remove.setMaxSize(15, 15);
+        this.remove.setMinSize(15, 15);
+        this.remove.setVisible(true);
+        this.remove.setStyle("-fx-background-color: DD0000;");
         this.pane.getChildren().add(this.remove);
 	}
 	
@@ -119,15 +120,6 @@ public class GUITile extends Pane {
         this.addChild.setMinSize(120, 30);
         this.addChild.setVisible(false);
         this.pane.getChildren().add(this.addChild);
-	}
-	
-	public void buildMoveButton() {
-		this.move.setLayoutY(270);
-        this.move.setLayoutX(10);
-        this.move.setMaxSize(120, 30);
-        this.move.setMinSize(120, 30);
-        this.move.setVisible(false);
-        this.pane.getChildren().add(this.move);
 	}
 	
 }
