@@ -187,6 +187,11 @@ public class GUI extends Application {
 				
 				return;
 			}
+			if (env.findItem(t.nameBox.getText()) != null) {
+				Alert a = new Alert(Alert.AlertType.CONFIRMATION, t.nameBox.getText() + " is already added.");
+				a.show();
+				return;
+			}
 			env.addItem(new UMLItem(t.nameBox.getText()));
 			if (env.findItem(t.nameBox.getText()) != null) {
 				Alert a = new Alert(Alert.AlertType.CONFIRMATION, t.nameBox.getText() + " added successfully!");
