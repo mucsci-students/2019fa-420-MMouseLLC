@@ -16,14 +16,18 @@ public class UMLEnvironment {
   private static final Logger logger = Logger.getLogger(UMLEnvironment.class.getName());
 
   ArrayList<UMLItem> items;
+  ArrayList<ParentChildPair> relationships;
 
   public UMLEnvironment() {
     this.items = new ArrayList<>();
+    this.relationships = new ArrayList<>();
+    
   }
 
   public UMLEnvironment(UMLItem item) {
     this.items = new ArrayList<>();
     this.items.add(item);
+    this.relationships = new ArrayList<>();
   }
 
   /**
@@ -194,6 +198,49 @@ public class UMLEnvironment {
       builder.append("]");      
     }
     return builder.toString();
+  }
+  
+  /**
+   * Add a new relationship between 2 classes to the environment
+   * @param parent
+   * @param child
+   */
+  public void addRelationship(UMLItem parent, UMLItem child) {
+	  ParentChildPair r = new ParentChildPair(parent, child);
+	  if (!relationships.contains(r)) {
+		  relationships.add(r);
+	  }
+  }
+  
+  /**
+   * Add a new relationship between 2 classes to the environment
+   * @param r
+   */
+  public void addRelationship(ParentChildPair r) {
+	  if (!relationships.contains(r)) {
+		  relationships.add(r);
+	  }
+  }
+  
+  /**
+   * Try to remove a relationship from the environment
+   * 
+   * @param parent
+   * @param child
+   * @return true if found, else false
+   */
+  public boolean removeRelationship(UMLItem parent, UMLItem child) {
+	  ParentChildPair r = new ParentChildPair(parent, child);
+	  return relationships.remove(r);
+  }
+  
+  /**
+   * Try to remove a relationship from the environment
+   * @param r
+   * @return true if found, else false
+   */
+  public boolean removeRelationship(ParentChildPair r) {
+	  return relationships.remove(r);
   }
 
   ////////////////////////////////////
