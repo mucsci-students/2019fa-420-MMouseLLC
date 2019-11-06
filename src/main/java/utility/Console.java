@@ -8,6 +8,8 @@ import config.HelpScreenConfig;
 import data.UMLEnvironment;
 import data.UMLItem;
 import mapper.AttributeMapper;
+import mapper.FieldMapper;
+import mapper.FunctionMapper;
 
 /**
  * The Class ConsoleEnum.
@@ -81,14 +83,26 @@ public class Console {
       listChildren(input);
     } else if (command.equals("list_parents")) {
       listParents(input);
-    } else if(command.equals("list_attributes")) {
-      listAttributes(input);
-    } else if (command.equals("edit_attribute")) {
-      editAttribute(input);
-    } else if (command.equals("add_attribute")) {
-      addAttribute(input);
-    } else if (command.equals("delete_attribute")) {
-      deleteAttribute(input);
+    } else if (command.equals("edit_field_type")) {
+      editFieldType(input);
+    } else if (command.equals("edit_function_type")) {
+        editFunctionType(input);
+    } else if (command.equals("edit_field_var")) {
+        editFieldVar(input);
+    } else if (command.equals("edit_function_var")) {
+        editFunctionVar(input);
+    } else if (command.equals("add_field")) {
+      addField(input);
+    } else if (command.equals("add_function")) {
+        addFunction(input);
+    } else if (command.equals("list_fields")) {
+        listFields(input);
+    } else if (command.equals("list_functions")) {
+        listFunction(input);
+    } else if (command.equals("delete_field")) {
+        deleteField(input);
+    } else if (command.equals("delete_function")) {
+        deleteFunction(input);
     } else if(command.equals("quit")) {
       quit();
     } else if(command.equals("help")) {
@@ -285,81 +299,252 @@ public class Console {
       System.out.println(parentList);
     }
   }
-  
+ 
   /**
-   * Given command list_attributes  [className], log the attributes of given class
+   * edit a field type currently in a class
+   * and  gives list of fields currently in the class
    * 
    * @param input The input
    */
-  public void listAttributes(String[] input) {
-    if (input.length != 2) {
-      logger.warning("Invalid: list_attributes [className] - 2 fields required, " + input.length + " found.");
-    } else {
-      String itemName = input[1];
-      AttributeMapper mapper = new AttributeMapper(env);
-      String attributes = mapper.listAttributes(itemName);
-      System.out.println(attributes);      
-    }
-  }
-  
-  /**
-   * edit an attribute currently in a class
-   * and  gives list of attributes currently in the class
-   * 
-   * @param input The input
-   */
-  public void editAttribute(String[] input) {
-    if (input.length != 4) {
-      logger.warning("Invalid: editattribute [Class] [Old Attribute] [New Attribute] - 4 fields requierd, " + input.length + " found");
+  public void editFieldType(String[] input) {
+    if (input.length != 5) {
+      logger.warning("Invalid: editfieldtype [Class] [Key] [Old Type] [New Type] - 5 fields required, " + input.length + " found");
     } else {
       String className = input[1];
-      String oldAttr = input[2];
-      String newAttr = input[3];
+      String key = input[2];
+      String oldType = input[3];
+      String newType = input[4];
       
-      AttributeMapper mapper = new AttributeMapper(env);
-      mapper.editAttribute(className, oldAttr, newAttr);
-      String attributes = mapper.listAttributes(className);
-      System.out.println(attributes);      
+      UMLItem item = env.findItem(className);
+      if(item == null) {
+    	  logger.warning("Inavalid Class Name");
+      }
+      
+      FieldMapper mapper = new FieldMapper(env);
+      mapper.editFieldType(className, key, oldType, newType);
+      String fields = mapper.listMap(item.getFields());
+      System.out.println(fields);      
     }
   }
-
-	/**
-	 * add a new attribute in an exisiting class
-	 * and gives a list of the attributes currently in the class
+  /**
+   * edit a Function type currently in a class
+   * and  gives list of Functions currently in the class
+   * 
+   * @param input The input
+   */
+  public void editFunctionType(String[] input) {
+    if (input.length != 5) {
+      logger.warning("Invalid: editFunctiontype [Class] [Key] [Old Type] [New Type] - 5 fields required, " + input.length + " found");
+    } else {
+      String className = input[1];
+      String key = input[2];
+      String oldType = input[3];
+      String newType = input[4];
+      
+      UMLItem item = env.findItem(className);
+      if(item == null) {
+    	  logger.warning("Inavalid Class Name");
+      }
+      
+      FunctionMapper mapper = new FunctionMapper(env);
+      mapper.editFunctionType(className, key, oldType, newType);
+      String functions = mapper.listMap(item.getFunctions());
+      System.out.println(functions);      
+    }
+  }
+  
+  /**
+   * edit a field variable and the type currently in a class
+   * and  gives list of fields currently in the class
+   * 
+   * @param input The input
+   */
+  public void editFieldVar(String[] input) {
+    if (input.length != 6) {
+      logger.warning("Invalid: editfieldvar [Class] [Old Key] [New Key] [Old Type] [New Type] - 6 fields required, " + input.length + " found");
+    } else {
+      String className = input[1];
+      String oldKey = input[2];
+      String newKey = input[3];
+      String oldType = input[4];
+      String newType = input[5];
+      
+      UMLItem item = env.findItem(className);
+      if(item == null) {
+    	  logger.warning("Inavalid Class Name");
+      }
+      
+      FieldMapper mapper = new FieldMapper(env);
+      mapper.editFieldVar(className, oldKey, newKey, oldType, newType);
+      String fields = mapper.listMap(item.getFields());
+      System.out.println(fields);      
+    }
+  }
+  
+  /**
+   * edit a function variable and the type currently in a class
+   * and  gives list of functions currently in the class
+   * 
+   * @param input The input
+   */
+  public void editFunctionVar(String[] input) {
+    if (input.length != 6) {
+      logger.warning("Invalid: editfunctionvar [Class] [Old Key] [New Key] [Old Type] [New Type] - 6 fields required, " + input.length + " found");
+    } else {
+      String className = input[1];
+      String oldKey = input[2];
+      String newKey = input[3];
+      String oldType = input[4];
+      String newType = input[5];
+      
+      UMLItem item = env.findItem(className);
+      if(item == null) {
+    	  logger.warning("Inavalid Class Name");
+      }
+      
+      FunctionMapper mapper = new FunctionMapper(env);
+      mapper.editFunctionVar(className, oldKey, newKey, oldType, newType);
+      String functions = mapper.listMap(item.getFunctions());
+      System.out.println(functions);      
+    }
+  }
+  
+  /**
+	 * add a new field in an exisiting class
+	 * and gives a list of the field currently in the class
 	 * 
 	 * @param input The input
 	 */
-	public void addAttribute(String[] input) {
-		if (input.length != 3) {
-			logger.warning("Invalid: addattribute [Class] [Attribute] - 3 fields requierd, " + input.length + " found");
+	public void addField(String[] input) {
+		if (input.length != 4) {
+			logger.warning("Invalid: addfield [Class] [type] [var] - 4 fields required, " + input.length + " found");
 		} else {
 	    String className = input[1];
-	    String attributeName = input[2];
+	    String type = input[2];
+	    String var = input[3];
 	    
-	    AttributeMapper mapper = new AttributeMapper(env);
-	    mapper.addAttribute(className, attributeName);
-	    String attributes = mapper.listAttributes(className);
-	    System.out.println(attributes);		  
+	    UMLItem item = env.findItem(className);
+	      if(item == null) {
+	    	  logger.warning("Inavalid Class Name");
+	      }
+	      
+	    FieldMapper mapper = new FieldMapper(env);
+	    mapper.addField(className, type, var);
+	    String fields = mapper.listMap(item.getFields());
+	    System.out.println(fields);		  
 		}
 	}
-
-	/**
-	 * delete an attribute currently in a class gives 
-	 * and gives list of attributes remaining in the class
+	
+	 /**
+		 * add a new Function in an exisiting class
+		 * and gives a list of the Function currently in the class
+		 * 
+		 * @param input The input
+		 */
+		public void addFunction(String[] input) {
+			if (input.length != 4) {
+				logger.warning("Invalid: addfunction [Class] [type] [var] - 4 fields required, " + input.length + " found");
+			} else {
+		    String className = input[1];
+		    String type = input[2];
+		    String var = input[3];
+		    
+		    UMLItem item = env.findItem(className);
+		      if(item == null) {
+		    	  logger.warning("Inavalid Class Name");
+		      }
+		      
+		    FunctionMapper mapper = new FunctionMapper(env);
+		    mapper.addFunction(className, type, var);
+		    String functions = mapper.listMap(item.getFunctions());
+		    System.out.println(functions);		  
+			}
+		}
+		 /**
+		 * list all the Fields in an existing class
+		 * 
+		 * @param input The input
+		 */
+	public void listFields(String[] input) {
+		if (input.length != 2) {
+		      logger.warning("Invalid: listFields [Class] - 2 fields required, " + input.length + " found");
+				} else {
+		String className = input[1];
+		UMLItem item = env.findItem(className);
+	      if(item == null) {
+	    	  logger.warning("Inavalid Class Name");
+	      }
+		  FieldMapper mapper = new FieldMapper(env);
+		  String fields = mapper.listMap(item.getFields());
+		  System.out.println(fields);	
+				}
+	}
+	 /**
+	 * list all the Functions in an existing class
 	 * 
 	 * @param input The input
 	 */
-	public void deleteAttribute(String[] input) {
+	public void listFunction(String[] input) {
+		if (input.length != 2) {
+		      logger.warning("Invalid: listFunctions [Class] - 2 fields required, " + input.length + " found");
+				} else {
+		String className = input[1];
+		UMLItem item = env.findItem(className);
+	      if(item == null) {
+	    	  logger.warning("Inavalid Class Name");
+	      }
+		  FunctionMapper mapper = new FunctionMapper(env);
+		  String functions = mapper.listMap(item.getFunctions());
+		  System.out.println(functions);	
+				}
+	}
+	/**
+	 * delete a field currently in a class gives 
+	 * and gives list of fields remaining in the class
+	 * 
+	 * @param input The input
+	 */
+	public void deleteField(String[] input) {
 		if (input.length != 3) {
-      logger.warning("Invalid: addattribute [Class] [Attribute] - 3 fields requierd, " + input.length + " found");
+      logger.warning("Invalid: deleteField [Class] [Field] - 3 fields required, " + input.length + " found");
 		} else {
 		  String className = input[1];
-		  String attributeName = input[2];
+		  String var = input[2];
 		  
-		  AttributeMapper mapper = new AttributeMapper(env);
-		  mapper.deleteAttribute(className, attributeName);
-		  String attributes = mapper.listAttributes(className);
-		  System.out.println(attributes);
+		  UMLItem item = env.findItem(className);
+	      if(item == null) {
+	    	  logger.warning("Inavalid Class Name");
+	      }
+	      
+	    FieldMapper mapper = new FieldMapper(env);
+	    mapper.deleteField(className, var);
+	    String fields = mapper.listMap(item.getFields());
+	    System.out.println(fields);		  
+		}
+	}
+	
+	/**
+	 * delete a  Function currently in a class gives 
+	 * and gives list of  Function s remaining in the class
+	 * 
+	 * @param input The input
+	 */
+	public void deleteFunction(String[] input) {
+		if (input.length != 3) {
+      logger.warning("Invalid:  deleteFunction [Class] [Function] - 3 fields required, " + input.length + " found");
+		} else {
+		  String className = input[1];
+		  String var = input[2];
+		  
+		  UMLItem item = env.findItem(className);
+	      if(item == null) {
+	    	  logger.warning("Inavalid Class Name");
+	      }
+	      
+	    FunctionMapper mapper = new  FunctionMapper(env);
+	    mapper.deleteFunction(className, var);
+	    String functions = mapper.listMap(item.getFunctions());
+	    System.out.println(functions);		  
 		}
 	}
 

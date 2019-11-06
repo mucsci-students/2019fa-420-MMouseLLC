@@ -32,14 +32,26 @@ package config;
    LIST_CHILDREN,
    /** The list parents */
    LIST_PARENTS,
-   /** the edit attribute */
-   EDIT_ATTRIBUTE,
-   /** The add attribute */
-   ADD_ATTRIBUTE,
-   /** The delete attribute */
-   DELETE_ATTRIBUTE,
-   /** The list attributes */
-   LIST_ATTRIBUTES;
+   /** the edit field type */
+   EDIT_FIELD_TYPE,
+   /** the edit field var*/
+   EDIT_FIELD_VAR,
+   /** the edit function type */
+   EDIT_FUNCTION_TYPE,
+   /** the edit function var*/
+   EDIT_FUNCTION_VAR,
+   /** The add field */
+   ADD_FIELD,
+   /** The add function */
+   ADD_FUNCTION,
+   /** The list fields */
+   LIST_FIELDS,
+   /** The list functions */
+   LIST_FUNCTIONS,
+   /** The delete field */
+   DELETE_FIELD,
+   /** The delete function */
+   DELETE_FUNCTION;
     
   }
   

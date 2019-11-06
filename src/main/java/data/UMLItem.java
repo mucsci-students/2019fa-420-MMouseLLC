@@ -1,6 +1,7 @@
 package data;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /*
  * UMLItem is a class that represents a single item in the UML Environment.
@@ -17,6 +18,11 @@ public class UMLItem {
 	private String name;
 	/** List of attributes associated with this class **/
 	private ArrayList<String> attributes;
+	/** Map of fields associated with this class
+	Map of variable names to their type**/
+	private HashMap<String, String> fields;
+	/** Map of functions associated with this class **/
+	private HashMap<String, String> functions;
 	/** List of parents that this class inherits from **/
 	private ArrayList<UMLItem> parents;
 	/** List of children that inherit from this class **/
@@ -29,6 +35,8 @@ public class UMLItem {
 		id = -1;
 		name = "";
 		attributes = new ArrayList<String>();
+		this.fields = new HashMap<>();
+		this.functions = new HashMap<>();
 		parents = new ArrayList<>();
 		children = new ArrayList<>();
 	}
@@ -46,6 +54,9 @@ public class UMLItem {
 		this.name = name;
 
 		this.attributes = new ArrayList<>();
+		this.fields = new HashMap<>();
+		this.functions = new HashMap<>();
+		
 		this.parents = new ArrayList<>();
 		this.children = new ArrayList<>();
 
@@ -63,6 +74,8 @@ public class UMLItem {
 		this.id = id;
 		this.name = name;
 		this.attributes = new ArrayList<>();
+		this.fields = new HashMap<>();
+		this.functions = new HashMap<>();
 		this.parents = new ArrayList<>();
 		this.children = new ArrayList<>();
 	}
@@ -75,6 +88,8 @@ public class UMLItem {
 	public UMLItem(String name) {
 		this.name = name;
 		this.attributes = new ArrayList<>();
+		this.fields = new HashMap<>();
+		this.functions = new HashMap<>();
 		this.parents = new ArrayList<>();
 		this.children = new ArrayList<>();
 	}
@@ -113,6 +128,161 @@ public class UMLItem {
 		this.name = name;
 	}
 
+	/**
+	 * Get the HashMap of the field
+	 * 
+	 * Returns the field
+	 */
+	public HashMap<String, String> getFields() {
+		return this.fields;
+	}
+	
+	/**
+	 * Get the HashMap of the function
+	 * 
+	 * Returns the function
+	 */   
+	public HashMap<String, String> getFunctions() {
+		return this.functions;
+	}
+
+	/**
+	 * Add a variable and type to the HashMap<String, String> fields if var is unique
+	 * 
+	 * @param type
+	 * @param var
+	 * 
+	 * @return true if var is unique
+	 */
+	public boolean addField(String type, String var) {
+		if(! existingField(var)) {
+			fields.put(var, type);
+			return true;
+		}
+		return false;
+	}
+	
+	/**
+	 * Add a variable and type to the HashMap<String, String> function if var is unique
+	 *  
+	 * @param type
+	 * @param var
+	 * 
+	 * @return true if var is unique
+	 */
+	public boolean addFunction(String type, String var) {
+		if(! existingFunction(var)) {
+			functions.put(var, type);
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Check if field is unique
+	 * 
+	 * @param var
+	 * 
+	 * @return true if var exists
+	 */
+	public boolean existingField(String var) {
+		return this.fields.containsKey(var);
+	}
+	
+	/**
+	 * Check if function is unique
+	 * 
+	 * @param var
+	 * 
+	 * @return true if var exists
+	 */
+	public boolean existingFunction(String var) {
+		return this.functions.containsKey(var);
+	}
+
+	/**
+	 * Edit the type associated with var in fields
+	 * 
+	 * @params var
+	 * @params newType
+	 * 
+	 * @return true if var was found and type was edited, false if not found
+	 */
+	public boolean editField(String var, String newType) {
+		return fields.replace(var, newType) != null;
+	}
+	
+	/**
+	 * Edit the var and type associated with the old var in fields
+	 * 
+	 * @params oldVar
+	 * @params newVar
+	 * @params newType
+	 * 
+	 * @return true if var was found and type and var are both edited, false if var not found
+	 */
+	public boolean editField(String oldVar, String newVar, String newType) {
+		if (fields.remove(oldVar) == null) {
+			return false;
+		}
+		fields.put(newVar, newType);
+		return true;
+	}
+	
+	/**
+	 * Edit the type associated with var in functions
+	 * 
+	 * @params var
+	 * @params newType
+	 * 
+	 * @return true if var was found and type was edited, false if not found
+	 */
+	public boolean editFunction(String var, String newType) {
+		return functions.replace(var, newType) != null;
+	}
+	
+	/**
+	 * Edit the var and type associated with the old var in functions
+	 * 
+	 * @params oldVar
+	 * @params newVar
+	 * @params newType
+	 * 
+	 * @return true if var was found and type and var are both edited, false if var not found
+	 */
+	public boolean editFunction(String oldVar, String newVar, String newType) {
+		if (functions.remove(oldVar) == null) {
+			return false;
+		}
+		functions.put(newVar, newType);
+		return true;
+	}
+
+	/**
+	 * If String var is found as a key then remove the pair
+	 * 
+	 * @param var
+	 * 
+	 * @return true if the field pair was removed, false if not found
+	 */
+	public boolean removeField(String var) {
+		return this.fields.remove(var) != null;
+	}
+	
+	/**
+	 * If String var is found as a key then remove the pair
+	 * 
+	 * @param var
+	 * 
+	 * @return true if the functions pair was removed, false if not found
+	 */
+	public boolean removeFunction(String var) {
+		return this.functions.remove(var) != null;
+	}
+
+	
+	
+	
 	/**
 	 * Get the ArrayList of attribute Strings
 	 * 
