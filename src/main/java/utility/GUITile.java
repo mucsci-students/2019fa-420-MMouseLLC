@@ -1,6 +1,7 @@
 package utility;
 
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 
 public class GUITile extends Pane {
@@ -10,8 +11,7 @@ public class GUITile extends Pane {
 	TextField nameBox = new TextField("EnterName");
 	Label nameLabel = new Label(this.nameBox.getText());
 	TextArea textArea = new TextArea();
-	Pane pane = new Pane();
-	Button add = new Button("Add Class");
+	Pane pane = new Pane();Button add = new Button("Add Class");
     Button edit = new Button("Edit Name");
     Button remove = new Button("Remove Class");
     Button addAttr = new Button("Add Attribute");
@@ -67,7 +67,7 @@ public class GUITile extends Pane {
 		this.addAttr.setVisible(false);
         this.addAttr.setMaxSize(120, 30);
         this.addAttr.setMinSize(120, 30);
-		this.pane.getChildren().add(this.addAttr);
+        this.pane.getChildren().add(this.addAttr);
 	}
 	
 	public void buildRemAttrButton() {
