@@ -95,6 +95,10 @@ public class Console {
       addField(input);
     } else if (command.equals("add_function")) {
         addFunction(input);
+    } else if (command.equals("list_fields")) {
+        listFields(input);
+    } else if (command.equals("list_functions")) {
+        listFunction(input);
     } else if (command.equals("delete_field")) {
         deleteField(input);
     } else if (command.equals("delete_function")) {
@@ -304,7 +308,7 @@ public class Console {
    */
   public void editFieldType(String[] input) {
     if (input.length != 5) {
-      logger.warning("Invalid: editfieldtype [Class] [Key] [Old Type] [New Type] - 5 fields requierd, " + input.length + " found");
+      logger.warning("Invalid: editfieldtype [Class] [Key] [Old Type] [New Type] - 5 fields required, " + input.length + " found");
     } else {
       String className = input[1];
       String key = input[2];
@@ -330,7 +334,7 @@ public class Console {
    */
   public void editFunctionType(String[] input) {
     if (input.length != 5) {
-      logger.warning("Invalid: editFunctiontype [Class] [Key] [Old Type] [New Type] - 5 fields requierd, " + input.length + " found");
+      logger.warning("Invalid: editFunctiontype [Class] [Key] [Old Type] [New Type] - 5 fields required, " + input.length + " found");
     } else {
       String className = input[1];
       String key = input[2];
@@ -357,7 +361,7 @@ public class Console {
    */
   public void editFieldVar(String[] input) {
     if (input.length != 6) {
-      logger.warning("Invalid: editfieldvar [Class] [Old Key] [New Key] [Old Type] [New Type] - 6 fields requierd, " + input.length + " found");
+      logger.warning("Invalid: editfieldvar [Class] [Old Key] [New Key] [Old Type] [New Type] - 6 fields required, " + input.length + " found");
     } else {
       String className = input[1];
       String oldKey = input[2];
@@ -385,7 +389,7 @@ public class Console {
    */
   public void editFunctionVar(String[] input) {
     if (input.length != 6) {
-      logger.warning("Invalid: editfunctionvar [Class] [Old Key] [New Key] [Old Type] [New Type] - 6 fields requierd, " + input.length + " found");
+      logger.warning("Invalid: editfunctionvar [Class] [Old Key] [New Key] [Old Type] [New Type] - 6 fields required, " + input.length + " found");
     } else {
       String className = input[1];
       String oldKey = input[2];
@@ -456,7 +460,44 @@ public class Console {
 		    System.out.println(functions);		  
 			}
 		}
-
+		 /**
+		 * list all the Fields in an existing class
+		 * 
+		 * @param input The input
+		 */
+	public void listFields(String[] input) {
+		if (input.length != 2) {
+		      logger.warning("Invalid: listFields [Class] - 2 fields required, " + input.length + " found");
+				} else {
+		String className = input[1];
+		UMLItem item = env.findItem(className);
+	      if(item == null) {
+	    	  logger.warning("Inavalid Class Name");
+	      }
+		  FieldMapper mapper = new FieldMapper(env);
+		  String fields = mapper.listMap(item.getFields());
+		  System.out.println(fields);	
+				}
+	}
+	 /**
+	 * list all the Functions in an existing class
+	 * 
+	 * @param input The input
+	 */
+	public void listFunction(String[] input) {
+		if (input.length != 2) {
+		      logger.warning("Invalid: listFunctions [Class] - 2 fields required, " + input.length + " found");
+				} else {
+		String className = input[1];
+		UMLItem item = env.findItem(className);
+	      if(item == null) {
+	    	  logger.warning("Inavalid Class Name");
+	      }
+		  FunctionMapper mapper = new FunctionMapper(env);
+		  String functions = mapper.listMap(item.getFunctions());
+		  System.out.println(functions);	
+				}
+	}
 	/**
 	 * delete a field currently in a class gives 
 	 * and gives list of fields remaining in the class
@@ -465,7 +506,7 @@ public class Console {
 	 */
 	public void deleteField(String[] input) {
 		if (input.length != 3) {
-      logger.warning("Invalid: deleteField [Class] [Field] - 3 fields requierd, " + input.length + " found");
+      logger.warning("Invalid: deleteField [Class] [Field] - 3 fields required, " + input.length + " found");
 		} else {
 		  String className = input[1];
 		  String var = input[2];
@@ -490,7 +531,7 @@ public class Console {
 	 */
 	public void deleteFunction(String[] input) {
 		if (input.length != 3) {
-      logger.warning("Invalid:  deleteFunction [Class] [Function] - 3 fields requierd, " + input.length + " found");
+      logger.warning("Invalid:  deleteFunction [Class] [Function] - 3 fields required, " + input.length + " found");
 		} else {
 		  String className = input[1];
 		  String var = input[2];

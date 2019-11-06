@@ -44,6 +44,10 @@ package config;
    ADD_FIELD,
    /** The add function */
    ADD_FUNCTION,
+   /** The list fields */
+   LIST_FIELDS,
+   /** The list functions */
+   LIST_FUNCTIONS,
    /** The delete field */
    DELETE_FIELD,
    /** The delete function */
