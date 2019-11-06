@@ -181,8 +181,6 @@ public class GUI extends Application {
 			}
 			env.addItem(new UMLItem(t.nameBox.getText()));
 			if (env.findItem(t.nameBox.getText()) != null) {
-				Alert a = new Alert(Alert.AlertType.CONFIRMATION, t.nameBox.getText() + " added successfully!");
-				a.show();
 				
 				// Update the name and add buttons 
 				t.nameBox.setVisible(false);
@@ -247,9 +245,6 @@ public class GUI extends Application {
 				env.editItem(t.nameBox.getText(), answer.get(), env.findItem(t.nameBox.getText()));
 				
 				if (env.findItem(answer.get()) != null){
-					Alert a = new Alert(Alert.AlertType.CONFIRMATION,
-							t.nameBox.getText() + " successsfully changed to " + answer.get());
-					a.show();
 					t.nameBox.setText(answer.get());
 					t.nameLabel.setText(answer.get());
 				} else {
@@ -411,9 +406,6 @@ public class GUI extends Application {
 			Arrow arr = new Arrow(parentCoords[0], parentCoords[1], childCoords[0], childCoords[1], 5);
 			layout.getChildren().add(arr);
 			env.addArrow(parent, child, arr);
-			Alert a = new Alert(Alert.AlertType.CONFIRMATION,
-					t.nameBox.getText() + "Child added successfully!");
-			a.show();
 		});
 	}
 	
