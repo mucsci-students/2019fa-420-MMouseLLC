@@ -16,7 +16,7 @@ public class UMLEnvironment {
   private static final Logger logger = Logger.getLogger(UMLEnvironment.class.getName());
 
   ArrayList<UMLItem> items;
-  ArrayList<Relationahip> relationships;
+  ArrayList<Relationship> relationships;
 
   public UMLEnvironment() {
     this.items = new ArrayList<>();
@@ -201,22 +201,11 @@ public class UMLEnvironment {
   }
   
   /**
-   * Add a new relationship between 2 classes to the environment
+   * Add a new relationship to the environment
    * @param parent
    * @param child
    */
-  public void addRelationship(UMLItem parent, UMLItem child) {
-	  ParentChildPair r = new ParentChildPair(parent, child);
-	  if (!relationships.contains(r)) {
-		  relationships.add(r);
-	  }
-  }
-  
-  /**
-   * Add a new relationship between 2 classes to the environment
-   * @param r
-   */
-  public void addRelationship(ParentChildPair r) {
+  public void addRelationship(Relationship r) {
 	  if (!relationships.contains(r)) {
 		  relationships.add(r);
 	  }
@@ -229,18 +218,52 @@ public class UMLEnvironment {
    * @param child
    * @return true if found, else false
    */
-  public boolean removeRelationship(UMLItem parent, UMLItem child) {
-	  ParentChildPair r = new ParentChildPair(parent, child);
-	  return relationships.remove(r);
+  public boolean removeRelationship(Relationship r) {
+	  Relationship toRemove = findRelationship(r);
+	  if (toRemove == null) {
+		  return false;
+	  }
+	  
+	  relationships.remove(toRemove);
+	  
+	  return true;
   }
   
   /**
-   * Try to remove a relationship from the environment
+   * Find and return Relationship r in list of relationships
+   *   else return null
    * @param r
-   * @return true if found, else false
+   * @return
    */
-  public boolean removeRelationship(ParentChildPair r) {
-	  return relationships.remove(r);
+  public Relationship findRelationship(Relationship r) {
+	  System.out.println("Here");
+	  for (Relationship i : relationships) {
+		  if (i.getParent().equals(r.getParent()) && i.getChild().equals(r.getChild() )) {
+			  return i;
+		  }
+	  }
+	  return null;
+  }
+  
+  /**
+   * Find and return a Relationship 
+   * @param parent
+   * @param child
+   * @return
+   */
+  public Relationship findRelationship(UMLItem parent, UMLItem child) {
+	  
+	  for (Relationship i : relationships) {
+		  
+		  if (i.getParent().equals(parent) && i.getChild().equals(child)) {
+			  return i;
+		  }
+	  }
+	  return null;
+  }
+  
+  public ArrayList<Relationship> getRelationships(){
+	  return relationships;
   }
 
   ////////////////////////////////////

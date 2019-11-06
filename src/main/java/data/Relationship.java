@@ -29,4 +29,20 @@ public class Relationship extends ParentChildPair{
         super(p, c);
         this.quantifier = 0;
     }
+    
+    /**
+     * Return the int representation of the contained quantifier
+     * @return
+     */
+    public int getQuantifier() {
+    	return quantifier;
+    }
+    
+    /**
+     * Return quantifier as its verbose String name
+     * @return
+     */
+    public String getQuantifierName() {
+    	return quantifierNames[quantifier];
+    }
 }
