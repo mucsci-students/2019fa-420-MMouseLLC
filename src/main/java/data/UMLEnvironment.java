@@ -16,14 +16,18 @@ public class UMLEnvironment {
   private static final Logger logger = Logger.getLogger(UMLEnvironment.class.getName());
 
   ArrayList<UMLItem> items;
+  ArrayList<Relationship> relationships;
 
   public UMLEnvironment() {
     this.items = new ArrayList<>();
+    this.relationships = new ArrayList<>();
+    
   }
 
   public UMLEnvironment(UMLItem item) {
     this.items = new ArrayList<>();
     this.items.add(item);
+    this.relationships = new ArrayList<>();
   }
 
   /**
@@ -103,6 +107,22 @@ public class UMLEnvironment {
     builder.append("]");
     return builder.toString();
   }
+  
+  /**
+   * Gets all classes in the environment.
+   * 
+   * @return builder the String of all classes
+   */
+  public String listRelationships() {
+    StringBuilder builder = new StringBuilder();
+    builder.append("List of relationships: [ ");
+    for (Relationship i : relationships) {
+      builder.append("{" + i.getParent().getName() + "--[" + i.getQuantifierName() + "]->" + i.getChild().getName() + "} ");
+    }
+    builder.append("]");
+    return builder.toString();
+  }
+  
 
   /**
    * Adds a child to a parent in the environment. Checks if the child/parent
@@ -114,6 +134,7 @@ public class UMLEnvironment {
    * @param childItem The child UMLItem
    * @param parentItem The parent UMLItem
    */
+  @Deprecated
   public void addChild(String childName, String parentName, UMLItem childItem, UMLItem parentItem) {
     if (childItem == null || !itemExists(childItem)) {
       logger.warning("Child class " + childName + " does not exist. Add child cancelled.");
@@ -140,6 +161,7 @@ public class UMLEnvironment {
    * @param childItem The child UMLItem
    * @param parentItem The parent UMLItem
    */
+  @Deprecated
   public void removeChild(String childName, String parentName, UMLItem childItem, UMLItem parentItem) {
     if (childItem == null || !itemExists(childItem)) {
       logger.warning("Child class " + childName + " does not exist. Remove child cancelled.");
@@ -160,6 +182,7 @@ public class UMLEnvironment {
    * @param parentName The parent name
    * @return builder The string of all children
    */
+  @Deprecated
   public String listChildren(String parentName) {
     UMLItem parentItem = findItem(parentName);
     StringBuilder builder = new StringBuilder();
@@ -181,6 +204,7 @@ public class UMLEnvironment {
    * @param childName The child name
    * @return builder The string of all parents
    */
+  @Deprecated
   public String listParents(String childName) {
     StringBuilder builder = new StringBuilder();
     UMLItem childItem = findItem(childName);
@@ -194,6 +218,70 @@ public class UMLEnvironment {
       builder.append("]");      
     }
     return builder.toString();
+  }
+  
+  /**
+   * Add a new relationship to the environment
+   * @param parent
+   * @param child
+   */
+  public void addRelationship(Relationship r) {
+	  if (findRelationship(r) == null) {
+		  relationships.add(r);
+	  }
+	  
+  }
+  
+  /**
+   * Try to remove a relationship from the environment
+   * 
+   * @param parent
+   * @param child
+   * @return true if found, else false
+   */
+  public boolean removeRelationship(Relationship r) {
+	  Relationship toRemove = findRelationship(r);
+	  if (toRemove == null) {
+		  return false;
+	  }
+	  
+	  relationships.remove(toRemove);
+	  
+	  return true;
+  }
+  
+  /**
+   * Find and return Relationship r in list of relationships
+   *   else return null
+   * @param r
+   * @return
+   */
+  public Relationship findRelationship(Relationship r) {
+	  for (Relationship i : relationships) {
+		  if (i.getParent().equals(r.getParent()) && i.getChild().equals(r.getChild() )) {
+			  return i;
+		  }
+	  }
+	  return null;
+  }
+  
+  /**
+   * Find and return a Relationship 
+   * @param parent
+   * @param child
+   * @return
+   */
+  public Relationship findRelationship(UMLItem parent, UMLItem child) {
+	  for (Relationship i : relationships) {
+		  if (i.getParent().equals(parent) && i.getChild().equals(child)) {
+			  return i;
+		  }
+	  }
+	  return null;
+  }
+  
+  public ArrayList<Relationship> getRelationships(){
+	  return relationships;
   }
 
   ////////////////////////////////////
