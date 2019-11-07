@@ -132,8 +132,8 @@ public class GUI extends Application {
 							tile.addChild.setVisible(true);
 							tile.move.setVisible(true);
 							int tileSize = found.getAttributes().size();
-							tile.pane.setMaxHeight(310 + (tileSize * ADD_ATTR_OFFSET));
-							tile.pane.setMinHeight(310 + (tileSize * ADD_ATTR_OFFSET));
+							tile.pane.setMaxHeight(250 + (tileSize * ADD_ATTR_OFFSET));
+							tile.pane.setMinHeight(250 + (tileSize * ADD_ATTR_OFFSET));
 							tile.pane.getChildren().remove(tile.add);
 							UMLItem item = env.findItem(tile.nameBox.getText());
 							env.createMappingFor(item, tile);
@@ -307,7 +307,7 @@ public class GUI extends Application {
 				return;
 			}
 			if (env.findItem(t.nameBox.getText()) != null) {
-				Alert a = new Alert(Alert.AlertType.CONFIRMATION, t.nameBox.getText() + " is already added.");
+				Alert a = new Alert(Alert.AlertType.ERROR, t.nameBox.getText() + " is already added.");
 				a.show();
 				return;
 			}
@@ -325,8 +325,8 @@ public class GUI extends Application {
 				t.move.setVisible(true);
 				// t.displayMode.setVisible(true);
 				// t.editMode.setVisible(true);
-				t.pane.setMaxHeight(310);
-				t.pane.setMinHeight(310);
+				t.pane.setMaxHeight(250);
+				t.pane.setMinHeight(250);
 				t.pane.getChildren().remove(t.add);
 				UMLItem item = env.findItem(t.nameBox.getText());
 				env.createMappingFor(item, t);

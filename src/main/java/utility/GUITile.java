@@ -121,7 +121,7 @@ public class GUITile extends Pane {
 	}
 
 	public void buildChildButton() {
-		this.addChild.setLayoutY(230);
+		this.addChild.setLayoutY(190);
 		this.addChild.setLayoutX(10);
 		this.addChild.setMaxSize(120, 30);
 		this.addChild.setMinSize(120, 30);
