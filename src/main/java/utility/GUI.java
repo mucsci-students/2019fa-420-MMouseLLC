@@ -40,7 +40,8 @@ public class GUI extends Application {
 	private Pane mainLayout = new Pane();
 	private Group layout = new Group();
 	private Group arrowLayout = new Group();
-
+	private long lastTime = 0;
+	private boolean isClicked = false;
 	/*
 	 * @author eric main calls the built in application function "launch" to create
 	 * the initial window
@@ -259,6 +260,7 @@ public class GUI extends Application {
 			layout.getChildren().add(resetAll);
 		});
 
+		
 		/*
 		 * @author eric This bottom section sets the stage size, add button layout and
 		 * what is added to the stage In the end it shows everything that was added to
@@ -269,6 +271,7 @@ public class GUI extends Application {
 		addButton.setLayoutX(10);
 		addButton.setLayoutY(10);
 		addButton.setOnAction(clickAddEvent);
+		//layout.setOnAction(clickAddEvent);
 		resetAll.setLayoutX(110);
 		resetAll.setLayoutY(10);
 		resetAll.setVisible(false);
@@ -410,7 +413,6 @@ public class GUI extends Application {
 				System.out.println(env.getRelationshipsFor(item).size());
 				env.getRelationshipsFor(item).forEach(removeArrow());
 				layout.getChildren().remove(t.pane);
-
 				env.removeItem(item);
 				System.out.println(env.getRelationshipsFor(item).size());
 			}
@@ -665,11 +667,8 @@ public class GUI extends Application {
 
 	private BiConsumer<? super ParentChildPair, ? super Arrow> removeArrow() {
 		return (ParentChildPair pair, Arrow arrow) -> {
-			layout.getChildren().remove(arrow);
 			env.removeArrow(pair.getParent(), pair.getChild());
-			env.removeArrow(pair.getChild(), pair.getParent());
-			// env.removeChild(pair.getChild().getName(), pair.getParent().getName(),
-			// pair.getChild(), pair.getParent());
+			layout.getChildren().remove(arrow);
 		};
 	}
 }
