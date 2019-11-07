@@ -106,10 +106,7 @@ public class GUI extends Application {
 					editMode.setSelected(true);
 					return;
 				} else {
-					Alert a = new Alert(Alert.AlertType.CONFIRMATION, "Move to edit mode?", ButtonType.YES,
-							ButtonType.NO);
-					a.showAndWait();
-					if (a.getResult().getButtonData() == ButtonBar.ButtonData.YES) {
+					if (editMode.isSelected()) {
 						for (UMLItem i : env.getItems()) {
 							GUITile tile = env.getTileFor(i);
 							UMLItem found = env.findItem(tile.nameBox.getText());
@@ -129,12 +126,37 @@ public class GUI extends Application {
 							env.createMappingFor(item, tile);
 							tile.removeAttr.setVisible(true);
 							tile.pane.getChildren().remove(tile.add);
+
+							//tile.pane.setLayoutX(event.getSceneX());
+							//tile.pane.setLayoutY(event.getSceneY());
+
+							//UMLItem item2 = env.findItem(tile.nameBox.getText());
+
+							env.getRelationshipsFor(item).forEach((pair, arrow) -> {
+								UMLItem parent = pair.getParent();
+								UMLItem child = pair.getChild();
+								GUITile parentTile = env.getTileFor(parent);
+								GUITile childTile = env.getTileFor(child);
+
+								double[] parentCoords = { parentTile.pane.getLayoutX(), parentTile.pane.getLayoutY() };
+								double[] childCoords = { childTile.pane.getLayoutX(), childTile.pane.getLayoutY() };
+
+								parentCoords[0] += parentTile.pane.getWidth() / 2.0;
+								parentCoords[1] += parentTile.pane.getHeight();
+								childCoords[0] += parentTile.pane.getWidth() / 2.0;
+
+								Arrow newArrow = new Arrow(parentCoords[0], parentCoords[1], childCoords[0],
+										childCoords[1], 5);
+								layout.getChildren().remove(arrow);
+								env.replaceArrow(pair, newArrow);
+								layout.getChildren().add(newArrow);
+							});
 						}
 						displayMode.setSelected(false);
 						editMode.setSelected(true);
 						addButton.setDisable(false);
 						return;
-					} else if (a.getResult().getButtonData() == ButtonBar.ButtonData.NO && !editMode.isSelected()) {
+					} else if (!editMode.isSelected()) {
 						displayMode.setSelected(false);
 						editMode.setSelected(true);
 
@@ -156,10 +178,7 @@ public class GUI extends Application {
 					editMode.setSelected(false);
 					return;
 				} else {
-					Alert a = new Alert(Alert.AlertType.CONFIRMATION, "Move to display mode?", ButtonType.YES,
-							ButtonType.NO);
-					a.showAndWait();
-					if (a.getResult().getButtonData() == ButtonBar.ButtonData.YES) {
+					if (displayMode.isSelected()) {
 						for (UMLItem i : env.getItems()) {
 							GUITile tile = env.getTileFor(i);
 							UMLItem found = env.findItem(tile.nameBox.getText());
@@ -180,12 +199,37 @@ public class GUI extends Application {
 							tile.removeAttr.setVisible(false);
 							tile.pane.getChildren().remove(tile.add);
 
+							//tile.pane.setLayoutX(event.getSceneX());
+							//tile.pane.setLayoutY(event.getSceneY());
+
+							//UMLItem item2 = env.findItem(tile.nameBox.getText());
+
+							env.getRelationshipsFor(item).forEach((pair, arrow) -> {
+								UMLItem parent = pair.getParent();
+								UMLItem child = pair.getChild();
+								GUITile parentTile = env.getTileFor(parent);
+								GUITile childTile = env.getTileFor(child);
+
+								double[] parentCoords = { parentTile.pane.getLayoutX(), parentTile.pane.getLayoutY() };
+								double[] childCoords = { childTile.pane.getLayoutX(), childTile.pane.getLayoutY() };
+
+								parentCoords[0] += parentTile.pane.getWidth() / 2.0;
+								parentCoords[1] += parentTile.pane.getHeight();
+								childCoords[0] += parentTile.pane.getWidth() / 2.0;
+
+								Arrow newArrow = new Arrow(parentCoords[0], parentCoords[1], childCoords[0],
+										childCoords[1], 5);
+								layout.getChildren().remove(arrow);
+								env.replaceArrow(pair, newArrow);
+								layout.getChildren().add(newArrow);
+							});
+
 						}
 						displayMode.setSelected(true);
 						editMode.setSelected(false);
 						addButton.setDisable(true);
 						return;
-					} else if (a.getResult().getButtonData() == ButtonBar.ButtonData.NO && !displayMode.isSelected()) {
+					} else if (!displayMode.isSelected()) {
 						displayMode.setSelected(true);
 						editMode.setSelected(false);
 
@@ -239,9 +283,6 @@ public class GUI extends Application {
 				layout.getChildren().remove(i);
 			}
 			layout.getChildren().add(addButton);
-
-			// layout.getChildren().add(displayButton);
-			// layout.getChildren().add(editButton);
 
 			layout.getChildren().add(resetAll);
 		});
@@ -307,8 +348,6 @@ public class GUI extends Application {
 				t.addAttr.setVisible(true);
 				t.addChild.setVisible(true);
 				t.move.setVisible(true);
-				// t.displayMode.setVisible(true);
-				// t.editMode.setVisible(true);
 				t.pane.setMaxHeight(310);
 				t.pane.setMinHeight(310);
 				t.pane.getChildren().remove(t.add);
