@@ -107,6 +107,22 @@ public class UMLEnvironment {
     builder.append("]");
     return builder.toString();
   }
+  
+  /**
+   * Gets all classes in the environment.
+   * 
+   * @return builder the String of all classes
+   */
+  public String listRelationships() {
+    StringBuilder builder = new StringBuilder();
+    builder.append("List of relationships: [ ");
+    for (Relationship i : relationships) {
+      builder.append("{" + i.getParent().getName() + "--[" + i.getQuantifierName() + "]->" + i.getChild().getName() + "} ");
+    }
+    builder.append("]");
+    return builder.toString();
+  }
+  
 
   /**
    * Adds a child to a parent in the environment. Checks if the child/parent
@@ -206,9 +222,10 @@ public class UMLEnvironment {
    * @param child
    */
   public void addRelationship(Relationship r) {
-	  if (!relationships.contains(r)) {
+	  if (findRelationship(r) == null) {
 		  relationships.add(r);
 	  }
+	  
   }
   
   /**
@@ -236,7 +253,6 @@ public class UMLEnvironment {
    * @return
    */
   public Relationship findRelationship(Relationship r) {
-	  System.out.println("Here");
 	  for (Relationship i : relationships) {
 		  if (i.getParent().equals(r.getParent()) && i.getChild().equals(r.getChild() )) {
 			  return i;
@@ -252,9 +268,7 @@ public class UMLEnvironment {
    * @return
    */
   public Relationship findRelationship(UMLItem parent, UMLItem child) {
-	  
 	  for (Relationship i : relationships) {
-		  
 		  if (i.getParent().equals(parent) && i.getChild().equals(child)) {
 			  return i;
 		  }

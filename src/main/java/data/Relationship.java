@@ -3,9 +3,9 @@ package data;
 public class Relationship extends ParentChildPair{
     
     private int quantifier;
-    /** Simple String[] of names associated with the type of relationship 
-     * 0 => OneToOne; 1 => OneToMany; 2 => ManyToMany; 3=> ManyToMany  **/
-    final public String[] quantifierNames = {"OneToOne, OneToMany, ManyToOne, ManyToMany"};
+    /** Simple String[] of names associated with the type of relationship:
+     * 0 => None; 1 => OneToOne; 2 => OneToMany; 3 => ManyToMany; 4 => ManyToMany  **/
+    final public String[] quantifierNames = {"N", "1t1", "1tM", "Mt1", "MtM"};
 
     /**
      * Construct new Relationship between parent and child, specifiying a quantifier
@@ -36,6 +36,15 @@ public class Relationship extends ParentChildPair{
      */
     public int getQuantifier() {
     	return quantifier;
+    }
+    
+    /**
+     * Change the quantifier
+     * @param newQuantifier
+     */
+    public void setQuantifier(int newQuantifier) {
+    	
+    	this.quantifier = newQuantifier;
     }
     
     /**
