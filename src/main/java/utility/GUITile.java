@@ -1,7 +1,6 @@
 package utility;
 
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 
 public class GUITile extends Pane {

@@ -1,3 +1,4 @@
+
 import static org.junit.Assert.*;
 
 import org.junit.Before;
@@ -9,6 +10,7 @@ import data.UMLEnvironment;
 import data.UMLItem;
 import utility.Console;
 
+@Deprecated
 public class ChildTest {
   private UMLEnvironment env;
   private Console c = new Console();

@@ -6,7 +6,6 @@ import java.util.logging.Logger;
 
 import data.UMLEnvironment;
 import data.UMLItem;
-import deprecated.AddClass;
 
 /**
  * The Class FieldMapper.
@@ -14,7 +13,7 @@ import deprecated.AddClass;
 public class FieldMapper {
 
 	  /** The logger. */
-	  private static final Logger logger = Logger.getLogger(AttributeMapper.class.getName());
+	  private static final Logger logger = Logger.getLogger(FieldMapper.class.getName());
 	  
 	  /** The env. */
 	  UMLEnvironment env;

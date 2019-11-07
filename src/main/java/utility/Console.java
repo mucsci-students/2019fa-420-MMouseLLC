@@ -8,7 +8,6 @@ import config.HelpScreenConfig;
 import data.Relationship;
 import data.UMLEnvironment;
 import data.UMLItem;
-import mapper.AttributeMapper;
 import mapper.FieldMapper;
 import mapper.FunctionMapper;
 
@@ -366,6 +365,7 @@ public class Console {
 	 * 
 	 * @param input The input
 	 */
+	@Deprecated
 	public void removeChild(String[] input) {
 		if (input.length != 3) {
 			logger.warning(
@@ -386,6 +386,7 @@ public class Console {
 	 * 
 	 * @param input
 	 */
+	@Deprecated
 	public void listChildren(String[] input) {
 		if (input.length != 2) {
 			logger.warning("Invalid: listchildren [parentClass] - 2 fields required, " + input.length + " found.");
@@ -401,6 +402,7 @@ public class Console {
 	 * 
 	 * @param input The input
 	 */
+	@Deprecated
 	public void listParents(String[] input) {
 		if (input.length != 2) {
 			logger.warning("Invalid: listparents [childClass] - 2 fields required, " + input.length + " found.");

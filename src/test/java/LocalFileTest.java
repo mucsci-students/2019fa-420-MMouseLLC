@@ -104,8 +104,6 @@ public class LocalFileTest {
     UMLItem item = new UMLItem();
     UMLItem itemTwo = new UMLItem();
     
-    item.addAttribute("Dan");
-    itemTwo.addAttribute("Matt");
     
     env.addItem(item);
     env.addItem(itemTwo);

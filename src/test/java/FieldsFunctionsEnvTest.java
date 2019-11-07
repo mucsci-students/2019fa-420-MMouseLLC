@@ -3,7 +3,6 @@ import static org.junit.Assert.*;
 import java.util.HashMap;
 import java.util.Map;
 import org.junit.Test;
-import data.UMLEnvironment; 
 import data.UMLItem;
 
 public class FieldsFunctionsEnvTest {

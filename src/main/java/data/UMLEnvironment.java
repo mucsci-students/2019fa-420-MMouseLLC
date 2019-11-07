@@ -134,6 +134,7 @@ public class UMLEnvironment {
    * @param childItem The child UMLItem
    * @param parentItem The parent UMLItem
    */
+  @Deprecated
   public void addChild(String childName, String parentName, UMLItem childItem, UMLItem parentItem) {
     if (childItem == null || !itemExists(childItem)) {
       logger.warning("Child class " + childName + " does not exist. Add child cancelled.");
@@ -160,6 +161,7 @@ public class UMLEnvironment {
    * @param childItem The child UMLItem
    * @param parentItem The parent UMLItem
    */
+  @Deprecated
   public void removeChild(String childName, String parentName, UMLItem childItem, UMLItem parentItem) {
     if (childItem == null || !itemExists(childItem)) {
       logger.warning("Child class " + childName + " does not exist. Remove child cancelled.");
@@ -180,6 +182,7 @@ public class UMLEnvironment {
    * @param parentName The parent name
    * @return builder The string of all children
    */
+  @Deprecated
   public String listChildren(String parentName) {
     UMLItem parentItem = findItem(parentName);
     StringBuilder builder = new StringBuilder();
@@ -201,6 +204,7 @@ public class UMLEnvironment {
    * @param childName The child name
    * @return builder The string of all parents
    */
+  @Deprecated
   public String listParents(String childName) {
     StringBuilder builder = new StringBuilder();
     UMLItem childItem = findItem(childName);
