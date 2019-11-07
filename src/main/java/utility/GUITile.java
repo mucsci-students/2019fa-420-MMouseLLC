@@ -5,6 +5,9 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 
 public class GUITile extends Pane {
+	/*final ToggleGroup group = new ToggleGroup();
+	ToggleButton displayMode = new ToggleButton("Display Mode");
+	ToggleButton editMode = new ToggleButton("Edit Mode");*/
 
 	//TilePane tile = new TilePane();
 	TextField textBox = new TextField("Enter Text");
@@ -20,6 +23,7 @@ public class GUITile extends Pane {
     Button removeAttr = new Button("Remove Attribute");
     Label displayAttr = new Label("");
     boolean hasAttr = false;
+
     double sceneX, sceneY, layoutX, layoutY;
 	
 	public GUITile() {
