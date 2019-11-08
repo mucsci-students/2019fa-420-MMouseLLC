@@ -40,6 +40,8 @@ public class GUI extends Application {
 	private Pane mainLayout = new Pane();
 	private Group layout = new Group();
 	private Group arrowLayout = new Group();
+	ToggleButton displayMode = new ToggleButton("Display Mode");
+	ToggleButton editMode = new ToggleButton("Edit Mode");
 
 	/*
 	 * @author eric main calls the built in application function "launch" to create
@@ -97,8 +99,8 @@ public class GUI extends Application {
 		sp.setContent(mainLayout);
 
 		ToggleGroup group = new ToggleGroup();
-		ToggleButton displayMode = new ToggleButton("Display Mode");
-		ToggleButton editMode = new ToggleButton("Edit Mode");
+		// ToggleButton displayMode = new ToggleButton("Display Mode");
+		// ToggleButton editMode = new ToggleButton("Edit Mode");
 		displayMode.setToggleGroup(group);
 		editMode.setToggleGroup(group);
 		// Pane layout = new Pane();
@@ -139,7 +141,7 @@ public class GUI extends Application {
 							env.createMappingFor(item, tile);
 							tile.removeAttr.setVisible(true);
 							tile.pane.getChildren().remove(tile.add);
-							
+
 							env.getRelationshipsFor(item).forEach(updateArrowWithParent());
 						}
 						displayMode.setSelected(false);
@@ -184,7 +186,7 @@ public class GUI extends Application {
 							env.createMappingFor(item, tile);
 							tile.removeAttr.setVisible(false);
 							tile.pane.getChildren().remove(tile.add);
-							
+
 							env.getRelationshipsFor(item).forEach(updateArrowWithParent());
 
 						}
@@ -315,25 +317,42 @@ public class GUI extends Application {
 			if (env.findItem(t.nameBox.getText()) != null) {
 
 				// Update the name and add buttons
-				t.nameBox.setVisible(false);
-				t.nameLabel.setVisible(true);
-				t.nameLabel.setText(t.nameBox.getText());
-				t.edit.setVisible(true);
-				t.remove.setVisible(true);
-				t.addAttr.setVisible(true);
-				t.addChild.setVisible(true);
-				t.move.setVisible(true);
-				// t.displayMode.setVisible(true);
-				// t.editMode.setVisible(true);
-				t.pane.setMaxHeight(250);
-				t.pane.setMinHeight(250);
-				t.pane.getChildren().remove(t.add);
-				UMLItem item = env.findItem(t.nameBox.getText());
-				env.createMappingFor(item, t);
-				t.removeAttr.setVisible(true);
-				t.pane.getChildren().remove(t.add);
-				
-				
+				if (editMode.isSelected()) {
+					t.nameBox.setVisible(false);
+					t.nameLabel.setVisible(true);
+					t.nameLabel.setText(t.nameBox.getText());
+					t.edit.setVisible(true);
+					t.remove.setVisible(true);
+					t.addAttr.setVisible(true);
+					t.addChild.setVisible(true);
+					t.move.setVisible(true);
+					// t.displayMode.setVisible(true);
+					// t.editMode.setVisible(true);
+					t.pane.setMaxHeight(250);
+					t.pane.setMinHeight(250);
+					t.pane.getChildren().remove(t.add);
+					UMLItem item = env.findItem(t.nameBox.getText());
+					env.createMappingFor(item, t);
+					t.removeAttr.setVisible(true);
+					t.pane.getChildren().remove(t.add);
+				} else {
+					t.nameBox.setVisible(false);
+					t.nameLabel.setVisible(true);
+					t.nameLabel.setText(t.nameBox.getText());
+					t.edit.setVisible(false);
+					t.remove.setVisible(false);
+					t.addAttr.setVisible(false);
+					t.addChild.setVisible(false);
+					t.move.setVisible(false);
+					t.pane.setMaxHeight(50);
+					t.pane.setMinHeight(50);
+					t.pane.getChildren().remove(t.add);
+					UMLItem item = env.findItem(t.nameBox.getText());
+					env.createMappingFor(item, t);
+					t.removeAttr.setVisible(false);
+					t.pane.getChildren().remove(t.add);
+				}
+
 			} else {
 				Alert b = new Alert(Alert.AlertType.ERROR,
 						t.nameBox.getText() + " could not be added. Name already exists.\nPlease choose another name.");
