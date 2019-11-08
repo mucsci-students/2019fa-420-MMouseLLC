@@ -94,7 +94,6 @@ public class GUI extends Application {
 		Button addButton = new Button();
 		Button resetAll = new Button("Start Over");
 		addButton.setText("Add Class");
-
 		ScrollPane sp = new ScrollPane();
 		sp.setContent(mainLayout);
 
@@ -200,6 +199,7 @@ public class GUI extends Application {
 
 		});
 
+
 		/*
 		 * @author eric this event listener is for the add button in the main menu the
 		 * purpose is to create a new potential item to be added to the environment
@@ -236,7 +236,6 @@ public class GUI extends Application {
 				setAddChildButtonAction(t, layout);
 				setMoveTileAction(t, layout);
 				setRemoveAttrButton(t, layout);
-
 				sp.setContent(layout);
 
 			}
@@ -568,7 +567,6 @@ public class GUI extends Application {
 	}
 
 	public void setMoveTileAction(GUITile t, Group layout) {
-		// Moves tile t to location specified by a click
 
 		t.pane.setOnMousePressed(e -> {
 			t.sceneX = e.getSceneX();

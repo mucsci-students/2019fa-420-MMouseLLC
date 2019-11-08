@@ -8,6 +8,7 @@ import data.UMLItem;
 /**
  * The Class AttributeMapper.
  */
+@Deprecated
 public class AttributeMapper {
   
   /** The logger. */
