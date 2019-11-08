@@ -1,5 +1,8 @@
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+
+import org.junit.After;
+
 import data.*;
 import utility.Console;
 
@@ -83,5 +86,17 @@ public class RelationshipTest {
 		assertEquals(1, env.getRelationships().size());
 		run("edit_relationship A B N");
 		assertEquals("N", env.findRelationship(new Relationship(env.findItem("A"), env.findItem("B"))).getQuantifierName());
+	}
+	
+	@After
+	@Test
+	public void testListClasses() {
+		run("add Matt");
+		run("add Kasey");
+		run("add_field Matt Kasey frien");
+		run("add_function Matt Kasey getFrien()");
+		System.out.println("Start");
+		System.out.println(env.listClass(env.findItem("Matt")));
+		System.out.println("End");
 	}
 }

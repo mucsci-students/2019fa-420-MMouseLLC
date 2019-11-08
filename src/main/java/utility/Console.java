@@ -547,6 +547,10 @@ public class Console {
 			if (item == null) {
 				logger.warning("Inavalid Class Name");
 			}
+			UMLItem findType = env.findItem(type);
+			if (findType != null) {
+				env.addRelationship(new Relationship(findType, item));
+			}
 
 			FieldMapper mapper = new FieldMapper(env);
 			mapper.addField(className, type, var);
@@ -574,6 +578,11 @@ public class Console {
 				logger.warning("Inavalid Class Name");
 			}
 
+			UMLItem findType = env.findItem(type);
+			if (findType != null) {
+				env.addRelationship(new Relationship(findType, item));
+			}
+			
 			FunctionMapper mapper = new FunctionMapper(env);
 			mapper.addFunction(className, type, var);
 			String functions = mapper.listMap(item.getFunctions());

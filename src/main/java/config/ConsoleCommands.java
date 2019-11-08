@@ -57,5 +57,7 @@ public enum ConsoleCommands {
 	/** Edit a relationship */
 	EDIT_RELATIONSHIP,
 	/** Remove a relationship */
-	REMOVE_RELATIONSHIP;
+	REMOVE_RELATIONSHIP,
+	/** List relationships */
+	LIST_RELATIONSHIP;
 }

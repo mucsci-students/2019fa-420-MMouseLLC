@@ -1,7 +1,10 @@
 package data;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Logger;
+import mapper.*;
 
 /*
  * UMLEnvironment is an object meant to keep track of all the UMLItems that 
@@ -122,6 +125,23 @@ public class UMLEnvironment {
     builder.append("]");
     return builder.toString();
   }
+  
+  /**
+   * Gets all classes in the environment.
+   * 
+   * @return builder the String of all classes
+   */
+  public String listRelationships(ArrayList<Relationship> r) {
+    StringBuilder builder = new StringBuilder();
+    builder.append("List of relationships: [ ");
+    for (Relationship i : r) {
+      builder.append("{" + i.getParent().getName() + "--[" + i.getQuantifierName() + "]->" + i.getChild().getName() + "} ");
+    }
+    builder.append("]");
+    return builder.toString();
+  }
+  
+  
   
 
   /**
@@ -282,6 +302,68 @@ public class UMLEnvironment {
   
   public ArrayList<Relationship> getRelationships(){
 	  return relationships;
+  }
+  
+  /**
+   * Returns a list containing relationships where UMLItem i is the parent
+   * @param i
+   * @return ArrayList
+   */
+  public ArrayList<Relationship> relationshipsWithParent(UMLItem i ){
+	  ArrayList<Relationship> arr = new ArrayList<>();
+	  for (Relationship r : relationships) {
+		  if (r.getParent().equals(i)) {
+			  arr.add(r);
+		  }
+	  }
+	  return arr;
+  }
+  
+  /**
+   * Returns a list containing relationships where UMLItem i is the child
+   * @param i
+   * @return ArrayList
+   */
+  public ArrayList<Relationship> relationshipsWithChild(UMLItem i ){
+	  ArrayList<Relationship> arr = new ArrayList<>();
+	  for (Relationship r : relationships) {
+		  if (r.getChild().equals(i)) {
+			  arr.add(r);
+		  }
+	  }
+	  return arr;
+  }
+  
+  public String listMap(HashMap<String, String> m) {
+		StringBuilder s = new StringBuilder();
+		s.append("[ ");
+		
+		for (Map.Entry<String, String> i : m.entrySet()) {
+			s.append("{ " + i.getKey() + ": " +  i.getValue() + " } " );
+		}
+		s.append("]");
+		return s.toString();
+	}
+  
+  public String listClass(UMLItem i) {
+	  StringBuilder s = new StringBuilder();
+	  s.append("Listing class: " + i.getName() + "\n\n");
+	  if (i == null) {
+		  return s.toString();
+	  }
+	  // List fields
+	  // List functions
+	  // List relationships where i is the Parent
+	  // List relationships where i is the Child
+	  s.append("Fields: ");
+	  s.append(listMap(i.getFields()) + "\nFunctions: ");
+	  s.append(listMap(i.getFunctions()) + "\nRelations as Parent: ");
+	  s.append(this.listRelationships(this.relationshipsWithParent(i)) + "\nRelations as Child: ");
+	  s.append(this.listRelationships(this.relationshipsWithChild(i)));
+	  s.append("\n");
+	  
+	  return s.toString();
+	  
   }
 
   ////////////////////////////////////
