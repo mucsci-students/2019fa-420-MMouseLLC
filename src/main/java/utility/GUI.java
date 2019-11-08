@@ -435,6 +435,7 @@ public class GUI extends Application {
 				layout.getChildren().remove(t.pane);
 
 				env.removeItem(item);
+				env.removeItemGUI(item);
 				System.out.println(env.getRelationshipsFor(item).size());
 			}
 
