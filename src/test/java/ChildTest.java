@@ -47,13 +47,13 @@ public class ChildTest {
   public void testAddChild() {
     String[] input = { "add", "Matt" };
     c.checkInput(input);
-    c.list();
+    c.list(input);
     input[1] = "Kasey";
     c.checkInput(input);
-    c.list();
+    c.list(input);
     input[1] = "Grant";
     c.checkInput(input);
-    c.list();
+    c.list(input);
     UMLItem child = env.findItem("Matt");
     UMLItem parent = env.findItem("Kasey");
 
@@ -119,13 +119,13 @@ public class ChildTest {
   public void testRemoveChild() {
     String[] input = { "add", "Eric" };
     c.checkInput(input);
-    c.list();
+    c.list(input);
     input[1] = "Dan";
     c.checkInput(input);
-    c.list();
+    c.list(input);
     input[1] = "Lauren";
     c.checkInput(input);
-    c.list();
+    c.list(input);
     UMLItem child = env.findItem("Eric");
     UMLItem parent = env.findItem("Dan");
 
@@ -205,13 +205,13 @@ public class ChildTest {
   public void testListChildren() {
     String[] input = { "add", "Maggie" };
     c.checkInput(input);
-    c.list();
+    c.list(input);
     input[1] = "Oreo";
     c.checkInput(input);
-    c.list();
+    c.list(input);
     input[1] = "Goober";
     c.checkInput(input);
-    c.list();
+    c.list(input);
 
     input = new String[3];
     input[0] = "add_child";
@@ -275,13 +275,13 @@ public class ChildTest {
   public void testListParents() {
     String[] input = { "add", "Biscotti" };
     c.checkInput(input);
-    c.list();
+    
     input[1] = "Patches";
     c.checkInput(input);
-    c.list();
+    
     input[1] = "Sauron";
     c.checkInput(input);
-    c.list();
+    
 
     input = new String[3];
     input[0] = "add_child";

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
-import mapper.*;
 
 /*
  * UMLEnvironment is an object meant to keep track of all the UMLItems that 
@@ -47,7 +46,7 @@ public class UMLEnvironment {
         return i;
       }
     }
-    logger.warning("Class " + itemName + " not found.");
+    //logger.warning("Class " + itemName + " not found.");
     return null;
   }
 
@@ -133,7 +132,7 @@ public class UMLEnvironment {
    */
   public String listRelationships(ArrayList<Relationship> r) {
     StringBuilder builder = new StringBuilder();
-    builder.append("List of relationships: [ ");
+    builder.append("[ ");
     for (Relationship i : r) {
       builder.append("{" + i.getParent().getName() + "--[" + i.getQuantifierName() + "]->" + i.getChild().getName() + "} ");
     }
@@ -334,6 +333,12 @@ public class UMLEnvironment {
 	  return arr;
   }
   
+  /**
+   * Given a map String=>String, return a String in Array style showing all members
+   * Ex: [ { height: int } { Matt: String } ] 
+   * @param m
+   * @return
+   */
   public String listMap(HashMap<String, String> m) {
 		StringBuilder s = new StringBuilder();
 		s.append("[ ");
@@ -345,25 +350,41 @@ public class UMLEnvironment {
 		return s.toString();
 	}
   
+  /**
+   * List a UMLItem by every data member associated with it 
+   * Returns a string giving information on its Fields, Functions, Relationships as parent and child
+   * @param i UMLItem
+   * @return String 
+   */
   public String listClass(UMLItem i) {
 	  StringBuilder s = new StringBuilder();
-	  s.append("Listing class: " + i.getName() + "\n\n");
 	  if (i == null) {
-		  return s.toString();
+		  return "";
 	  }
-	  // List fields
-	  // List functions
-	  // List relationships where i is the Parent
-	  // List relationships where i is the Child
+	  s.append("\n" + i.getName() + "\n");
 	  s.append("Fields: ");
 	  s.append(listMap(i.getFields()) + "\nFunctions: ");
 	  s.append(listMap(i.getFunctions()) + "\nRelations as Parent: ");
 	  s.append(this.listRelationships(this.relationshipsWithParent(i)) + "\nRelations as Child: ");
 	  s.append(this.listRelationships(this.relationshipsWithChild(i)));
-	  s.append("\n");
+	  
 	  
 	  return s.toString();
 	  
+  }
+  
+  /**
+   * Builds string containing verbose info on every class in environment
+   *   Calls listClass
+   * @return
+   */
+  public String listClassesVerbose() {
+	  StringBuilder s = new StringBuilder();
+	  for (UMLItem i : items) {
+		  s.append(listClass(i));
+		  s.append("\n");
+	  }
+	  return s.toString();
   }
 
   ////////////////////////////////////

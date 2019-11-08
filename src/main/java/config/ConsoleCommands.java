@@ -18,20 +18,14 @@ public enum ConsoleCommands {
 	LOAD,
 	/** The list. */
 	LIST,
+	/** List all associated with class */
+	LIST_CLASS,
 	/** The quit. */
 	QUIT,
 	/** The add. */
 	ADD,
 	/** The delete. */
 	DELETE,
-	/** The remove child */
-	DELETE_CHILD,
-	/** The add child */
-	ADD_CHILD,
-	/** The list children */
-	LIST_CHILDREN,
-	/** The list parents */
-	LIST_PARENTS,
 	/** the edit field type */
 	EDIT_FIELD_TYPE,
 	/** the edit field var */

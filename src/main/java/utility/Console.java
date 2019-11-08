@@ -70,7 +70,9 @@ public class Console {
 		} else if (command.equals("find")) {
 			find(input);
 		} else if (command.equals("list")) {
-			list();
+			list(input);
+		} else if (command.equals("list_class")) {
+			listClass(input);
 		} else if (command.equals("save")) {
 			save(input);
 		} else if (command.equals("load")) {
@@ -184,8 +186,25 @@ public class Console {
 	/**
 	 * Lists all classes in the environment
 	 */
-	public void list() {
+	public void list(String[] input) {
+		if (input.length > 1) {
+			System.out.println(env.listClassesVerbose());
+			return;
+		}
 		System.out.println(env.listClasses());
+	}
+	
+	public void listClass(String[] input) {
+		if (input.length < 2) {
+			logger.warning("Usage: list_class [className]");
+			return;
+		}
+		UMLItem i = env.findItem(input[1]);
+		if (i == null) {
+			logger.warning("Classname " + input[1] + " not found.");
+			return;
+		}
+		System.out.println(env.listClass(i));
 	}
 
 	/**

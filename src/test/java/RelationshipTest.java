@@ -1,6 +1,5 @@
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-
 import org.junit.After;
 
 import data.*;
@@ -98,5 +97,7 @@ public class RelationshipTest {
 		System.out.println("Start");
 		System.out.println(env.listClass(env.findItem("Matt")));
 		System.out.println("End");
+
+		
 	}
 }
