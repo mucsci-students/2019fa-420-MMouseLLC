@@ -40,8 +40,8 @@ public class GUI extends Application {
 	private Pane mainLayout = new Pane();
 	private Group layout = new Group();
 	private Group arrowLayout = new Group();
-	ToggleButton displayMode = new ToggleButton("Display Mode");
-	ToggleButton editMode = new ToggleButton("Edit Mode");
+	private ToggleButton displayMode = new ToggleButton("Display Mode");
+	private ToggleButton editMode = new ToggleButton("Edit Mode");
 
 	/*
 	 * @author eric main calls the built in application function "launch" to create
@@ -98,17 +98,16 @@ public class GUI extends Application {
 		ScrollPane sp = new ScrollPane();
 		sp.setContent(mainLayout);
 
+		// Allows for the display/edit modes buttons
 		ToggleGroup group = new ToggleGroup();
-		// ToggleButton displayMode = new ToggleButton("Display Mode");
-		// ToggleButton editMode = new ToggleButton("Edit Mode");
 		displayMode.setToggleGroup(group);
 		editMode.setToggleGroup(group);
-		// Pane layout = new Pane();
 		displayMode.setLayoutX(100);
 		displayMode.setLayoutY(10);
 		editMode.setLayoutX(210);
 		editMode.setLayoutY(10);
 		layout.getChildren().addAll(displayMode, editMode);
+		// default in edit mode when starting GUI
 		editMode.setSelected(true);
 
 		editMode.setOnAction(new EventHandler<ActionEvent>() {
@@ -121,6 +120,7 @@ public class GUI extends Application {
 					editMode.setSelected(true);
 					return;
 				} else {
+					// update tiles to show buttons
 					if (editMode.isSelected()) {
 						for (UMLItem i : env.getItems()) {
 							GUITile tile = env.getTileFor(i);
@@ -141,16 +141,14 @@ public class GUI extends Application {
 							env.createMappingFor(item, tile);
 							tile.removeAttr.setVisible(true);
 							tile.pane.getChildren().remove(tile.add);
-
+							// updates paired arrows with new size of tiles
 							env.getRelationshipsFor(item).forEach(updateArrowWithParent());
 						}
+						// reset the main buttons to be appropriate
 						displayMode.setSelected(false);
 						editMode.setSelected(true);
 						addButton.setDisable(false);
 						return;
-					} else {
-						displayMode.setSelected(true);
-						editMode.setSelected(false);
 					}
 				}
 			}
@@ -166,6 +164,7 @@ public class GUI extends Application {
 					editMode.setSelected(false);
 					return;
 				} else {
+					// update tiles to hide buttons
 					if (displayMode.isSelected()) {
 						for (UMLItem i : env.getItems()) {
 							GUITile tile = env.getTileFor(i);
@@ -186,17 +185,15 @@ public class GUI extends Application {
 							env.createMappingFor(item, tile);
 							tile.removeAttr.setVisible(false);
 							tile.pane.getChildren().remove(tile.add);
-
+							// updates paired arrows with new size of tiles
 							env.getRelationshipsFor(item).forEach(updateArrowWithParent());
 
 						}
+						// reset the main buttons to be appropriate
 						displayMode.setSelected(true);
 						editMode.setSelected(false);
 						addButton.setDisable(true);
 						return;
-					} else {
-						displayMode.setSelected(false);
-						editMode.setSelected(true);
 					}
 				}
 			}
@@ -252,9 +249,6 @@ public class GUI extends Application {
 				layout.getChildren().remove(i);
 			}
 			layout.getChildren().add(addButton);
-
-			// layout.getChildren().add(displayButton);
-			// layout.getChildren().add(editButton);
 
 			layout.getChildren().add(resetAll);
 		});
@@ -317,6 +311,10 @@ public class GUI extends Application {
 			if (env.findItem(t.nameBox.getText()) != null) {
 
 				// Update the name and add buttons
+				/*
+				 * Checking whether edit or display is currently activated and lets buttons be
+				 * visible accordingly
+				 */
 				if (editMode.isSelected()) {
 					t.nameBox.setVisible(false);
 					t.nameLabel.setVisible(true);
@@ -326,8 +324,6 @@ public class GUI extends Application {
 					t.addAttr.setVisible(true);
 					t.addChild.setVisible(true);
 					t.move.setVisible(true);
-					// t.displayMode.setVisible(true);
-					// t.editMode.setVisible(true);
 					t.pane.setMaxHeight(250);
 					t.pane.setMinHeight(250);
 					t.pane.getChildren().remove(t.add);
