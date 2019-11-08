@@ -40,8 +40,8 @@ public class UMLItem {
 		attributes = new ArrayList<String>();
 		this.fields = new HashMap<>();
 		this.functions = new HashMap<>();
-		parents = new ArrayList<>();
-		children = new ArrayList<>();
+		parents = new ArrayList<UMLItem>();
+		children = new ArrayList<UMLItem>();
 	}
 
 	/**
@@ -60,8 +60,8 @@ public class UMLItem {
 		this.fields = new HashMap<>();
 		this.functions = new HashMap<>();
 
-		this.parents = new ArrayList<>();
-		this.children = new ArrayList<>();
+		this.parents = new ArrayList<UMLItem>();
+		this.children = new ArrayList<UMLItem>();
 
 		this.parents.add(parent);
 		this.children.add(child);
@@ -79,8 +79,8 @@ public class UMLItem {
 		this.attributes = new ArrayList<>();
 		this.fields = new HashMap<>();
 		this.functions = new HashMap<>();
-		this.parents = new ArrayList<>();
-		this.children = new ArrayList<>();
+		this.parents = new ArrayList<UMLItem>();
+		this.children = new ArrayList<UMLItem>();
 	}
 
 	/**
@@ -93,8 +93,8 @@ public class UMLItem {
 		this.attributes = new ArrayList<>();
 		this.fields = new HashMap<>();
 		this.functions = new HashMap<>();
-		this.parents = new ArrayList<>();
-		this.children = new ArrayList<>();
+		this.parents = new ArrayList<UMLItem>();
+		this.children = new ArrayList<UMLItem>();
 	}
 
 	/**

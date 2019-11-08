@@ -689,8 +689,6 @@ public class GUI extends Application {
 	private BiConsumer<? super ParentChildPair, ? super Arrow> removeArrow() {
 		return (ParentChildPair pair, Arrow arrow) -> {
 			layout.getChildren().remove(arrow);
-			env.removeArrow(pair.getParent(), pair.getChild());
-			env.removeArrow(pair.getChild(), pair.getParent());
 			// env.removeChild(pair.getChild().getName(), pair.getParent().getName(),
 			// pair.getChild(), pair.getParent());
 		};

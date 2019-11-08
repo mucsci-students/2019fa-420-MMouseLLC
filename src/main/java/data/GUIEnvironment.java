@@ -63,13 +63,16 @@ public class GUIEnvironment extends UMLEnvironment {
 	public void removeItemGUI(UMLItem item) {
 		//boolean result = this.items.remove(item);
 		for(UMLItem child : item.getChildren()) {
+			ParentChildPair pair = new ParentChildPair(item, child);
 			child.removeParent(item);
 			item.removeChild(child);
-			arrowMapping.remove(item)
+			arrowMapping.remove(pair);
 		}
 		for(UMLItem parent : item.getParents()) {
+			ParentChildPair pair = new ParentChildPair(parent, item);
 			parent.removeChild(item);
 			item.removeParent(parent);
+			arrowMapping.remove(pair);
 		}
 		tileMapping.remove(item);
 	}
