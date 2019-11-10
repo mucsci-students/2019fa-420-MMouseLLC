@@ -42,6 +42,9 @@ public class GUI extends Application {
 	private Group arrowLayout = new Group();
 	private ToggleButton displayMode = new ToggleButton("Display Mode");
 	private ToggleButton editMode = new ToggleButton("Edit Mode");
+	private Button quantButton = new Button("Add Quantifier");
+	private TextField quantBox = new TextField("Quantifier");
+	private Label quantLabel = new Label(quantBox.getText());
 
 	/*
 	 * @author eric main calls the built in application function "launch" to create
@@ -574,27 +577,26 @@ public class GUI extends Application {
 			layout.getChildren().add(arr);
 			env.addArrow(parent, child, arr);
 
-			Button quantButton = new Button("Add Quantifier");
+			//Button quantButton = new Button("Add Quantifier");
 			quantButton.setLayoutX(Math.abs((parentCoords[0] + childCoords[0])/2));
 			quantButton.setLayoutY(Math.abs((parentCoords[1] + childCoords[1])/2) + 30);
-			TextField nameBox = new TextField("Quantifier");
+			//TextField quantBox = new TextField("Quantifier");
 			layout.getChildren().add(quantButton);
 
-			nameBox.setLayoutX(Math.abs((parentCoords[0] + childCoords[0])/2));
-			nameBox.setLayoutY(Math.abs((parentCoords[1] + childCoords[1])/2));
-			nameBox.setMaxWidth(120);
-			layout.getChildren().add(nameBox);
+			quantBox.setLayoutX(Math.abs((parentCoords[0] + childCoords[0])/2));
+			quantBox.setLayoutY(Math.abs((parentCoords[1] + childCoords[1])/2));
+			quantBox.setMaxWidth(120);
+			layout.getChildren().add(quantBox);
 			quantButton.setOnAction(new EventHandler<ActionEvent>() {
 				@Override
 				public void handle(ActionEvent clickQuantButton) {
-					Label nameLabel = new Label(nameBox.getText());
-					nameLabel.setMinWidth(120);
-					nameLabel.setLayoutX(Math.abs((parentCoords[0] + childCoords[0])/2));
-					nameLabel.setLayoutY(Math.abs((parentCoords[1] + childCoords[1])/2));
-					nameLabel.setMaxWidth(120);
-					nameLabel.setMinWidth(120);
-					layout.getChildren().add(nameLabel);
-					layout.getChildren().remove(nameBox);
+					quantLabel = new Label(quantBox.getText());
+					quantLabel.setMinWidth(120);
+					quantLabel.setLayoutX(Math.abs((parentCoords[0] + childCoords[0])/2));
+					quantLabel.setLayoutY(Math.abs((parentCoords[1] + childCoords[1])/2));
+					quantLabel.setMaxWidth(120);
+					layout.getChildren().add(quantLabel);
+					layout.getChildren().remove(quantBox);
 					layout.getChildren().remove(quantButton);
 				}
 			});
@@ -715,6 +717,9 @@ public class GUI extends Application {
 			layout.getChildren().remove(arrow);
 			env.replaceArrow(pair, newArrow);
 			layout.getChildren().add(newArrow);
+			
+			quantLabel.setLayoutX(Math.abs((parentCoords[0] + childCoords[0])/2));
+			quantLabel.setLayoutY(Math.abs((parentCoords[1] + childCoords[1])/2));
 			// mainLayout.getChildren().remove(arrowLayout);
 			// mainLayout.getChildren().add(arrowLayout);
 
@@ -726,6 +731,7 @@ public class GUI extends Application {
 			layout.getChildren().remove(arrow);
 			env.removeArrow(pair.getParent(), pair.getChild());
 			env.removeArrow(pair.getChild(), pair.getParent());
+			layout.getChildren().remove(quantLabel);
 			// env.removeChild(pair.getChild().getName(), pair.getParent().getName(),
 			// pair.getChild(), pair.getParent());
 		};
