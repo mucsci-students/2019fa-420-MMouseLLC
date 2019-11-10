@@ -117,6 +117,7 @@ public class GUI extends Application {
 					a.show();
 					displayMode.setSelected(false);
 					editMode.setSelected(true);
+					addButton.setDisable(true);
 					return;
 				} else {
 					// update tiles to show buttons
@@ -148,6 +149,11 @@ public class GUI extends Application {
 						editMode.setSelected(true);
 						addButton.setDisable(false);
 						return;
+					} else {
+						displayMode.setSelected(true);
+						editMode.setSelected(false);
+						addButton.setDisable(true);
+						return;
 					}
 				}
 			}
@@ -161,6 +167,7 @@ public class GUI extends Application {
 					a.show();
 					displayMode.setSelected(true);
 					editMode.setSelected(false);
+					addButton.setDisable(false);
 					return;
 				} else {
 					// update tiles to hide buttons
@@ -193,12 +200,16 @@ public class GUI extends Application {
 						editMode.setSelected(false);
 						addButton.setDisable(true);
 						return;
+					} else {
+						displayMode.setSelected(false);
+						editMode.setSelected(true);
+						addButton.setDisable(false);
+						return;
 					}
 				}
 			}
 
 		});
-
 
 		/*
 		 * @author eric this event listener is for the add button in the main menu the
@@ -435,7 +446,7 @@ public class GUI extends Application {
 				layout.getChildren().remove(t.pane);
 
 				env.removeItem(item);
-				System.out.println(env.getRelationshipsFor(item).size());
+				// System.out.println(env.getRelationshipsFor(item).size());
 			}
 
 		});
@@ -562,6 +573,31 @@ public class GUI extends Application {
 			Arrow arr = new Arrow(parentCoords[0], parentCoords[1], childCoords[0], childCoords[1], 5);
 			layout.getChildren().add(arr);
 			env.addArrow(parent, child, arr);
+
+			Button quantButton = new Button("Add Quantifier");
+			quantButton.setLayoutX(Math.abs((parentCoords[0] + childCoords[0])/2));
+			quantButton.setLayoutY(Math.abs((parentCoords[1] + childCoords[1])/2) + 30);
+			TextField nameBox = new TextField("Quantifier");
+			layout.getChildren().add(quantButton);
+
+			nameBox.setLayoutX(Math.abs((parentCoords[0] + childCoords[0])/2));
+			nameBox.setLayoutY(Math.abs((parentCoords[1] + childCoords[1])/2));
+			nameBox.setMaxWidth(120);
+			layout.getChildren().add(nameBox);
+			quantButton.setOnAction(new EventHandler<ActionEvent>() {
+				@Override
+				public void handle(ActionEvent clickQuantButton) {
+					Label nameLabel = new Label(nameBox.getText());
+					nameLabel.setMinWidth(120);
+					nameLabel.setLayoutX(Math.abs((parentCoords[0] + childCoords[0])/2));
+					nameLabel.setLayoutY(Math.abs((parentCoords[1] + childCoords[1])/2));
+					nameLabel.setMaxWidth(120);
+					nameLabel.setMinWidth(120);
+					layout.getChildren().add(nameLabel);
+					layout.getChildren().remove(nameBox);
+					layout.getChildren().remove(quantButton);
+				}
+			});
 
 		});
 	}
