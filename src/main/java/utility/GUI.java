@@ -42,9 +42,9 @@ public class GUI extends Application {
 	private Group arrowLayout = new Group();
 	private ToggleButton displayMode = new ToggleButton("Display Mode");
 	private ToggleButton editMode = new ToggleButton("Edit Mode");
-	private Button quantButton = new Button("Add Quantifier");
+	/*private Button quantButton = new Button("Add Quantifier");
 	private TextField quantBox = new TextField("Quantifier");
-	private Label quantLabel = new Label(quantBox.getText());
+	private Label quantLabel = new Label(quantBox.getText());*/
 
 	/*
 	 * @author eric main calls the built in application function "launch" to create
@@ -577,31 +577,37 @@ public class GUI extends Application {
 			layout.getChildren().add(arr);
 			env.addArrow(parent, child, arr);
 
-			//Button quantButton = new Button("Add Quantifier");
-			quantButton.setLayoutX(Math.abs((parentCoords[0] + childCoords[0])/2));
-			quantButton.setLayoutY(Math.abs((parentCoords[1] + childCoords[1])/2) + 30);
-			//TextField quantBox = new TextField("Quantifier");
-			layout.getChildren().add(quantButton);
-
-			quantBox.setLayoutX(Math.abs((parentCoords[0] + childCoords[0])/2));
-			quantBox.setLayoutY(Math.abs((parentCoords[1] + childCoords[1])/2));
-			quantBox.setMaxWidth(120);
-			layout.getChildren().add(quantBox);
-			quantButton.setOnAction(new EventHandler<ActionEvent>() {
-				@Override
-				public void handle(ActionEvent clickQuantButton) {
-					quantLabel = new Label(quantBox.getText());
-					quantLabel.setMinWidth(120);
-					quantLabel.setLayoutX(Math.abs((parentCoords[0] + childCoords[0])/2));
-					quantLabel.setLayoutY(Math.abs((parentCoords[1] + childCoords[1])/2));
-					quantLabel.setMaxWidth(120);
-					layout.getChildren().add(quantLabel);
-					layout.getChildren().remove(quantBox);
-					layout.getChildren().remove(quantButton);
-				}
-			});
-
+			quantifierBuild(t, layout, parentCoords[0], parentCoords[1], childCoords[0], childCoords[1]);
 		});
+	}
+	
+	public void quantifierBuild (GUITile t, Group layout, double parentX, double parentY, double childX, double childY) {
+		Button quantButton = new Button("Add Quantifier");
+		quantButton.setLayoutX(Math.abs((parentX + childX)/2));
+		quantButton.setLayoutY(Math.abs((parentY + childY)/2) + 30);
+		TextField quantBox = new TextField("Quantifier");
+		layout.getChildren().add(quantButton);
+
+		Label quantLabel = new Label();
+		quantBox.setLayoutX(Math.abs((parentX + childX)/2));
+		quantBox.setLayoutY(Math.abs((parentY + childY)/2));
+		quantBox.setMaxWidth(120);
+		layout.getChildren().add(quantBox);
+		quantButton.setOnAction(new EventHandler<ActionEvent>() {
+			Label quantLabel = new Label();
+			public void handle(ActionEvent clickQuantButton) {
+				quantLabel = new Label(quantBox.getText());
+				quantLabel = new Label(quantBox.getText());
+				quantLabel.setMinWidth(120);
+				quantLabel.setLayoutX(Math.abs((parentX + childX)/2));
+				quantLabel.setLayoutY(Math.abs((parentY + childY)/2));
+				quantLabel.setMaxWidth(120);
+				layout.getChildren().add(quantLabel);
+				layout.getChildren().remove(quantBox);
+				layout.getChildren().remove(quantButton);
+			}
+		});
+
 	}
 
 	public void setMoveTileAction(GUITile t, Group layout) {
@@ -718,8 +724,8 @@ public class GUI extends Application {
 			env.replaceArrow(pair, newArrow);
 			layout.getChildren().add(newArrow);
 			
-			quantLabel.setLayoutX(Math.abs((parentCoords[0] + childCoords[0])/2));
-			quantLabel.setLayoutY(Math.abs((parentCoords[1] + childCoords[1])/2));
+			//quantLabel.setLayoutX(Math.abs((parentCoords[0] + childCoords[0])/2));
+			//quantLabel.setLayoutY(Math.abs((parentCoords[1] + childCoords[1])/2));
 			// mainLayout.getChildren().remove(arrowLayout);
 			// mainLayout.getChildren().add(arrowLayout);
 
@@ -731,7 +737,7 @@ public class GUI extends Application {
 			layout.getChildren().remove(arrow);
 			env.removeArrow(pair.getParent(), pair.getChild());
 			env.removeArrow(pair.getChild(), pair.getParent());
-			layout.getChildren().remove(quantLabel);
+			//layout.getChildren().remove(quantLabel);
 			// env.removeChild(pair.getChild().getName(), pair.getParent().getName(),
 			// pair.getChild(), pair.getParent());
 		};
