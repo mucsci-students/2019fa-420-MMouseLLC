@@ -433,7 +433,7 @@ public class GUI extends Application {
 				System.out.println(env.getRelationshipsFor(item).size());
 				env.getRelationshipsFor(item).forEach(removeArrow());
 				layout.getChildren().remove(t.pane);
-
+				env.removeItemGUI(item);
 				env.removeItem(item);
 				System.out.println(env.getRelationshipsFor(item).size());
 			}
@@ -491,7 +491,6 @@ public class GUI extends Application {
 					t.edit.setLayoutY(t.edit.getLayoutY() + ADD_ATTR_OFFSET);
 					t.addAttr.setLayoutY(t.addAttr.getLayoutY() + ADD_ATTR_OFFSET);
 					t.removeAttr.setLayoutY(t.removeAttr.getLayoutY() + ADD_ATTR_OFFSET);
-					t.remove.setLayoutY(t.remove.getLayoutY() + ADD_ATTR_OFFSET);
 					t.addChild.setLayoutY(t.addChild.getLayoutY() + ADD_ATTR_OFFSET);
 
 					newAttr = t.displayAttr.getText() + "\u2022" + answer.get() + "\n";
@@ -651,7 +650,6 @@ public class GUI extends Application {
 					t.edit.setLayoutY(t.edit.getLayoutY() - ADD_ATTR_OFFSET);
 					t.addAttr.setLayoutY(t.addAttr.getLayoutY() - ADD_ATTR_OFFSET);
 					t.removeAttr.setLayoutY(t.removeAttr.getLayoutY() - ADD_ATTR_OFFSET);
-					t.remove.setLayoutY(t.remove.getLayoutY() - ADD_ATTR_OFFSET);
 					t.addChild.setLayoutY(t.addChild.getLayoutY() - ADD_ATTR_OFFSET);
 				}
 			}
@@ -665,20 +663,21 @@ public class GUI extends Application {
 			UMLItem child = pair.getChild();
 			GUITile parentTile = env.getTileFor(parent);
 			GUITile childTile = env.getTileFor(child);
+			
+			if(parentTile != null && childTile != null) {
+				double[] parentCoords = { parentTile.pane.getTranslateX() + parentTile.layoutX,
+						parentTile.pane.getTranslateY() + parentTile.layoutY };
+				double[] childCoords = { childTile.pane.getTranslateX() + childTile.layoutX,
+						childTile.pane.getTranslateY() + childTile.layoutY };
+				parentCoords[0] += parentTile.pane.getWidth() / 2.0;
+				parentCoords[1] += parentTile.pane.getHeight();
+				childCoords[0] += parentTile.pane.getWidth() / 2.0;
 
-			double[] parentCoords = { parentTile.pane.getTranslateX() + parentTile.layoutX,
-					parentTile.pane.getTranslateY() + parentTile.layoutY };
-			double[] childCoords = { childTile.pane.getTranslateX() + childTile.layoutX,
-					childTile.pane.getTranslateY() + childTile.layoutY };
-
-			parentCoords[0] += parentTile.pane.getWidth() / 2.0;
-			parentCoords[1] += parentTile.pane.getHeight();
-			childCoords[0] += parentTile.pane.getWidth() / 2.0;
-
-			Arrow newArrow = new Arrow(parentCoords[0], parentCoords[1], childCoords[0], childCoords[1], 5);
-			layout.getChildren().remove(arrow);
-			env.replaceArrow(pair, newArrow);
-			layout.getChildren().add(newArrow);
+				Arrow newArrow = new Arrow(parentCoords[0], parentCoords[1], childCoords[0], childCoords[1], 5);
+				layout.getChildren().remove(arrow);
+				env.replaceArrow(pair, newArrow);
+				layout.getChildren().add(newArrow);
+			}
 			// mainLayout.getChildren().remove(arrowLayout);
 			// mainLayout.getChildren().add(arrowLayout);
 
@@ -690,8 +689,9 @@ public class GUI extends Application {
 			layout.getChildren().remove(arrow);
 			env.removeArrow(pair.getParent(), pair.getChild());
 			env.removeArrow(pair.getChild(), pair.getParent());
-			// env.removeChild(pair.getChild().getName(), pair.getParent().getName(),
-			// pair.getChild(), pair.getParent());
+			pair.getChild().removeParent(pair.getParent());
+			pair.getParent().removeChild(pair.getChild());
+			
 		};
 	}
 }
