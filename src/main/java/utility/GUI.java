@@ -1,5 +1,7 @@
 package utility;
 
+import java.awt.AWTException;
+import java.awt.Event;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -8,6 +10,7 @@ import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
+import config.ArrowModifier;
 import data.Arrow;
 import data.GUIEnvironment;
 import data.ParentChildPair;
@@ -19,7 +22,10 @@ import javafx.scene.Scene;
 import javafx.stage.*;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
+
+import java.awt.Robot;
 
 /*
  * @author eric 
@@ -132,16 +138,17 @@ public class GUI extends Application {
 							tile.addAttr.setVisible(true);
 							tile.addChild.setVisible(true);
 							tile.move.setVisible(true);
-							int tileSize = found.getAttributes().size();
+							int tileSize = i.getAttributes().size();
 							tile.pane.setMaxHeight(250 + (tileSize * ADD_ATTR_OFFSET));
 							tile.pane.setMinHeight(250 + (tileSize * ADD_ATTR_OFFSET));
 							tile.pane.getChildren().remove(tile.add);
 							UMLItem item = env.findItem(tile.nameBox.getText());
-							env.createMappingFor(item, tile);
+							env.createMappingFor(i, tile);
 							tile.removeAttr.setVisible(true);
 							tile.pane.getChildren().remove(tile.add);
+							setMoveTileAction(tile, layout);
 							// updates paired arrows with new size of tiles
-							env.getRelationshipsFor(item).forEach(updateArrowWithParent());
+							env.getRelationshipsFor(i).forEach(updateArrowWithParent());
 						}
 						// reset the main buttons to be appropriate
 						displayMode.setSelected(false);
@@ -176,16 +183,16 @@ public class GUI extends Application {
 							tile.addAttr.setVisible(false);
 							tile.addChild.setVisible(false);
 							tile.move.setVisible(false);
-							int tileSize = found.getAttributes().size();
+							int tileSize = i.getAttributes().size();
 							tile.pane.setMaxHeight(50 + (tileSize * ADD_ATTR_OFFSET));
 							tile.pane.setMinHeight(50 + (tileSize * ADD_ATTR_OFFSET));
 							tile.pane.getChildren().remove(tile.add);
 							UMLItem item = env.findItem(tile.nameBox.getText());
-							env.createMappingFor(item, tile);
+							env.createMappingFor(i, tile);
 							tile.removeAttr.setVisible(false);
 							tile.pane.getChildren().remove(tile.add);
-							// updates paired arrows with new size of tiles
-							env.getRelationshipsFor(item).forEach(updateArrowWithParent());
+							env.getRelationshipsFor(i).forEach(updateArrowWithParent());
+							
 
 						}
 						// reset the main buttons to be appropriate
@@ -212,13 +219,11 @@ public class GUI extends Application {
 			public void handle(ActionEvent e) {
 				GUITile t = new GUITile();
 				if (getSize() == 0) {
-					t.pane.setLayoutX(0);
 					t.pane.setTranslateX(0);
 					t.pane.setTranslateY(0);
 					t.layoutX = t.pane.getLayoutX();
 					t.layoutY = t.pane.getLayoutY();
 				} else {
-					t.pane.setLayoutX(10);
 					t.pane.setTranslateX(0);
 					t.pane.setTranslateY(0);
 					t.layoutX = t.pane.getLayoutX();
@@ -236,7 +241,7 @@ public class GUI extends Application {
 				setAddChildButtonAction(t, layout);
 				setMoveTileAction(t, layout);
 				setRemoveAttrButton(t, layout);
-				sp.setContent(layout);
+				sp.setContent(mainLayout);
 
 			}
 		};
@@ -536,31 +541,16 @@ public class GUI extends Application {
 
 			UMLItem child = env.findItem(nameTest[0]);
 			UMLItem parent = env.findItem(t.nameBox.getText());
+			ArrowModifier mod = new ArrowModifier(parent, child);
+			Arrow arr = mod.makeNewArrow(env);
+			arrowLayout.getChildren().add(arr);
+			env.addArrow(parent, child, arr);
 			if (child == null) {
 				Alert a = new Alert(Alert.AlertType.ERROR, nameTest[0] + " does not exist.");
 				a.show();
 				return;
 			}
-			GUITile childTile = env.getTileFor(child);
-			GUITile parentTile = env.getTileFor(parent);
-
-			/*
-			 * childTile.pane.setLayoutX(parentTile.pane.getLayoutX());
-			 * childTile.pane.setLayoutY(parentTile.pane.getLayoutY() + 340.0);
-			 */
-
-			child.addParent(parent);
-			parent.addChild(child);
-			double[] parentCoords = { parentTile.pane.getLayoutX(), parentTile.pane.getLayoutY() };
-			double[] childCoords = { childTile.pane.getLayoutX(), childTile.pane.getLayoutY() };
-
-			parentCoords[0] += parentTile.pane.getWidth() / 2.0;
-			parentCoords[1] += parentTile.pane.getHeight();
-			childCoords[0] += parentTile.pane.getWidth() / 2.0;
-
-			Arrow arr = new Arrow(parentCoords[0], parentCoords[1], childCoords[0], childCoords[1], 5);
-			layout.getChildren().add(arr);
-			env.addArrow(parent, child, arr);
+			
 
 		});
 	}
@@ -568,12 +558,14 @@ public class GUI extends Application {
 	public void setMoveTileAction(GUITile t, Group layout) {
 
 		t.pane.setOnMousePressed(e -> {
+			layout.getChildren().remove(t.pane);
+			layout.getChildren().add(t.pane);
 			t.sceneX = e.getSceneX();
 			t.sceneY = e.getSceneY();
 			t.layoutX = t.pane.getLayoutX();
 			t.layoutY = t.pane.getLayoutY();
 		});
-
+		
 		t.pane.setOnMouseDragged(event -> {
 			double offsetX = event.getSceneX() - t.sceneX;
 			double offsetY = event.getSceneY() - t.sceneY;
@@ -591,12 +583,13 @@ public class GUI extends Application {
 			t.sceneY = event.getSceneY();
 			t.layoutX = t.pane.getLayoutX();
 			t.layoutY = t.pane.getLayoutY();
-
 			t.pane.setTranslateX(0);
 			t.pane.setTranslateY(0);
+			UMLItem item = env.findItem(t.nameBox.getText());
+			env.getRelationshipsFor(item).forEach(updateArrowWithParent());
 		});
 	}
-
+	
 	public void setRemoveAttrButton(GUITile t, Group layout) {
 		// Removes attribute from text field in tile t
 		t.removeAttr.setOnAction((event) -> {
@@ -661,32 +654,19 @@ public class GUI extends Application {
 
 			UMLItem parent = pair.getParent();
 			UMLItem child = pair.getChild();
-			GUITile parentTile = env.getTileFor(parent);
-			GUITile childTile = env.getTileFor(child);
-			
-			if(parentTile != null && childTile != null) {
-				double[] parentCoords = { parentTile.pane.getTranslateX() + parentTile.layoutX,
-						parentTile.pane.getTranslateY() + parentTile.layoutY };
-				double[] childCoords = { childTile.pane.getTranslateX() + childTile.layoutX,
-						childTile.pane.getTranslateY() + childTile.layoutY };
-				parentCoords[0] += parentTile.pane.getWidth() / 2.0;
-				parentCoords[1] += parentTile.pane.getHeight();
-				childCoords[0] += parentTile.pane.getWidth() / 2.0;
 
-				Arrow newArrow = new Arrow(parentCoords[0], parentCoords[1], childCoords[0], childCoords[1], 5);
-				layout.getChildren().remove(arrow);
-				env.replaceArrow(pair, newArrow);
-				layout.getChildren().add(newArrow);
-			}
-			// mainLayout.getChildren().remove(arrowLayout);
-			// mainLayout.getChildren().add(arrowLayout);
+			ArrowModifier mod = new ArrowModifier(parent, child);
+			Arrow newArrow = mod.updateArrow(env);
+			arrowLayout.getChildren().remove(arrow);
+			env.replaceArrow(pair, newArrow);
+			arrowLayout.getChildren().add(newArrow);
 
 		};
 	}
 
 	private BiConsumer<? super ParentChildPair, ? super Arrow> removeArrow() {
 		return (ParentChildPair pair, Arrow arrow) -> {
-			layout.getChildren().remove(arrow);
+			arrowLayout.getChildren().remove(arrow);
 			env.removeArrow(pair.getParent(), pair.getChild());
 			env.removeArrow(pair.getChild(), pair.getParent());
 			pair.getChild().removeParent(pair.getParent());
