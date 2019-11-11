@@ -10,6 +10,7 @@ import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
+import config.ArrowModifier;
 import data.Arrow;
 import data.GUIEnvironment;
 import data.ParentChildPair;
@@ -137,17 +138,17 @@ public class GUI extends Application {
 							tile.addAttr.setVisible(true);
 							tile.addChild.setVisible(true);
 							tile.move.setVisible(true);
-							int tileSize = found.getAttributes().size();
+							int tileSize = i.getAttributes().size();
 							tile.pane.setMaxHeight(250 + (tileSize * ADD_ATTR_OFFSET));
 							tile.pane.setMinHeight(250 + (tileSize * ADD_ATTR_OFFSET));
 							tile.pane.getChildren().remove(tile.add);
 							UMLItem item = env.findItem(tile.nameBox.getText());
-							env.createMappingFor(item, tile);
+							env.createMappingFor(i, tile);
 							tile.removeAttr.setVisible(true);
 							tile.pane.getChildren().remove(tile.add);
 							setMoveTileAction(tile, layout);
 							// updates paired arrows with new size of tiles
-							env.getRelationshipsFor(found).forEach(updateArrowWithParent());
+							env.getRelationshipsFor(i).forEach(updateArrowWithParent());
 						}
 						// reset the main buttons to be appropriate
 						displayMode.setSelected(false);
@@ -182,15 +183,15 @@ public class GUI extends Application {
 							tile.addAttr.setVisible(false);
 							tile.addChild.setVisible(false);
 							tile.move.setVisible(false);
-							int tileSize = found.getAttributes().size();
+							int tileSize = i.getAttributes().size();
 							tile.pane.setMaxHeight(50 + (tileSize * ADD_ATTR_OFFSET));
 							tile.pane.setMinHeight(50 + (tileSize * ADD_ATTR_OFFSET));
 							tile.pane.getChildren().remove(tile.add);
 							UMLItem item = env.findItem(tile.nameBox.getText());
-							env.createMappingFor(item, tile);
+							env.createMappingFor(i, tile);
 							tile.removeAttr.setVisible(false);
 							tile.pane.getChildren().remove(tile.add);
-							env.getRelationshipsFor(item).forEach(updateArrowWithParent());
+							env.getRelationshipsFor(i).forEach(updateArrowWithParent());
 							
 
 						}
@@ -218,13 +219,11 @@ public class GUI extends Application {
 			public void handle(ActionEvent e) {
 				GUITile t = new GUITile();
 				if (getSize() == 0) {
-					t.pane.setLayoutX(0);
 					t.pane.setTranslateX(0);
 					t.pane.setTranslateY(0);
 					t.layoutX = t.pane.getLayoutX();
 					t.layoutY = t.pane.getLayoutY();
 				} else {
-					t.pane.setLayoutX(10);
 					t.pane.setTranslateX(0);
 					t.pane.setTranslateY(0);
 					t.layoutX = t.pane.getLayoutX();
@@ -542,96 +541,16 @@ public class GUI extends Application {
 
 			UMLItem child = env.findItem(nameTest[0]);
 			UMLItem parent = env.findItem(t.nameBox.getText());
+			ArrowModifier mod = new ArrowModifier(parent, child);
+			Arrow arr = mod.makeNewArrow(env);
+			arrowLayout.getChildren().add(arr);
+			env.addArrow(parent, child, arr);
 			if (child == null) {
 				Alert a = new Alert(Alert.AlertType.ERROR, nameTest[0] + " does not exist.");
 				a.show();
 				return;
 			}
-			GUITile childTile = env.getTileFor(child);
-			GUITile parentTile = env.getTileFor(parent);
-			child.addParent(parent);
-			parent.addChild(child);
 			
-			//if child is on the right of the parent
-			if((parentTile.pane.getLayoutX() + parentTile.pane.getWidth()) < childTile.pane.getLayoutX()) {
-				//If child is above and to the right do this arrow draw:
-				if(childTile.pane.getLayoutY() + childTile.pane.getHeight() < parentTile.pane.getLayoutY()) {
-					double[] parentCoords = { parentTile.pane.getLayoutX() + parentTile.pane.getWidth(), parentTile.pane.getLayoutY() };
-					double[] childCoords = { childTile.pane.getLayoutX(), childTile.pane.getLayoutY() + childTile.pane.getHeight() };
-
-					Arrow arr = new Arrow(parentCoords[0], parentCoords[1], childCoords[0], childCoords[1], 5);
-					arrowLayout.getChildren().add(arr);
-					env.addArrow(parent, child, arr);
-				//if child is on right and below parent
-				} else if (childTile.pane.getLayoutY() > parentTile.pane.getHeight() + parentTile.pane.getLayoutY()) {
-					double[] parentCoords = { parentTile.pane.getLayoutX() + parentTile.pane.getWidth(), parentTile.pane.getLayoutY() + parentTile.pane.getHeight() };
-					double[] childCoords = { childTile.pane.getLayoutX(), childTile.pane.getLayoutY() };
-
-					Arrow arr = new Arrow(parentCoords[0], parentCoords[1], childCoords[0], childCoords[1], 5);
-					arrowLayout.getChildren().add(arr);
-					env.addArrow(parent, child, arr);
-				//if child is in between on the right
-				} else {
-					double[] parentCoords = { parentTile.pane.getLayoutX() + parentTile.pane.getWidth(), parentTile.pane.getLayoutY() + parentTile.pane.getHeight() / 2 };
-					double[] childCoords = { childTile.pane.getLayoutX(), childTile.pane.getLayoutY() + childTile.pane.getHeight() / 2 };
-
-					Arrow arr = new Arrow(parentCoords[0], parentCoords[1], childCoords[0], childCoords[1], 5);
-					arrowLayout.getChildren().add(arr);
-					env.addArrow(parent, child, arr);
-				}
-				
-			} // if child is on the left of the parent
-			else if(parentTile.pane.getLayoutX() > childTile.pane.getLayoutX() + childTile.pane.getWidth()) {
-				//child is above
-				if(childTile.pane.getLayoutY() + childTile.pane.getHeight() < parentTile.pane.getLayoutY()) {
-					double[] parentCoords = { parentTile.pane.getLayoutX(), parentTile.pane.getLayoutY() };
-					double[] childCoords = { childTile.pane.getLayoutX() + childTile.pane.getWidth(), childTile.pane.getLayoutY() + childTile.pane.getHeight() };
-
-					Arrow arr = new Arrow(parentCoords[0], parentCoords[1], childCoords[0], childCoords[1], 5);
-					arrowLayout.getChildren().add(arr);
-					env.addArrow(parent, child, arr);
-				//child is below
-				} else if (childTile.pane.getLayoutY() > parentTile.pane.getHeight() + parentTile.pane.getLayoutY()) {
-					double[] parentCoords = { parentTile.pane.getLayoutX(), parentTile.pane.getLayoutY() + parentTile.pane.getHeight() };
-					double[] childCoords = { childTile.pane.getLayoutX() + childTile.pane.getWidth(), childTile.pane.getLayoutY() };
-
-					Arrow arr = new Arrow(parentCoords[0], parentCoords[1], childCoords[0], childCoords[1], 5);
-					arrowLayout.getChildren().add(arr);
-					env.addArrow(parent, child, arr);
-				//child is in between on left
-				} else {
-					double[] parentCoords = { parentTile.pane.getLayoutX(), parentTile.pane.getLayoutY() + parentTile.pane.getHeight() / 2 };
-					double[] childCoords = { childTile.pane.getLayoutX() + childTile.pane.getWidth(), childTile.pane.getLayoutY() + childTile.pane.getHeight() / 2 };
-
-					Arrow arr = new Arrow(parentCoords[0], parentCoords[1], childCoords[0], childCoords[1], 5);
-					arrowLayout.getChildren().add(arr);
-					env.addArrow(parent, child, arr);
-				}
-			} // Parent is below and in between left and right 
-			else if((parentTile.pane.getLayoutY() > childTile.pane.getLayoutY() + childTile.pane.getHeight())) {
-				double[] parentCoords = { parentTile.pane.getLayoutX(), parentTile.pane.getLayoutY() };
-				double[] childCoords = { childTile.pane.getLayoutX(), childTile.pane.getLayoutY() };
-
-				parentCoords[0] += parentTile.pane.getWidth() / 2.0;
-				childCoords[0] += parentTile.pane.getWidth() / 2.0;
-				childCoords[1] += childTile.pane.getHeight();
-
-				Arrow arr = new Arrow(parentCoords[0], parentCoords[1], childCoords[0], childCoords[1], 5);
-				arrowLayout.getChildren().add(arr);
-				env.addArrow(parent, child, arr);
-			} // Parent is above and in between left and right
-			else if((parentTile.pane.getLayoutY() < childTile.pane.getLayoutY())) {
-				double[] parentCoords = { parentTile.pane.getLayoutX(), parentTile.pane.getLayoutY() };
-				double[] childCoords = { childTile.pane.getLayoutX(), childTile.pane.getLayoutY() };
-
-				parentCoords[0] += parentTile.pane.getWidth() / 2.0;
-				parentCoords[1] += parentTile.pane.getHeight();
-				childCoords[0] += parentTile.pane.getWidth() / 2.0;
-
-				Arrow arr = new Arrow(parentCoords[0], parentCoords[1], childCoords[0], childCoords[1], 5);
-				arrowLayout.getChildren().add(arr);
-				env.addArrow(parent, child, arr); 
-			}
 
 		});
 	}
@@ -735,94 +654,12 @@ public class GUI extends Application {
 
 			UMLItem parent = pair.getParent();
 			UMLItem child = pair.getChild();
-			GUITile parentTile = env.getTileFor(parent);
-			GUITile childTile = env.getTileFor(child);
-			
-			if(parentTile != null && childTile != null) {
-				if((parentTile.pane.getLayoutX() + parentTile.pane.getWidth()) < childTile.pane.getLayoutX()) {
-					//If child is above and to the right do this arrow draw:
-					if(childTile.pane.getLayoutY() + childTile.pane.getHeight() < parentTile.pane.getLayoutY()) {
-						double[] parentCoords = { parentTile.pane.getTranslateX() + parentTile.layoutX + parentTile.pane.getWidth(), parentTile.pane.getTranslateY() + parentTile.layoutY };
-						double[] childCoords = { childTile.pane.getTranslateX() + childTile.layoutX, childTile.pane.getTranslateY() + childTile.layoutY + childTile.pane.getHeight() };
 
-						Arrow newArrow = new Arrow(parentCoords[0], parentCoords[1], childCoords[0], childCoords[1], 5);
-						arrowLayout.getChildren().remove(arrow);
-						env.replaceArrow(pair, newArrow);
-						arrowLayout.getChildren().add(newArrow);
-					} else if (childTile.pane.getLayoutY() > parentTile.pane.getHeight() + parentTile.pane.getLayoutY()) {
-						double[] parentCoords = { parentTile.pane.getTranslateX() + parentTile.layoutX + parentTile.pane.getWidth(), parentTile.pane.getTranslateY() + parentTile.layoutY + parentTile.pane.getHeight() };
-						double[] childCoords = { childTile.pane.getTranslateX() + childTile.layoutX, childTile.pane.getTranslateY() + childTile.layoutY };
-
-						Arrow newArrow = new Arrow(parentCoords[0], parentCoords[1], childCoords[0], childCoords[1], 5);
-						arrowLayout.getChildren().remove(arrow);
-						env.replaceArrow(pair, newArrow);
-						arrowLayout.getChildren().add(newArrow);
-					} else {
-						double[] parentCoords = { parentTile.pane.getTranslateX() + parentTile.layoutX + parentTile.pane.getWidth(), parentTile.pane.getTranslateY() + parentTile.layoutY + parentTile.pane.getHeight() / 2 };
-						double[] childCoords = { childTile.pane.getTranslateX() + childTile.layoutX, childTile.pane.getTranslateY() + childTile.layoutY + childTile.pane.getHeight() / 2 };
-
-						Arrow newArrow = new Arrow(parentCoords[0], parentCoords[1], childCoords[0], childCoords[1], 5);
-						arrowLayout.getChildren().remove(arrow);
-						env.replaceArrow(pair, newArrow);
-						arrowLayout.getChildren().add(newArrow);
-					}
-				}else if(parentTile.pane.getLayoutX() > childTile.pane.getLayoutX() + childTile.pane.getWidth()) {
-					//child is above
-					if(childTile.pane.getLayoutY() + childTile.pane.getHeight() < parentTile.pane.getLayoutY()) {
-						double[] parentCoords = { parentTile.pane.getTranslateX() + parentTile.layoutX, parentTile.pane.getTranslateY() + parentTile.layoutY };
-						double[] childCoords = { childTile.pane.getTranslateX() + childTile.layoutX + childTile.pane.getWidth(), childTile.pane.getTranslateY() + childTile.layoutY + childTile.pane.getHeight() };
-
-						Arrow newArrow = new Arrow(parentCoords[0], parentCoords[1], childCoords[0], childCoords[1], 5);
-						arrowLayout.getChildren().remove(arrow);
-						env.replaceArrow(pair, newArrow);
-						arrowLayout.getChildren().add(newArrow);
-					//child is below
-					} else if (childTile.pane.getLayoutY() > parentTile.pane.getHeight() + parentTile.pane.getLayoutY()) {
-						double[] parentCoords = { parentTile.pane.getTranslateX() + parentTile.layoutX, parentTile.pane.getTranslateY() + parentTile.layoutY + parentTile.pane.getHeight() };
-						double[] childCoords = { childTile.pane.getTranslateX() + childTile.layoutX + childTile.pane.getWidth(), childTile.pane.getTranslateY() + childTile.layoutY };
-
-						Arrow newArrow = new Arrow(parentCoords[0], parentCoords[1], childCoords[0], childCoords[1], 5);
-						arrowLayout.getChildren().remove(arrow);
-						env.replaceArrow(pair, newArrow);
-						arrowLayout.getChildren().add(newArrow);
-					//child is in between on left
-					} else {
-						double[] parentCoords = { parentTile.pane.getTranslateX() + parentTile.layoutX, parentTile.pane.getTranslateY() + parentTile.layoutY + parentTile.pane.getHeight() / 2 };
-						double[] childCoords = { childTile.pane.getTranslateX() + childTile.layoutX + childTile.pane.getWidth(), childTile.pane.getTranslateY() + childTile.layoutY + childTile.pane.getHeight() / 2 };
-
-						Arrow newArrow = new Arrow(parentCoords[0], parentCoords[1], childCoords[0], childCoords[1], 5);
-						arrowLayout.getChildren().remove(arrow);
-						env.replaceArrow(pair, newArrow);
-						arrowLayout.getChildren().add(newArrow);
-					}
-				}// Parent is below and in between left and right 
-				else if((parentTile.pane.getLayoutY() > childTile.pane.getLayoutY() + childTile.pane.getHeight())) {
-					double[] parentCoords = { parentTile.pane.getTranslateX() + parentTile.layoutX, parentTile.pane.getTranslateY() + parentTile.layoutY };
-					double[] childCoords = { childTile.pane.getTranslateX() + childTile.layoutX, childTile.pane.getTranslateY() + childTile.layoutY  };
-
-					parentCoords[0] += parentTile.pane.getWidth() / 2.0;
-					childCoords[0] += parentTile.pane.getWidth() / 2.0;
-					childCoords[1] += childTile.pane.getHeight();
-
-					Arrow newArrow = new Arrow(parentCoords[0], parentCoords[1], childCoords[0], childCoords[1], 5);
-					arrowLayout.getChildren().remove(arrow);
-					env.replaceArrow(pair, newArrow);
-					arrowLayout.getChildren().add(newArrow);
-				} // Parent is above and in between left and right
-				else if((parentTile.pane.getLayoutY() < childTile.pane.getLayoutY())) {
-					double[] parentCoords = { parentTile.pane.getTranslateX() + parentTile.layoutX, parentTile.pane.getTranslateY() + parentTile.layoutY };
-					double[] childCoords = { childTile.pane.getTranslateX() + childTile.layoutX, childTile.pane.getTranslateY() + childTile.layoutY };
-
-					parentCoords[0] += parentTile.pane.getWidth() / 2.0;
-					parentCoords[1] += parentTile.pane.getHeight();
-					childCoords[0] += parentTile.pane.getWidth() / 2.0;
-
-					Arrow newArrow = new Arrow(parentCoords[0], parentCoords[1], childCoords[0], childCoords[1], 5);
-					arrowLayout.getChildren().remove(arrow);
-					env.replaceArrow(pair, newArrow);
-					arrowLayout.getChildren().add(newArrow);
-				}
-			}
+			ArrowModifier mod = new ArrowModifier(parent, child);
+			Arrow newArrow = mod.updateArrow(env);
+			arrowLayout.getChildren().remove(arrow);
+			env.replaceArrow(pair, newArrow);
+			arrowLayout.getChildren().add(newArrow);
 
 		};
 	}
