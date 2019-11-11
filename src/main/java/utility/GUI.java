@@ -619,9 +619,10 @@ public class GUI extends Application {
 			t.sceneY = event.getSceneY();
 			t.layoutX = t.pane.getLayoutX();
 			t.layoutY = t.pane.getLayoutY();
-
 			t.pane.setTranslateX(0);
 			t.pane.setTranslateY(0);
+			UMLItem item = env.findItem(t.nameBox.getText());
+			env.getRelationshipsFor(item).forEach(updateArrowWithParent());
 		});
 	}
 	
