@@ -236,7 +236,7 @@ public class GUI extends Application {
 				setAddChildButtonAction(t, layout);
 				setMoveTileAction(t, layout);
 				setRemoveAttrButton(t, layout);
-				sp.setContent(layout);
+				sp.setContent(mainLayout);
 
 			}
 		};
@@ -543,14 +543,10 @@ public class GUI extends Application {
 			}
 			GUITile childTile = env.getTileFor(child);
 			GUITile parentTile = env.getTileFor(parent);
-
-			/*
-			 * childTile.pane.setLayoutX(parentTile.pane.getLayoutX());
-			 * childTile.pane.setLayoutY(parentTile.pane.getLayoutY() + 340.0);
-			 */
-
 			child.addParent(parent);
 			parent.addChild(child);
+			
+			
 			double[] parentCoords = { parentTile.pane.getLayoutX(), parentTile.pane.getLayoutY() };
 			double[] childCoords = { childTile.pane.getLayoutX(), childTile.pane.getLayoutY() };
 
@@ -559,7 +555,7 @@ public class GUI extends Application {
 			childCoords[0] += parentTile.pane.getWidth() / 2.0;
 
 			Arrow arr = new Arrow(parentCoords[0], parentCoords[1], childCoords[0], childCoords[1], 5);
-			layout.getChildren().add(arr);
+			arrowLayout.getChildren().add(arr);
 			env.addArrow(parent, child, arr);
 
 		});
@@ -572,6 +568,8 @@ public class GUI extends Application {
 			t.sceneY = e.getSceneY();
 			t.layoutX = t.pane.getLayoutX();
 			t.layoutY = t.pane.getLayoutY();
+			layout.getChildren().remove(t.pane);
+			layout.getChildren().add(t.pane);
 		});
 
 		t.pane.setOnMouseDragged(event -> {
@@ -674,9 +672,9 @@ public class GUI extends Application {
 				childCoords[0] += parentTile.pane.getWidth() / 2.0;
 
 				Arrow newArrow = new Arrow(parentCoords[0], parentCoords[1], childCoords[0], childCoords[1], 5);
-				layout.getChildren().remove(arrow);
+				arrowLayout.getChildren().remove(arrow);
 				env.replaceArrow(pair, newArrow);
-				layout.getChildren().add(newArrow);
+				arrowLayout.getChildren().add(newArrow);
 			}
 			// mainLayout.getChildren().remove(arrowLayout);
 			// mainLayout.getChildren().add(arrowLayout);
@@ -686,7 +684,7 @@ public class GUI extends Application {
 
 	private BiConsumer<? super ParentChildPair, ? super Arrow> removeArrow() {
 		return (ParentChildPair pair, Arrow arrow) -> {
-			layout.getChildren().remove(arrow);
+			arrowLayout.getChildren().remove(arrow);
 			env.removeArrow(pair.getParent(), pair.getChild());
 			env.removeArrow(pair.getChild(), pair.getParent());
 			pair.getChild().removeParent(pair.getParent());
