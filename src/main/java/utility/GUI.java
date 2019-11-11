@@ -1,5 +1,7 @@
 package utility;
 
+import java.awt.AWTException;
+import java.awt.Event;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -19,7 +21,10 @@ import javafx.scene.Scene;
 import javafx.stage.*;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
+
+import java.awt.Robot;
 
 /*
  * @author eric 
@@ -140,8 +145,9 @@ public class GUI extends Application {
 							env.createMappingFor(item, tile);
 							tile.removeAttr.setVisible(true);
 							tile.pane.getChildren().remove(tile.add);
+							setMoveTileAction(tile, layout);
 							// updates paired arrows with new size of tiles
-							env.getRelationshipsFor(item).forEach(updateArrowWithParent());
+							env.getRelationshipsFor(found).forEach(updateArrowWithParent());
 						}
 						// reset the main buttons to be appropriate
 						displayMode.setSelected(false);
@@ -184,8 +190,8 @@ public class GUI extends Application {
 							env.createMappingFor(item, tile);
 							tile.removeAttr.setVisible(false);
 							tile.pane.getChildren().remove(tile.add);
-							// updates paired arrows with new size of tiles
 							env.getRelationshipsFor(item).forEach(updateArrowWithParent());
+							
 
 						}
 						// reset the main buttons to be appropriate
@@ -564,14 +570,14 @@ public class GUI extends Application {
 	public void setMoveTileAction(GUITile t, Group layout) {
 
 		t.pane.setOnMousePressed(e -> {
+			layout.getChildren().remove(t.pane);
+			layout.getChildren().add(t.pane);
 			t.sceneX = e.getSceneX();
 			t.sceneY = e.getSceneY();
 			t.layoutX = t.pane.getLayoutX();
 			t.layoutY = t.pane.getLayoutY();
-			layout.getChildren().remove(t.pane);
-			layout.getChildren().add(t.pane);
 		});
-
+		
 		t.pane.setOnMouseDragged(event -> {
 			double offsetX = event.getSceneX() - t.sceneX;
 			double offsetY = event.getSceneY() - t.sceneY;
@@ -594,7 +600,7 @@ public class GUI extends Application {
 			t.pane.setTranslateY(0);
 		});
 	}
-
+	
 	public void setRemoveAttrButton(GUITile t, Group layout) {
 		// Removes attribute from text field in tile t
 		t.removeAttr.setOnAction((event) -> {
@@ -676,8 +682,6 @@ public class GUI extends Application {
 				env.replaceArrow(pair, newArrow);
 				arrowLayout.getChildren().add(newArrow);
 			}
-			// mainLayout.getChildren().remove(arrowLayout);
-			// mainLayout.getChildren().add(arrowLayout);
 
 		};
 	}
