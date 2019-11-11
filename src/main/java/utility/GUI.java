@@ -552,8 +552,32 @@ public class GUI extends Application {
 			child.addParent(parent);
 			parent.addChild(child);
 			
-			
-			double[] parentCoords = { parentTile.pane.getLayoutX(), parentTile.pane.getLayoutY() };
+			if((parentTile.pane.getLayoutX() + parentTile.pane.getWidth()) < childTile.pane.getLayoutX()) {
+				//If child is above and to the right do this arrow draw:
+				if(childTile.pane.getLayoutY() + childTile.pane.getHeight() < parentTile.pane.getLayoutY()) {
+					double[] parentCoords = { parentTile.pane.getLayoutX() + parentTile.pane.getWidth(), parentTile.pane.getLayoutY() };
+					double[] childCoords = { childTile.pane.getLayoutX(), childTile.pane.getLayoutY() + childTile.pane.getHeight() };
+
+					Arrow arr = new Arrow(parentCoords[0], parentCoords[1], childCoords[0], childCoords[1], 5);
+					arrowLayout.getChildren().add(arr);
+					env.addArrow(parent, child, arr);
+				} else if (childTile.pane.getLayoutY() > parentTile.pane.getHeight() + parentTile.pane.getLayoutY()) {
+					double[] parentCoords = { parentTile.pane.getLayoutX() + parentTile.pane.getWidth(), parentTile.pane.getLayoutY() + parentTile.pane.getHeight() };
+					double[] childCoords = { childTile.pane.getLayoutX(), childTile.pane.getLayoutY() };
+
+					Arrow arr = new Arrow(parentCoords[0], parentCoords[1], childCoords[0], childCoords[1], 5);
+					arrowLayout.getChildren().add(arr);
+					env.addArrow(parent, child, arr);
+				} else {
+					double[] parentCoords = { parentTile.pane.getLayoutX() + parentTile.pane.getWidth(), parentTile.pane.getLayoutY() + parentTile.pane.getHeight() / 2 };
+					double[] childCoords = { childTile.pane.getLayoutX(), childTile.pane.getLayoutY() + childTile.pane.getHeight() / 2 };
+
+					Arrow arr = new Arrow(parentCoords[0], parentCoords[1], childCoords[0], childCoords[1], 5);
+					arrowLayout.getChildren().add(arr);
+					env.addArrow(parent, child, arr);
+				}
+			}
+			/*double[] parentCoords = { parentTile.pane.getLayoutX(), parentTile.pane.getLayoutY() };
 			double[] childCoords = { childTile.pane.getLayoutX(), childTile.pane.getLayoutY() };
 
 			parentCoords[0] += parentTile.pane.getWidth() / 2.0;
@@ -562,7 +586,7 @@ public class GUI extends Application {
 
 			Arrow arr = new Arrow(parentCoords[0], parentCoords[1], childCoords[0], childCoords[1], 5);
 			arrowLayout.getChildren().add(arr);
-			env.addArrow(parent, child, arr);
+			env.addArrow(parent, child, arr); */
 
 		});
 	}
@@ -669,18 +693,47 @@ public class GUI extends Application {
 			GUITile childTile = env.getTileFor(child);
 			
 			if(parentTile != null && childTile != null) {
-				double[] parentCoords = { parentTile.pane.getTranslateX() + parentTile.layoutX,
-						parentTile.pane.getTranslateY() + parentTile.layoutY };
-				double[] childCoords = { childTile.pane.getTranslateX() + childTile.layoutX,
-						childTile.pane.getTranslateY() + childTile.layoutY };
-				parentCoords[0] += parentTile.pane.getWidth() / 2.0;
-				parentCoords[1] += parentTile.pane.getHeight();
-				childCoords[0] += parentTile.pane.getWidth() / 2.0;
+				if((parentTile.pane.getLayoutX() + parentTile.pane.getWidth()) < childTile.pane.getLayoutX()) {
+					//If child is above and to the right do this arrow draw:
+					if(childTile.pane.getLayoutY() + childTile.pane.getHeight() < parentTile.pane.getLayoutY()) {
+						double[] parentCoords = { parentTile.pane.getTranslateX() + parentTile.layoutX + parentTile.pane.getWidth(), parentTile.pane.getTranslateY() + parentTile.layoutY };
+						double[] childCoords = { childTile.pane.getTranslateX() + childTile.layoutX, childTile.pane.getTranslateY() + childTile.layoutY + childTile.pane.getHeight() };
 
-				Arrow newArrow = new Arrow(parentCoords[0], parentCoords[1], childCoords[0], childCoords[1], 5);
-				arrowLayout.getChildren().remove(arrow);
-				env.replaceArrow(pair, newArrow);
-				arrowLayout.getChildren().add(newArrow);
+						Arrow newArrow = new Arrow(parentCoords[0], parentCoords[1], childCoords[0], childCoords[1], 5);
+						arrowLayout.getChildren().remove(arrow);
+						env.replaceArrow(pair, newArrow);
+						arrowLayout.getChildren().add(newArrow);
+					} else if (childTile.pane.getLayoutY() > parentTile.pane.getHeight() + parentTile.pane.getLayoutY()) {
+						double[] parentCoords = { parentTile.pane.getTranslateX() + parentTile.layoutX + parentTile.pane.getWidth(), parentTile.pane.getTranslateY() + parentTile.layoutY + parentTile.pane.getHeight() };
+						double[] childCoords = { childTile.pane.getTranslateX() + childTile.layoutX, childTile.pane.getTranslateY() + childTile.layoutY };
+
+						Arrow newArrow = new Arrow(parentCoords[0], parentCoords[1], childCoords[0], childCoords[1], 5);
+						arrowLayout.getChildren().remove(arrow);
+						env.replaceArrow(pair, newArrow);
+						arrowLayout.getChildren().add(newArrow);
+					} else {
+						double[] parentCoords = { parentTile.pane.getTranslateX() + parentTile.layoutX + parentTile.pane.getWidth(), parentTile.pane.getTranslateY() + parentTile.layoutY + parentTile.pane.getHeight() / 2 };
+						double[] childCoords = { childTile.pane.getTranslateX() + childTile.layoutX, childTile.pane.getTranslateY() + childTile.layoutY + childTile.pane.getHeight() / 2 };
+
+						Arrow newArrow = new Arrow(parentCoords[0], parentCoords[1], childCoords[0], childCoords[1], 5);
+						arrowLayout.getChildren().remove(arrow);
+						env.replaceArrow(pair, newArrow);
+						arrowLayout.getChildren().add(newArrow);
+					}
+				} else {
+					double[] parentCoords = { parentTile.pane.getTranslateX() + parentTile.layoutX,
+							parentTile.pane.getTranslateY() + parentTile.layoutY };
+					double[] childCoords = { childTile.pane.getTranslateX() + childTile.layoutX,
+							childTile.pane.getTranslateY() + childTile.layoutY };
+					parentCoords[0] += parentTile.pane.getWidth() / 2.0;
+					parentCoords[1] += parentTile.pane.getHeight();
+					childCoords[0] += parentTile.pane.getWidth() / 2.0;
+
+					Arrow newArrow = new Arrow(parentCoords[0], parentCoords[1], childCoords[0], childCoords[1], 5);
+					arrowLayout.getChildren().remove(arrow);
+					env.replaceArrow(pair, newArrow);
+					arrowLayout.getChildren().add(newArrow);
+				}
 			}
 
 		};
