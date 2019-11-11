@@ -1,6 +1,8 @@
 package data;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Logger;
 
 /*
@@ -44,7 +46,7 @@ public class UMLEnvironment {
         return i;
       }
     }
-    logger.warning("Class " + itemName + " not found.");
+    //logger.warning("Class " + itemName + " not found.");
     return null;
   }
 
@@ -122,6 +124,23 @@ public class UMLEnvironment {
     builder.append("]");
     return builder.toString();
   }
+  
+  /**
+   * Gets all classes in the environment.
+   * 
+   * @return builder the String of all classes
+   */
+  public String listRelationships(ArrayList<Relationship> r) {
+    StringBuilder builder = new StringBuilder();
+    builder.append("[ ");
+    for (Relationship i : r) {
+      builder.append("{" + i.getParent().getName() + "--[" + i.getQuantifierName() + "]->" + i.getChild().getName() + "} ");
+    }
+    builder.append("]");
+    return builder.toString();
+  }
+  
+  
   
 
   /**
@@ -282,6 +301,90 @@ public class UMLEnvironment {
   
   public ArrayList<Relationship> getRelationships(){
 	  return relationships;
+  }
+  
+  /**
+   * Returns a list containing relationships where UMLItem i is the parent
+   * @param i
+   * @return ArrayList
+   */
+  public ArrayList<Relationship> relationshipsWithParent(UMLItem i ){
+	  ArrayList<Relationship> arr = new ArrayList<>();
+	  for (Relationship r : relationships) {
+		  if (r.getParent().equals(i)) {
+			  arr.add(r);
+		  }
+	  }
+	  return arr;
+  }
+  
+  /**
+   * Returns a list containing relationships where UMLItem i is the child
+   * @param i
+   * @return ArrayList
+   */
+  public ArrayList<Relationship> relationshipsWithChild(UMLItem i ){
+	  ArrayList<Relationship> arr = new ArrayList<>();
+	  for (Relationship r : relationships) {
+		  if (r.getChild().equals(i)) {
+			  arr.add(r);
+		  }
+	  }
+	  return arr;
+  }
+  
+  /**
+   * Given a map String=>String, return a String in Array style showing all members
+   * Ex: [ { height: int } { Matt: String } ] 
+   * @param m
+   * @return
+   */
+  public String listMap(HashMap<String, String> m) {
+		StringBuilder s = new StringBuilder();
+		s.append("[ ");
+		
+		for (Map.Entry<String, String> i : m.entrySet()) {
+			s.append("{ " + i.getKey() + ": " +  i.getValue() + " } " );
+		}
+		s.append("]");
+		return s.toString();
+	}
+  
+  /**
+   * List a UMLItem by every data member associated with it 
+   * Returns a string giving information on its Fields, Functions, Relationships as parent and child
+   * @param i UMLItem
+   * @return String 
+   */
+  public String listClass(UMLItem i) {
+	  StringBuilder s = new StringBuilder();
+	  if (i == null) {
+		  return "";
+	  }
+	  s.append("\n" + i.getName() + "\n");
+	  s.append("Fields: ");
+	  s.append(listMap(i.getFields()) + "\nFunctions: ");
+	  s.append(listMap(i.getFunctions()) + "\nRelations as Parent: ");
+	  s.append(this.listRelationships(this.relationshipsWithParent(i)) + "\nRelations as Child: ");
+	  s.append(this.listRelationships(this.relationshipsWithChild(i)));
+	  
+	  
+	  return s.toString();
+	  
+  }
+  
+  /**
+   * Builds string containing verbose info on every class in environment
+   *   Calls listClass
+   * @return
+   */
+  public String listClassesVerbose() {
+	  StringBuilder s = new StringBuilder();
+	  for (UMLItem i : items) {
+		  s.append(listClass(i));
+		  s.append("\n");
+	  }
+	  return s.toString();
   }
 
   ////////////////////////////////////
