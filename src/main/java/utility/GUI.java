@@ -1,16 +1,31 @@
 package utility;
 
+import java.awt.AWTException;
+import java.awt.Event;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
+import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
+import java.util.function.Function;
+
+import config.ArrowModifier;
+import data.Arrow;
 import data.GUIEnvironment;
+import data.ParentChildPair;
 import data.UMLItem;
 import javafx.application.Application;
 import javafx.event.*;
+import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.stage.*;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
+
+import java.awt.Robot;
 
 /*
  * @author eric 
@@ -23,9 +38,16 @@ import javafx.scene.input.MouseEvent;
  */
 public class GUI extends Application {
 
-	int size = 0;
-	GUIEnvironment env;
-	boolean removed = false;
+	private int size = 0;
+	private GUIEnvironment env;
+	private boolean removed = false;
+	private final int TILE_OFFSET = 160;
+	private final int ADD_ATTR_OFFSET = 17;
+	private Pane mainLayout = new Pane();
+	private Group layout = new Group();
+	private Group arrowLayout = new Group();
+	private ToggleButton displayMode = new ToggleButton("Display Mode");
+	private ToggleButton editMode = new ToggleButton("Edit Mode");
 
 	/*
 	 * @author eric main calls the built in application function "launch" to create
@@ -78,7 +100,112 @@ public class GUI extends Application {
 		Button addButton = new Button();
 		Button resetAll = new Button("Start Over");
 		addButton.setText("Add Class");
-		Pane layout = new Pane();
+		ScrollPane sp = new ScrollPane();
+		sp.setContent(mainLayout);
+
+		// Allows for the display/edit modes buttons
+		ToggleGroup group = new ToggleGroup();
+		displayMode.setToggleGroup(group);
+		editMode.setToggleGroup(group);
+		displayMode.setLayoutX(100);
+		displayMode.setLayoutY(10);
+		editMode.setLayoutX(210);
+		editMode.setLayoutY(10);
+		layout.getChildren().addAll(displayMode, editMode);
+		// default in edit mode when starting GUI
+		editMode.setSelected(true);
+
+		editMode.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent clickEditButton) {
+				if (!editMode.isSelected()) {
+					Alert a = new Alert(Alert.AlertType.ERROR, "Already in Edit Mode");
+					a.show();
+					displayMode.setSelected(false);
+					editMode.setSelected(true);
+					return;
+				} else {
+					// update tiles to show buttons
+					if (editMode.isSelected()) {
+						for (UMLItem i : env.getItems()) {
+							GUITile tile = env.getTileFor(i);
+							UMLItem found = env.findItem(tile.nameBox.getText());
+							tile.nameBox.setVisible(false);
+							tile.nameLabel.setVisible(true);
+							tile.nameLabel.setText(tile.nameBox.getText());
+							tile.edit.setVisible(true);
+							tile.remove.setVisible(true);
+							tile.addAttr.setVisible(true);
+							tile.addChild.setVisible(true);
+							tile.move.setVisible(true);
+							int tileSize = i.getAttributes().size();
+							tile.pane.setMaxHeight(250 + (tileSize * ADD_ATTR_OFFSET));
+							tile.pane.setMinHeight(250 + (tileSize * ADD_ATTR_OFFSET));
+							tile.pane.getChildren().remove(tile.add);
+							UMLItem item = env.findItem(tile.nameBox.getText());
+							env.createMappingFor(i, tile);
+							tile.removeAttr.setVisible(true);
+							tile.pane.getChildren().remove(tile.add);
+							setMoveTileAction(tile, layout);
+							// updates paired arrows with new size of tiles
+							env.getRelationshipsFor(i).forEach(updateArrowWithParent());
+						}
+						// reset the main buttons to be appropriate
+						displayMode.setSelected(false);
+						editMode.setSelected(true);
+						addButton.setDisable(false);
+						return;
+					}
+				}
+			}
+		});
+
+		displayMode.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent clickDisplayButton) {
+				if (!displayMode.isSelected()) {
+					Alert a = new Alert(Alert.AlertType.ERROR, "Already in Display Mode");
+					a.show();
+					displayMode.setSelected(true);
+					editMode.setSelected(false);
+					return;
+				} else {
+					// update tiles to hide buttons
+					if (displayMode.isSelected()) {
+						for (UMLItem i : env.getItems()) {
+							GUITile tile = env.getTileFor(i);
+							UMLItem found = env.findItem(tile.nameBox.getText());
+							tile.nameBox.setVisible(false);
+							tile.nameLabel.setVisible(true);
+							tile.nameLabel.setText(tile.nameBox.getText());
+							tile.edit.setVisible(false);
+							tile.remove.setVisible(false);
+							tile.addAttr.setVisible(false);
+							tile.addChild.setVisible(false);
+							tile.move.setVisible(false);
+							int tileSize = i.getAttributes().size();
+							tile.pane.setMaxHeight(50 + (tileSize * ADD_ATTR_OFFSET));
+							tile.pane.setMinHeight(50 + (tileSize * ADD_ATTR_OFFSET));
+							tile.pane.getChildren().remove(tile.add);
+							UMLItem item = env.findItem(tile.nameBox.getText());
+							env.createMappingFor(i, tile);
+							tile.removeAttr.setVisible(false);
+							tile.pane.getChildren().remove(tile.add);
+							env.getRelationshipsFor(i).forEach(updateArrowWithParent());
+							
+
+						}
+						// reset the main buttons to be appropriate
+						displayMode.setSelected(true);
+						editMode.setSelected(false);
+						addButton.setDisable(true);
+						return;
+					}
+				}
+			}
+
+		});
+
 
 		/*
 		 * @author eric this event listener is for the add button in the main menu the
@@ -92,365 +219,30 @@ public class GUI extends Application {
 			public void handle(ActionEvent e) {
 				GUITile t = new GUITile();
 				if (getSize() == 0) {
-					t.pane.setLayoutX(0);
-					t.pane.setStyle("-fx-background-color: cyan");
-					t.pane.setStyle("-fx-border-color: black");
+					t.pane.setTranslateX(0);
+					t.pane.setTranslateY(0);
+					t.layoutX = t.pane.getLayoutX();
+					t.layoutY = t.pane.getLayoutY();
 				} else {
-					t.pane.setLayoutX(getSize() * 160);
-					t.pane.setStyle("-fx-background-color: cyan");
-					t.pane.setStyle("-fx-border-color: black");
+					t.pane.setTranslateX(0);
+					t.pane.setTranslateY(0);
+					t.layoutX = t.pane.getLayoutX();
+					t.layoutY = t.pane.getLayoutY();
+					// t.pane.setLayoutX(getSize() * TILE_OFFSET); <- old way for not stacking on
+					// creation
 				}
 				layout.getChildren().add(t.pane);
 				increaseSize();
 
-				/*
-				 * @author eric t.add button event is a handler for saving an individual item
-				 * into the environment. it will check if adding was successful or not. if
-				 * success a confirmation window will appear. if fail an error window will
-				 * appear.
-				 */
-				t.add.setOnAction((event) -> {
-					String[] nameTest = t.nameBox.getText().split(" ");
+				setAddButtonAction(t);
+				setEditButtonAction(t);
+				setRemoveButtonAction(t, layout);
+				setAddAttributeAction(t, layout);
+				setAddChildButtonAction(t, layout);
+				setMoveTileAction(t, layout);
+				setRemoveAttrButton(t, layout);
+				sp.setContent(mainLayout);
 
-					if (nameTest.length > 1) {
-						Alert a = new Alert(Alert.AlertType.ERROR,
-								"Name cannot contain spaces.\nExample: New Class should be NewClass");
-						a.show();
-						return;
-					}
-
-					boolean isWhitespace = t.nameBox.getText().matches("^\\s*$");
-
-					if (isWhitespace) {
-						Alert a = new Alert(Alert.AlertType.ERROR,
-								"Name cannot be only whitespace.\nInput example: NewClass");
-						a.show();
-						return;
-					}
-
-					if (AddClass.addClass(env, t.nameBox.getText())) {
-						Alert a = new Alert(Alert.AlertType.CONFIRMATION, t.nameBox.getText() + " added successfully!");
-						a.show();
-						
-						// Update the name and add buttons 
-						t.nameBox.setVisible(false);
-						t.nameLabel.setVisible(true);
-						t.nameLabel.setText(t.nameBox.getText());
-						t.edit.setVisible(true);
-						t.remove.setVisible(true);
-						t.addAttr.setVisible(true);
-						t.addChild.setVisible(true);
-						t.move.setVisible(true);
-						t.pane.setMaxHeight(310);
-						t.pane.setMinHeight(310);
-						t.pane.getChildren().remove(t.add);
-						UMLItem item = AddClass.getItem(env, t.nameBox.getText());
-						env.createMappingFor(item, t);
-						t.removeAttr.setVisible(true);
-						t.pane.getChildren().remove(t.add);
-					} else {
-						Alert b = new Alert(Alert.AlertType.ERROR, t.nameBox.getText()
-								+ " could not be added. Name already exists.\nPlease choose another name.");
-						b.show();
-					}
-				});
-
-				/*
-				 * @author eric t.edit button event will appear after the confirmation of the
-				 * add class. the edit button will take in the old name of the selected class
-				 * and ask in a dialog box for a new name for the class. after input is entered
-				 * the new name will be checked if it exists, if it does not the class will be
-				 * changed to that name, if it does exist the user will be prompted to enter a
-				 * new name instead.
-				 */
-
-				t.edit.setOnAction((event) -> {
-					TextInputDialog input = new TextInputDialog();
-					input.setHeaderText("Enter New name for \"" + t.nameBox.getText() + "\": ");
-					input.setHeight(50);
-					input.setWidth(120);
-					Optional<String> answer = input.showAndWait();
-					String[] nameTest = answer.toString().split(" ");
-
-					if (nameTest.length > 1) {
-						Alert a = new Alert(Alert.AlertType.ERROR,
-								"Name cannot contain spaces.\nExample: New Class should be NewClass");
-						a.show();
-						return;
-					}
-
-					boolean isWhitespace = t.nameBox.getText().matches("^\\s*$"); // checks if name entered is only
-																					// whitespace.
-
-					if (isWhitespace) {
-						Alert a = new Alert(Alert.AlertType.ERROR,
-								"Name cannot be only whitespace.\nInput example: NewClass");
-						a.show();
-						return;
-					}
-
-					if (answer.isPresent()) {
-						if (AddClass.editItem(env, t.nameBox.getText(), answer.get())) {
-							Alert a = new Alert(Alert.AlertType.CONFIRMATION,
-									t.nameBox.getText() + " successsfully changed to " + answer.get());
-							a.show();
-							t.nameBox.setText(answer.get());
-							t.nameLabel.setText(answer.get());
-						} else {
-							Alert b = new Alert(Alert.AlertType.ERROR,
-									answer.get() + " already exists. Please choose another name.");
-							b.show();
-						}
-					} else {
-						Alert c = new Alert(Alert.AlertType.ERROR, "New name field cannot be blank.");
-						c.show();
-					}
-
-				});
-				/*
-				 * @author eric t.remove button event is set to remove an item from the
-				 * environment and also from the gui's main display when remove button is
-				 * pressed on a specific uml item.
-				 */
-				t.remove.setOnAction((event) -> {
-					Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Delete " + t.nameBox.getText() + "? ",
-							ButtonType.YES, ButtonType.NO);
-					alert.showAndWait();
-					if (alert.getResult().getButtonData() == ButtonBar.ButtonData.YES) {
-						t.pane.setVisible(false);
-						layout.getChildren().remove(t.pane);
-						UMLItem remove = new UMLItem(t.nameBox.getText());
-						env.removeItem(remove);
-						setSize(getSize() - 1);
-						for (int i = 2; i < layout.getChildren().size(); i++) {
-							layout.getChildren().get(i).relocate((i - 2) * 160,
-									layout.getChildren().get(i).getLayoutY());
-						}
-					}
-				});
-				// Adds an attribute as text to the tile clicked
-				t.addAttr.setOnAction((event) -> {
-					TextInputDialog input = new TextInputDialog();
-					input.setHeaderText("Enter attribute to add for " + t.nameBox.getText()
-							+ ":\nMust be one word no spaces\nExample: NewAttribute");
-					input.setHeight(50);
-					input.setWidth(120);
-					Optional<String> answer = input.showAndWait();
-					String[] attrTest = answer.toString().split(" ");
-
-					if (attrTest.length > 1) {
-						Alert a = new Alert(Alert.AlertType.ERROR,
-								"Attribute cannot contain spaces.\nExample: New Attr should be NewAttr");
-						a.show();
-						return;
-					}
-
-					boolean isWhitespace = answer.get().matches("^\\s*$"); // checks if name entered is only whitespace.
-
-					if (isWhitespace) {
-						Alert a = new Alert(Alert.AlertType.ERROR,
-								"Attribute cannot be only whitespace.\nExample: NewAttr");
-						a.show();
-						return;
-					}
-					if (answer.isPresent()) {
-						UMLItem found = AddClass.getItem(env, t.nameBox.getText());
-						if (found != null) {
-							ArrayList<String> testName = new ArrayList<String>(found.getAttributes());
-							for (int i = 0; i < testName.size(); i++) {
-								if (answer.get().equals(testName.get(i))) {
-									Alert a = new Alert(Alert.AlertType.ERROR, "Attribute " + testName.get(i).toString()
-											+ " already exists. Please enter an original name.");
-									a.show();
-									return;
-								}
-							}
-							t.displayAttr.setText("");
-							String newAttr = "";
-							found.addAttribute(answer.get());
-							ArrayList<String> test = new ArrayList<>(found.getAttributes());
-							for (int i = 0; i < test.size(); i++) {
-								newAttr = t.displayAttr.getText() + "\u2022" + test.get(i).toString() + "\n";
-								t.displayAttr.setText(newAttr);
-							}
-							t.pane.setMinHeight(t.pane.getHeight() + 17);
-							t.pane.setMaxHeight(t.pane.getHeight() + 17);
-							t.edit.setLayoutY(t.edit.getLayoutY() + 17);
-							t.addAttr.setLayoutY(t.addAttr.getLayoutY() + 17);
-							t.removeAttr.setLayoutY(t.removeAttr.getLayoutY() + 17);
-							t.remove.setLayoutY(t.remove.getLayoutY() + 17);
-							t.addChild.setLayoutY(t.addChild.getLayoutY() + 17);
-							t.move.setLayoutY(t.move.getLayoutY() + 17);
-
-							newAttr = t.displayAttr.getText() + "\u2022" + answer.get() + "\n";
-						} else {
-							Alert a = new Alert(Alert.AlertType.ERROR, "Something went wrong finding the class.");
-							a.show();
-						}
-					} else {
-						Alert a = new Alert(Alert.AlertType.ERROR, "Attribute cannot be blank.");
-						a.show();
-					}
-
-				});
-				
-				// Moves the child specified under tile t and links with arrow
-				t.addChild.setOnAction((event) -> {
-					// prompt search for text input
-					// locate the panel containing that text
-					// move that panel down under the currentPanel
-					TextInputDialog input = new TextInputDialog();
-					input.setHeaderText("Enter name of Child Class");
-					input.setHeight(50);
-					input.setWidth(120);
-					Optional<String> answer = input.showAndWait();
-					String[] nameTest = answer.get().split(" ");
-
-					if (nameTest.length > 1) {
-						Alert a = new Alert(Alert.AlertType.ERROR,
-								"Name cannot contain spaces.\nExample: New Class should be NewClass");
-						a.show();
-						return;
-					}
-					boolean isWhitespace = t.nameBox.getText().matches("^\\s*$");
-
-					if (isWhitespace) {
-						Alert a = new Alert(Alert.AlertType.ERROR,
-								"Name cannot be only whitespace.\nInput example: NewClass");
-						a.show();
-						return;
-					}
-					// text in prompt matches our specs
-
-					UMLItem child = AddClass.getItem(env, nameTest[0]);
-					UMLItem parent = AddClass.getItem(env, t.nameBox.getText());
-					if (child == null) {
-						Alert a = new Alert(Alert.AlertType.ERROR, nameTest[0] + " does not exist.");
-						a.show();
-						return;
-					}
-					GUITile childTile = env.getTileFor(child);
-					GUITile parentTile = env.getTileFor(parent);
-					childTile.pane.setLayoutX(parentTile.pane.getLayoutX());
-					childTile.pane.setLayoutY(parentTile.pane.getLayoutY() + 340.0);
-					child.addParent(parent);
-					parent.addChild(child);
-					double[] parentCoords = { parentTile.pane.getLayoutX(), parentTile.pane.getLayoutY() };
-					double[] childCoords = { childTile.pane.getLayoutX(), childTile.pane.getLayoutY() };
-
-					parentCoords[0] += parentTile.pane.getWidth() / 2.0;
-					parentCoords[1] += parentTile.pane.getHeight();
-					childCoords[0] += parentTile.pane.getWidth() / 2.0;
-
-					Arrow arr = new Arrow(parentCoords[0], parentCoords[1], childCoords[0], childCoords[1], 5);
-					layout.getChildren().add(arr);
-					env.addArrow(parent, child, arr);
-					Alert a = new Alert(Alert.AlertType.CONFIRMATION,
-							t.nameBox.getText() + "Child added successfully!");
-					a.show();
-				});
-
-				// Moves tile t to location specified by a click
-				t.move.setOnAction((event) -> {
-					Alert a = new Alert(Alert.AlertType.CONFIRMATION, "Click where you would like to move.");
-					a.show();
-
-					layout.setOnMouseClicked(new EventHandler<MouseEvent>() {
-						@Override
-						public void handle(MouseEvent event) {
-
-							t.pane.setLayoutX(event.getSceneX());
-							t.pane.setLayoutY(event.getSceneY());
-							
-							
-							UMLItem item = AddClass.getItem(env, t.nameBox.getText());
-							
-							env.getRelationshipsFor(item).forEach((pair, arrow) -> {
-								UMLItem parent = pair.getParent();
-								UMLItem child = pair.getChild();
-								GUITile parentTile = env.getTileFor(parent);
-								GUITile childTile = env.getTileFor(child);
-								
-								double[] parentCoords = { parentTile.pane.getLayoutX(), parentTile.pane.getLayoutY() };
-								double[] childCoords = { childTile.pane.getLayoutX(), childTile.pane.getLayoutY() };
-
-								parentCoords[0] += parentTile.pane.getWidth() / 2.0;
-								parentCoords[1] += parentTile.pane.getHeight(); 
-								childCoords[0] += parentTile.pane.getWidth() / 2.0;
-								
-								Arrow newArrow = new Arrow(parentCoords[0], parentCoords[1], childCoords[0], childCoords[1], 5);
-								layout.getChildren().remove(arrow);
-								env.replaceArrow(pair, newArrow);
-								layout.getChildren().add(newArrow);
-							});
-							
-						}
-					});
-
-				});
-				
-				// Removes attribute from text field in tile t
-				t.removeAttr.setOnAction((event) -> {
-					TextInputDialog input = new TextInputDialog();
-					input.setHeaderText("Enter attribute to remove for " + t.nameBox.getText() + ".");
-					input.setHeight(50);
-					input.setWidth(120);
-					Optional<String> answer = input.showAndWait();
-					String[] attrTest = answer.toString().split(" ");
-
-					if (attrTest.length > 1) {
-						Alert a = new Alert(Alert.AlertType.ERROR,
-								"Attribute cannot contain spaces.\nExample: New Attr should be NewAttr");
-						a.show();
-						return;
-					}
-					boolean isWhitespace = answer.get().matches("^\\s*$"); // checks if name entered is only whitespace.
-
-					if (isWhitespace) {
-						Alert a = new Alert(Alert.AlertType.ERROR,
-								"Attribute cannot be only whitespace.\nExample: NewAttr");
-						a.show();
-						return;
-					}
-					if (answer.isPresent()) {
-						UMLItem found = AddClass.getItem(env, t.nameBox.getText());
-						if (found != null) {
-							ArrayList<String> testName = new ArrayList<String>(found.getAttributes());
-							boolean isFound = false;
-							for (int i = 0; i < testName.size(); i++) {
-								if (answer.get().equals(testName.get(i))) {
-									isFound = true;
-									found.removeAttribute(answer.get());
-									Alert a = new Alert(Alert.AlertType.CONFIRMATION,
-											"Attribute " + answer.get() + " removed from " + t.nameBox.getText() + ".");
-									a.show();
-									break;
-								}
-							}
-							if (!isFound) {
-								Alert a = new Alert(Alert.AlertType.ERROR,
-										"Attribute " + answer.get() + " not found in list of attributes.");
-								a.show();
-								return;
-							}
-							t.displayAttr.setText("");
-							ArrayList<String> testArr = new ArrayList<String>(found.getAttributes());
-							String newAttr = "";
-							for (int i = 0; i < testArr.size(); i++) {
-								newAttr += "\u2022" + testArr.get(i).toString() + "\n";
-							}
-							t.displayAttr.setText(newAttr);
-							t.pane.setMinHeight(t.pane.getHeight() - 17);
-							t.pane.setMaxHeight(t.pane.getHeight() - 17);
-							t.edit.setLayoutY(t.edit.getLayoutY() - 17);
-							t.addAttr.setLayoutY(t.addAttr.getLayoutY() - 17);
-							t.removeAttr.setLayoutY(t.removeAttr.getLayoutY() - 17);
-							t.remove.setLayoutY(t.remove.getLayoutY() - 17);
-							t.addChild.setLayoutY(t.addChild.getLayoutY() - 17);
-							t.move.setLayoutY(t.move.getLayoutY() - 17);
-						}
-					}
-				});
 			}
 		};
 
@@ -461,6 +253,7 @@ public class GUI extends Application {
 				layout.getChildren().remove(i);
 			}
 			layout.getChildren().add(addButton);
+
 			layout.getChildren().add(resetAll);
 		});
 
@@ -481,9 +274,404 @@ public class GUI extends Application {
 		primary.setMinWidth(winLength);
 		layout.getChildren().add(addButton);
 		layout.getChildren().add(resetAll);
-		Scene scene = new Scene(layout, winLength, winHeight);
+		mainLayout.getChildren().add(arrowLayout);
+		mainLayout.getChildren().add(layout);
+		Scene scene = new Scene(sp, winLength, winHeight);
 		primary.setScene(scene);
 		primary.show();
 	}
 
+	public void setAddButtonAction(GUITile t) {
+		/*
+		 * @author eric t.add button event is a handler for saving an individual item
+		 * into the environment. it will check if adding was successful or not. if
+		 * success a confirmation window will appear. if fail an error window will
+		 * appear.
+		 */
+		t.add.setOnAction((event) -> {
+			String[] nameTest = t.nameBox.getText().split(" ");
+
+			if (nameTest.length > 1) {
+				Alert a = new Alert(Alert.AlertType.ERROR,
+						"Name cannot contain spaces.\nExample: New Class should be NewClass");
+				a.show();
+				return;
+			}
+
+			boolean isWhitespace = t.nameBox.getText().matches("^\\s*$");
+
+			if (isWhitespace) {
+				Alert a = new Alert(Alert.AlertType.ERROR, "Name cannot be only whitespace.\nInput example: NewClass");
+				a.show();
+
+				return;
+			}
+			if (env.findItem(t.nameBox.getText()) != null) {
+				Alert a = new Alert(Alert.AlertType.ERROR, t.nameBox.getText() + " is already added.");
+				a.show();
+				return;
+			}
+			env.addItem(new UMLItem(t.nameBox.getText()));
+			if (env.findItem(t.nameBox.getText()) != null) {
+
+				// Update the name and add buttons
+				/*
+				 * Checking whether edit or display is currently activated and lets buttons be
+				 * visible accordingly
+				 */
+				if (editMode.isSelected()) {
+					t.nameBox.setVisible(false);
+					t.nameLabel.setVisible(true);
+					t.nameLabel.setText(t.nameBox.getText());
+					t.edit.setVisible(true);
+					t.remove.setVisible(true);
+					t.addAttr.setVisible(true);
+					t.addChild.setVisible(true);
+					t.move.setVisible(true);
+					t.pane.setMaxHeight(250);
+					t.pane.setMinHeight(250);
+					t.pane.getChildren().remove(t.add);
+					UMLItem item = env.findItem(t.nameBox.getText());
+					env.createMappingFor(item, t);
+					t.removeAttr.setVisible(true);
+					t.pane.getChildren().remove(t.add);
+				} else {
+					t.nameBox.setVisible(false);
+					t.nameLabel.setVisible(true);
+					t.nameLabel.setText(t.nameBox.getText());
+					t.edit.setVisible(false);
+					t.remove.setVisible(false);
+					t.addAttr.setVisible(false);
+					t.addChild.setVisible(false);
+					t.move.setVisible(false);
+					t.pane.setMaxHeight(50);
+					t.pane.setMinHeight(50);
+					t.pane.getChildren().remove(t.add);
+					UMLItem item = env.findItem(t.nameBox.getText());
+					env.createMappingFor(item, t);
+					t.removeAttr.setVisible(false);
+					t.pane.getChildren().remove(t.add);
+				}
+
+			} else {
+				Alert b = new Alert(Alert.AlertType.ERROR,
+						t.nameBox.getText() + " could not be added. Name already exists.\nPlease choose another name.");
+				b.show();
+			}
+			t.pane.setLayoutX(t.layoutX + t.pane.getTranslateX() + 10);
+			t.pane.setLayoutY(t.layoutY + t.pane.getTranslateY() + 10);
+			t.layoutX = t.pane.getLayoutX();
+			t.layoutY = t.pane.getLayoutY();
+
+			t.pane.setTranslateX(0);
+			t.pane.setTranslateY(0);
+			t.pane.setLayoutX(10);
+			t.pane.setLayoutY(110);
+		});
+	}
+
+	public void setEditButtonAction(GUITile t) {
+		/*
+		 * @author eric t.edit button event will appear after the confirmation of the
+		 * add class. the edit button will take in the old name of the selected class
+		 * and ask in a dialog box for a new name for the class. after input is entered
+		 * the new name will be checked if it exists, if it does not the class will be
+		 * changed to that name, if it does exist the user will be prompted to enter a
+		 * new name instead.
+		 */
+
+		t.edit.setOnAction((event) -> {
+			TextInputDialog input = new TextInputDialog();
+			input.setHeaderText("Enter New name for \"" + t.nameBox.getText() + "\": ");
+			input.setHeight(50);
+			input.setWidth(120);
+			Optional<String> answer = input.showAndWait();
+			String[] nameTest = answer.toString().split(" ");
+
+			if (nameTest.length > 1) {
+				Alert a = new Alert(Alert.AlertType.ERROR,
+						"Name cannot contain spaces.\nExample: New Class should be NewClass");
+				a.show();
+				return;
+			}
+
+			boolean isWhitespace = t.nameBox.getText().matches("^\\s*$"); // checks if name entered is only
+																			// whitespace.
+
+			if (isWhitespace) {
+				Alert a = new Alert(Alert.AlertType.ERROR, "Name cannot be only whitespace.\nInput example: NewClass");
+				a.show();
+				return;
+			}
+
+			if (answer.isPresent()) {
+				env.editItem(t.nameBox.getText(), answer.get(), env.findItem(t.nameBox.getText()));
+
+				if (env.findItem(answer.get()) != null) {
+					t.nameBox.setText(answer.get());
+					t.nameLabel.setText(answer.get());
+				} else {
+					Alert b = new Alert(Alert.AlertType.ERROR,
+							answer.get() + " already exists. Please choose another name.");
+					b.show();
+				}
+			} else {
+				Alert c = new Alert(Alert.AlertType.ERROR, "New name field cannot be blank.");
+				c.show();
+			}
+
+		});
+	}
+
+	public void setRemoveButtonAction(GUITile t, Group layout) {
+		/*
+		 * @author eric t.remove button event is set to remove an item from the
+		 * environment and also from the gui's main display when remove button is
+		 * pressed on a specific uml item.
+		 */
+		t.remove.setOnAction((event) -> {
+			Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Delete " + t.nameBox.getText() + "? ",
+					ButtonType.YES, ButtonType.NO);
+			alert.showAndWait();
+			if (alert.getResult().getButtonData() == ButtonBar.ButtonData.YES) {
+				UMLItem item = env.findItem(t.nameBox.getText());
+				System.out.println(env.getRelationshipsFor(item).size());
+				env.getRelationshipsFor(item).forEach(removeArrow());
+				layout.getChildren().remove(t.pane);
+				env.removeItemGUI(item);
+				env.removeItem(item);
+				System.out.println(env.getRelationshipsFor(item).size());
+			}
+
+		});
+	}
+
+	public void setAddAttributeAction(GUITile t, Group layout) {
+		// Adds an attribute as text to the tile clicked
+		t.addAttr.setOnAction((event) -> {
+			TextInputDialog input = new TextInputDialog();
+			input.setHeaderText("Enter attribute to add for " + t.nameBox.getText()
+					+ ":\nMust be one word no spaces\nExample: NewAttribute");
+			input.setHeight(50);
+			input.setWidth(120);
+			Optional<String> answer = input.showAndWait();
+			String[] attrTest = answer.toString().split(" ");
+
+			if (attrTest.length > 1) {
+				Alert a = new Alert(Alert.AlertType.ERROR,
+						"Attribute cannot contain spaces.\nExample: New Attr should be NewAttr");
+				a.show();
+				return;
+			}
+
+			boolean isWhitespace = answer.get().matches("^\\s*$"); // checks if name entered is only whitespace.
+
+			if (isWhitespace) {
+				Alert a = new Alert(Alert.AlertType.ERROR, "Attribute cannot be only whitespace.\nExample: NewAttr");
+				a.show();
+				return;
+			}
+			if (answer.isPresent()) {
+				UMLItem found = env.findItem(t.nameBox.getText());
+				if (found != null) {
+					ArrayList<String> testName = new ArrayList<String>(found.getAttributes());
+					for (int i = 0; i < testName.size(); i++) {
+						if (answer.get().equals(testName.get(i))) {
+							Alert a = new Alert(Alert.AlertType.ERROR, "Attribute " + testName.get(i).toString()
+									+ " already exists. Please enter an original name.");
+							a.show();
+							return;
+						}
+					}
+					t.displayAttr.setText("");
+					String newAttr = "";
+					found.addAttribute(answer.get());
+					ArrayList<String> test = new ArrayList<>(found.getAttributes());
+					for (int i = 0; i < test.size(); i++) {
+						newAttr = t.displayAttr.getText() + "\u2022" + test.get(i).toString() + "\n";
+						t.displayAttr.setText(newAttr);
+					}
+					t.pane.setMinHeight(t.pane.getHeight() + ADD_ATTR_OFFSET);
+					t.pane.setMaxHeight(t.pane.getHeight() + ADD_ATTR_OFFSET);
+					t.edit.setLayoutY(t.edit.getLayoutY() + ADD_ATTR_OFFSET);
+					t.addAttr.setLayoutY(t.addAttr.getLayoutY() + ADD_ATTR_OFFSET);
+					t.removeAttr.setLayoutY(t.removeAttr.getLayoutY() + ADD_ATTR_OFFSET);
+					t.addChild.setLayoutY(t.addChild.getLayoutY() + ADD_ATTR_OFFSET);
+
+					newAttr = t.displayAttr.getText() + "\u2022" + answer.get() + "\n";
+				} else {
+					Alert a = new Alert(Alert.AlertType.ERROR, "Something went wrong finding the class.");
+					a.show();
+				}
+			} else {
+				Alert a = new Alert(Alert.AlertType.ERROR, "Attribute cannot be blank.");
+				a.show();
+			}
+
+		});
+	}
+
+	public void setAddChildButtonAction(GUITile t, Group layout) {
+		// Moves the child specified under tile t and links with arrow
+		t.addChild.setOnAction((event) -> {
+			// prompt search for text input
+			// locate the panel containing that text
+			// move that panel down under the currentPanel
+			TextInputDialog input = new TextInputDialog();
+			input.setHeaderText("Enter name of Child Class");
+			input.setHeight(50);
+			input.setWidth(120);
+			Optional<String> answer = input.showAndWait();
+			String[] nameTest = answer.get().split(" ");
+
+			if (nameTest.length > 1) {
+				Alert a = new Alert(Alert.AlertType.ERROR,
+						"Name cannot contain spaces.\nExample: New Class should be NewClass");
+				a.show();
+				return;
+			}
+			boolean isWhitespace = t.nameBox.getText().matches("^\\s*$");
+
+			if (isWhitespace) {
+				Alert a = new Alert(Alert.AlertType.ERROR, "Name cannot be only whitespace.\nInput example: NewClass");
+				a.show();
+				return;
+			}
+			// text in prompt matches our specs
+
+			UMLItem child = env.findItem(nameTest[0]);
+			UMLItem parent = env.findItem(t.nameBox.getText());
+			ArrowModifier mod = new ArrowModifier(parent, child);
+			Arrow arr = mod.makeNewArrow(env);
+			arrowLayout.getChildren().add(arr);
+			env.addArrow(parent, child, arr);
+			if (child == null) {
+				Alert a = new Alert(Alert.AlertType.ERROR, nameTest[0] + " does not exist.");
+				a.show();
+				return;
+			}
+			
+
+		});
+	}
+
+	public void setMoveTileAction(GUITile t, Group layout) {
+
+		t.pane.setOnMousePressed(e -> {
+			layout.getChildren().remove(t.pane);
+			layout.getChildren().add(t.pane);
+			t.sceneX = e.getSceneX();
+			t.sceneY = e.getSceneY();
+			t.layoutX = t.pane.getLayoutX();
+			t.layoutY = t.pane.getLayoutY();
+		});
+		
+		t.pane.setOnMouseDragged(event -> {
+			double offsetX = event.getSceneX() - t.sceneX;
+			double offsetY = event.getSceneY() - t.sceneY;
+			t.pane.setTranslateX(offsetX);
+			t.pane.setTranslateY(offsetY);
+
+			UMLItem item = env.findItem(t.nameBox.getText());
+			env.getRelationshipsFor(item).forEach(updateArrowWithParent());
+		});
+
+		t.pane.setOnMouseReleased(event -> {
+			t.pane.setLayoutX(t.layoutX + t.pane.getTranslateX());
+			t.pane.setLayoutY(t.layoutY + t.pane.getTranslateY());
+			t.sceneX = event.getSceneX();
+			t.sceneY = event.getSceneY();
+			t.layoutX = t.pane.getLayoutX();
+			t.layoutY = t.pane.getLayoutY();
+			t.pane.setTranslateX(0);
+			t.pane.setTranslateY(0);
+			UMLItem item = env.findItem(t.nameBox.getText());
+			env.getRelationshipsFor(item).forEach(updateArrowWithParent());
+		});
+	}
+	
+	public void setRemoveAttrButton(GUITile t, Group layout) {
+		// Removes attribute from text field in tile t
+		t.removeAttr.setOnAction((event) -> {
+			TextInputDialog input = new TextInputDialog();
+			input.setHeaderText("Enter attribute to remove for " + t.nameBox.getText() + ".");
+			input.setHeight(50);
+			input.setWidth(120);
+			Optional<String> answer = input.showAndWait();
+			String[] attrTest = answer.toString().split(" ");
+
+			if (attrTest.length > 1) {
+				Alert a = new Alert(Alert.AlertType.ERROR,
+						"Attribute cannot contain spaces.\nExample: New Attr should be NewAttr");
+				a.show();
+				return;
+			}
+			boolean isWhitespace = answer.get().matches("^\\s*$"); // checks if name entered is only whitespace.
+
+			if (isWhitespace) {
+				Alert a = new Alert(Alert.AlertType.ERROR, "Attribute cannot be only whitespace.\nExample: NewAttr");
+				a.show();
+				return;
+			}
+			if (answer.isPresent()) {
+				UMLItem found = env.findItem(t.nameBox.getText());
+				if (found != null) {
+					ArrayList<String> testName = new ArrayList<String>(found.getAttributes());
+					boolean isFound = false;
+					for (int i = 0; i < testName.size(); i++) {
+						if (answer.get().equals(testName.get(i))) {
+							isFound = true;
+							found.removeAttribute(answer.get());
+							break;
+						}
+					}
+					if (!isFound) {
+						Alert a = new Alert(Alert.AlertType.ERROR,
+								"Attribute " + answer.get() + " not found in list of attributes.");
+						a.show();
+						return;
+					}
+					t.displayAttr.setText("");
+					ArrayList<String> testArr = new ArrayList<String>(found.getAttributes());
+					String newAttr = "";
+					for (int i = 0; i < testArr.size(); i++) {
+						newAttr += "\u2022" + testArr.get(i).toString() + "\n";
+					}
+					t.displayAttr.setText(newAttr);
+					t.pane.setMinHeight(t.pane.getHeight() - ADD_ATTR_OFFSET);
+					t.pane.setMaxHeight(t.pane.getHeight() - ADD_ATTR_OFFSET);
+					t.edit.setLayoutY(t.edit.getLayoutY() - ADD_ATTR_OFFSET);
+					t.addAttr.setLayoutY(t.addAttr.getLayoutY() - ADD_ATTR_OFFSET);
+					t.removeAttr.setLayoutY(t.removeAttr.getLayoutY() - ADD_ATTR_OFFSET);
+					t.addChild.setLayoutY(t.addChild.getLayoutY() - ADD_ATTR_OFFSET);
+				}
+			}
+		});
+	}
+
+	private BiConsumer<? super ParentChildPair, ? super Arrow> updateArrowWithParent() {
+		return (ParentChildPair pair, Arrow arrow) -> {
+
+			UMLItem parent = pair.getParent();
+			UMLItem child = pair.getChild();
+
+			ArrowModifier mod = new ArrowModifier(parent, child);
+			Arrow newArrow = mod.updateArrow(env);
+			arrowLayout.getChildren().remove(arrow);
+			env.replaceArrow(pair, newArrow);
+			arrowLayout.getChildren().add(newArrow);
+
+		};
+	}
+
+	private BiConsumer<? super ParentChildPair, ? super Arrow> removeArrow() {
+		return (ParentChildPair pair, Arrow arrow) -> {
+			arrowLayout.getChildren().remove(arrow);
+			env.removeArrow(pair.getParent(), pair.getChild());
+			env.removeArrow(pair.getChild(), pair.getParent());
+			pair.getChild().removeParent(pair.getParent());
+			pair.getParent().removeChild(pair.getChild());
+			
+		};
+	}
 }

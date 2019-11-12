@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import utility.Arrow;
 import utility.GUITile;
 
 /**
@@ -61,10 +60,15 @@ public class GUIEnvironment extends UMLEnvironment {
 	/**
 	 * removes mapping of key item from tileMapping member and env
 	 */
-	public boolean removeItem(UMLItem item) {
-		boolean result = this.items.remove(item);
+	public void removeItemGUI(UMLItem item) {
+		//boolean result = this.items.remove(item);
 		this.tileMapping.remove(item);
-		return result;
+		for(UMLItem child : item.getChildren()) {
+			this.arrowMapping.remove(new ParentChildPair(item , child));
+		}
+		for(UMLItem parent : item.getParents()) {
+			this.arrowMapping.remove(new ParentChildPair(parent , item));
+		}
 	}
 
 	/**

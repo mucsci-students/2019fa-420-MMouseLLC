@@ -1,5 +1,7 @@
-package utility;
+package data;
 
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.LineTo;
 import javafx.scene.shape.MoveTo;
@@ -29,6 +31,7 @@ public class Arrow extends Path {
 		strokeProperty().bind(fillProperty());
 		setFill(Color.BLACK);
 
+
 		// Line
 		getElements().add(new MoveTo(startX, startY));
 		getElements().add(new LineTo(endX, endY));
@@ -47,6 +50,7 @@ public class Arrow extends Path {
 		getElements().add(new LineTo(x1, y1));
 		getElements().add(new LineTo(x2, y2));
 		getElements().add(new LineTo(endX, endY));
+		
 	}
 
 	/**

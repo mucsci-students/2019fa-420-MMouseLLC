@@ -1,10 +1,8 @@
-package utility;
+package deprecated;
 
 import java.util.Scanner;
 
-/**
- * CLASS DEPRECATED - 10/16/2019
- */
+@Deprecated
 public class ReplScanner {
 	private static Scanner repl = null;
 	

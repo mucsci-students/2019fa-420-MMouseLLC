@@ -1,18 +1,15 @@
 package utility;
 
-import java.io.IOException;
 import java.util.logging.Logger;
 
-import org.jline.reader.Completer;
 import org.jline.reader.LineReader;
-import org.jline.reader.LineReaderBuilder;
-import org.jline.reader.impl.completer.EnumCompleter;
-import org.jline.terminal.Terminal;
-import org.jline.terminal.TerminalBuilder;
 
-import config.ConsoleCommands;
+import config.HelpScreenConfig;
+import data.Relationship;
 import data.UMLEnvironment;
 import data.UMLItem;
+import mapper.FieldMapper;
+import mapper.FunctionMapper;
 
 /**
  * The Class ConsoleEnum.
@@ -28,34 +25,17 @@ public class Console {
 	/** The UMLEnvironment. */
 	private UMLEnvironment env;
 
-	public Console(UMLEnvironment env) {
-		this.env = env;
+	public Console() {
+		this.env = new UMLEnvironment();
 	}
 
 	/**
 	 * The run command. This sets up the initial instance of the Console and builds
-	 * the TerminalBuilder, which creates the tools for tab completion in the
-	 * terminal, along with a reader that takes user input.
+	 * the console, which creates the tools for tab completion in the terminal,
+	 * along with a reader that takes user input.
 	 */
 	public void run() {
-
-		env = new UMLEnvironment();
-		TerminalBuilder builder = TerminalBuilder.builder();
-		Completer completer = new EnumCompleter(ConsoleCommands.class);
-		Terminal terminal = null;
-
-		try {
-			terminal = builder.build();
-		} catch (IOException e) {
-			logger.severe("Error. IOException occurred in run() in Console");
-		}
-
-		reader = LineReaderBuilder.builder().terminal(terminal).completer(completer).build();
-
-		reader.option(LineReader.Option.COMPLETE_IN_WORD, true);
-		reader.option(LineReader.Option.RECOGNIZE_EXACT, true);
-		reader.option(LineReader.Option.CASE_INSENSITIVE, true);
-
+		reader = new ConsoleBuilder().buildConsole();
 		homeScreen();
 	}
 
@@ -63,340 +43,668 @@ public class Console {
 	 * The Home Screen. Is displayed after initial setup, as well as after improper
 	 * command input.
 	 */
-	public void homeScreen() {
+	private void homeScreen() {
 		System.out.println("For a list of commands please type \"help\"  ");
 		while (true) {
-			String[] input = reader.readLine("Please input a command: ").split(" ");
+			String line = reader.readLine("Please input a command: ").replaceAll("\\s+", " ").trim();
+			String[] input = line.split(" ");
 			checkInput(input);
 		}
 	}
 
 	/**
-	 * Checks the user input. Determines if it is a single command or a multiple
-	 * argument command and acts accordingly.
+	 * Processes commands in single-line format to skip prompts. Commands taken are
+	 * add, edit, find, save and load. Check the "help" command to see exact specs
+	 * for each.
 	 *
-	 * @param lineArr The user input
+	 * @param input The input
 	 */
-	public void checkInput(String[] lineArr) {
-		String input = lineArr[0];
-		if (lineArr.length > 1) {
-			multiArgCommand(lineArr);
-			return;
-		}
-
-		if (input.equalsIgnoreCase("add")) {
-			add();
-		} else if (input.equalsIgnoreCase("list")) {
-			list();
-		} else if (input.equalsIgnoreCase("load")) {
-			load();
-		} else if (input.equalsIgnoreCase("save")) {
-			save();
-		} else if (input.equalsIgnoreCase("edit")) {
-			edit();
-		} else if (input.equalsIgnoreCase("help")) {
-			helpMultipleArgs();
-		} else if (input.equalsIgnoreCase("help_multi_arg")) {
-			helpMultipleArgs();
-		} else if (input.equalsIgnoreCase("find")) {
-			find();
-		} else if (input.equalsIgnoreCase("quit")) {
+	public void checkInput(String[] input) {
+		String command = input[0].toLowerCase();
+		if (command.equals("add")) {
+			add(input);
+		} else if (command.equals("delete")) {
+			delete(input);
+		} else if (command.equals("edit")) {
+			edit(input);
+		} else if (command.equals("find")) {
+			find(input);
+		} else if (command.equals("list")) {
+			list(input);
+		} else if (command.equals("list_class")) {
+			listClass(input);
+		} else if (command.equals("save")) {
+			save(input);
+		} else if (command.equals("load")) {
+			load(input);
+		} else if (command.equals("add_relationship")) {
+			addRelationship(input);
+		} else if (command.equals("edit_relationship")) {
+			editRelationship(input);
+		} else if (command.equals("remove_relationship")) {
+			removeRelationship(input);
+		} else if (command.equals("list_relationships")) {
+			listRelationships();
+		} else if (command.equals("edit_field_type")) {
+			editFieldType(input);
+		} else if (command.equals("edit_function_type")) {
+			editFunctionType(input);
+		} else if (command.equals("edit_field_var")) {
+			editFieldVar(input);
+		} else if (command.equals("edit_function_var")) {
+			editFunctionVar(input);
+		} else if (command.equals("add_field")) {
+			addField(input);
+		} else if (command.equals("add_function")) {
+			addFunction(input);
+		} else if (command.equals("list_fields")) {
+			listFields(input);
+		} else if (command.equals("list_functions")) {
+			listFunction(input);
+		} else if (command.equals("delete_field")) {
+			deleteField(input);
+		} else if (command.equals("delete_function")) {
+			deleteFunction(input);
+		} else if (command.equals("quit")) {
 			quit();
-		} else if (input.equalsIgnoreCase("add_child")) {
-			addChild();
-		} else if (input.equalsIgnoreCase("remove_child")) {
-			removeChild();
+		} else if (command.equals("help")) {
+			help();
 		} else {
-			logger.info("Error. Invalid Command.");
-			homeScreen();
+			logger.warning("Invalid Command");
 		}
 	}
 
 	/**
-	 * prompts user for input and calls add function to add a new class in
-	 * environment then gives a list of the classes currently in the environment.
-	 */
-	public void add() {
-		String newClass = reader.readLine("Enter new class name: ");
-		UMLItem isNull = AddClass.getItem(env, newClass);
-
-		if (isNull != null) {
-			logger.warning("Class " + newClass + " is already added. Use \"edit\" to modify this class.\n");
-			list();
-			homeScreen();
-		}
-
-		String answer = reader.readLine("Add class " + newClass + "? (y/n): ");
-
-		if (answer.equals("y")) {
-			AddClass.addClass(env, newClass);
-			logger.info("Class successfully added.");
-		} else if (answer.equals("n")) {
-			logger.info("Add cancelled.");
-		} else {
-			logger.warning("Invalid response.");
-		}
-		list();
-	}
-
-	/**
-	 * gives a list of the classes currently in the environment.
-	 */
-	public void list() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("List of classes: [ ");
-		for (UMLItem i : env.getItems()) {
-			builder.append("{" + i.getName() + "} ");
-		}
-		builder.append("]\n");
-		logger.info(builder.toString());
-	}
-
-	/**
-	 * gives a list of the attributes currently in the environment
+	 * Takes the input adds the new class(es) in environment, then gives a list of
+	 * the classes currently in the environment.
 	 *
-	 *@params item
+	 * @param input The input
 	 */
-	public void listAttributes(UMLItem item) {
-		StringBuilder builder = new StringBuilder();
-		builder.append("List of attributes in " + item.getName());
-		for (UMLItem i : env.getItems()) {
-			if (i.getName().equals(item.getName())) {
-				builder.append(" [ ");
-				for (String s : i.getAttributes()) {
-					builder.append("{" + s + "} ");
-					if (i.getAttributes().indexOf(s) != i.getAttributes().size() - 1)
-						builder.append(" ");
-				}
-				builder.append("]");
-				break;
-			}
-		}
-		logger.info(builder.toString());
-	}
-
-	/**
-	 * loads an existing file into the environment if user wishes to save unsaved
-	 * work, directed to save otherwise load function is called, then returned to
-	 * homescreen.
-	 */
-	public void load() {
-		String answer = reader.readLine("Any unsaved work will be lost, do you want to save? (y/n): ");
-		if (answer.equalsIgnoreCase("y")) {
-			save();
-		} else {
-			String fileName = reader.readLine("Enter file name to load: ");
-			LocalFile file = new LocalFile(fileName);
-			if (!file.hasExistingFileName(fileName)) {
-				logger.warning("No such file under name: " + fileName + ". Load canceled.\n");
-			} else {
-				env = file.loadFile();
-				logger.info("File loaded successfully.");
-			}
-		}
-	}
-
-	/**
-	 * prompts user for filename and checks if a file already exists under that name
-	 * will either cancel or overwrite based on user input.
-	 */
-	public void save() {
-		String answer = reader.readLine("Save current work? (y/n): ");
-
-		if (answer.equalsIgnoreCase("y")) {
-			String fileName = reader.readLine("Please enter file name: ");
-			LocalFile file = new LocalFile(env, fileName);
-			answer = reader.readLine("Use filename " + fileName + "? (y/n): ");
-			if (answer.equalsIgnoreCase("y")) {
-				if (file.hasExistingFileName(fileName) && canOverwriteSave(fileName)) {
-					file.saveFile();
-				} else if (file.hasExistingFileName(fileName) && !canOverwriteSave(fileName)) {
-					return;
-				} else {
-					file.saveFile();
-				}
-			}
-		} else {
-			logger.info("Save canceled.");
-		}
-	}
-
-	/**
-	 * Edits the class name. Checks if the class exists, and if so it checks if the
-	 * new class name is already being used or not. If the new class name does not
-	 * already exists it overwrites the existing class name for the chosen class.
-	 */
-	public void edit() {
-		String oldClass = reader.readLine("Enter class name to edit: ");
-		// Check if oldClass exists
-		if (!classNameExists(oldClass)) {
-			logger.warning("Class " + oldClass + " does not exist. Edit cancelled.");
-			list();
+	private void add(String[] input) {
+		if (input.length < 2) {
+			logger.warning("Usage: add [className] [optionalAdditionalClass(es)]");
 			return;
 		}
+		for (int i = 1; i < input.length; i++) {
+			String newClass = input[i];
+			UMLItem item = new UMLItem(newClass);
+			env.addItem(item);
+		}
+		env.listClasses();
+	}
 
-		String newClass = getNewClassName();
+	/**
+	 * Searches for a class and if it finds it, removes it.
+	 * 
+	 * @param input The input
+	 */
+	public void delete(String[] input) {
+		if (input.length < 3 || !input[1].equals("-f")) {
+			logger.warning("Usage: delete [flag \"-f\" to confirm delete] [className]");
+			return;
+		}
+		for (int i = 2; i < input.length; i++) {
+			UMLItem item = env.findItem(input[i]);
+			env.removeItem(item);
+		}
+	}
+
+	/**
+	 * Takes the input and edits the name of the UMLEnvironment. Checks if there are
+	 * valid parameters and if the class exists and the new name is not currently a
+	 * class name.
+	 *
+	 * @param input The input
+	 */
+	public void edit(String[] input) {
+		if (input.length != 3) {
+			logger.warning("Invalid: edit [oldClass] [newClass] - 3 fields required, " + input.length + " found.");
+			return;
+		}
+		String oldClass = input[1];
+		String newClass = input[2];
+		UMLItem item = env.findItem(oldClass);
 
 		if (canOverwriteEdit(oldClass, newClass)) {
-			AddClass.editItem(env, oldClass, newClass);
-			logger.info("Class " + oldClass + " changed to " + newClass + ".");
-		} else {
-			logger.info("Edit cancelled.");
-		}
-
-		list();
-	}
-
-	/**
-	 * add a new attribute in an exisiting class
-	 * and gives a list of the attributes currently in the class
-	 * 
-	 * @param args
-	 */
-	public void addAttribute(String[] args) {
-		// args looks like [add_attribute, [className], [newAttribute]
-		// args[1] == [className]
-
-		if (args.length != 3) {
-			logger.warning("Invalid: addattribute [Class] [Attribute]");
-			return;
-		}
-		// check that class exists
-		UMLItem addAttr = AddClass.getItem(env, args[1]);
-		if (addAttr == null) {
-			logger.warning("check help for synax");
-			return;
-		} else if (addAttr.getAttributes().contains(args[2])) {
-			logger.warning("Attribute " + args[2] + " already exists.");
-			return;
-		}
-		// class exists - add the attribute to the class
-		addAttr.addAttribute(args[2]);
-		listAttributes(addAttr);
-	}
-
-	/**
-	 * edit an attribute currently in a class
-	 * and  gives list of attributes currently in the class
-	 * 
-	 * @param args
-	 */
-	public void editAttribute(String[] args) {
-		// args looks like [edit_attributes, [className], [oldAttribute] [newAttribute]
-		// args[1] == [className]
-
-		// check for 4 inputs
-		if (args.length != 4) {
-			logger.warning("Invalid: editattribute [Class] [Old Attribute] [New Attribute]");
-			return;
-		}
-
-		// check that class exists
-		UMLItem editAttr = AddClass.getItem(env, args[1]);
-		if (editAttr == null) {
-			logger.warning("check help for synax");
-			return;
-
-			// check to see if new attribute exists already
-		} else if (editAttr.getAttributes().contains(args[3])) {
-			logger.warning("Attribute " + args[3] + " already exists.");
-			listAttributes(editAttr);
-			return;
-			// check to see if oldAttribute exists
-		} else if (editAttr.getAttributes().contains(args[2])) {
-			editAttr.editAttribute(args[2], args[3]);
-			logger.info("Attribute " + args[2] + " changed to " + args[3] + ".");
-			listAttributes(editAttr);
-			return;
-		} else {
-			logger.warning("Attribute " + args[2] + " doesn't exist.");
-			listAttributes(editAttr);
+			env.editItem(oldClass, newClass, item);
 		}
 	}
 
 	/**
-	 * delete an attribute currently in a class gives 
-	 * and gives list of attributes remaining in the class
-	 * 
-	 * @param args
+	 * Finds if a class exists in a given set of arguments.
+	 *
+	 * @param input The input
 	 */
-	public void deleteAttribute(String[] args) {
-		// args looks like [delete_attribute, [className], [attributeToDelete]
-		// args[1] == [className]
-
-		if (args.length != 3) {
-			logger.warning("Invalid: addattribute [Class] [AttributeToDelete]");
-			return;
-		}
-		// check that class exists
-		UMLItem deleteAttr = AddClass.getItem(env, args[1]);
-		if (deleteAttr == null) {
-			logger.warning("check help for synax");
-			// check to see if attribute exists
-		} else if (deleteAttr.getAttributes().contains(args[2])) {
-			deleteAttr.removeAttribute(args[2]);
-			logger.info("Attribute " + args[2] + " deleted.");
-			listAttributes(deleteAttr);
-			return;
-		} else {
-			logger.warning("Attribute " + args[2] + " doesn't exist.");
-			listAttributes(deleteAttr);
-		}
-	}
-
-	/**
-	 * The help menu.
-	 */
-	public void help() {
-		System.out.println("To add a class type \"add\" ");
-		System.out.println("To list a class type \"list\" ");
-		System.out.println("To edit a class type \"edit\" ");
-		System.out.println("To find if class exists type \"find\" ");
-		System.out.println("To save your project \"save\" ");
-		System.out.println("To load your project type \"load\" ");
-		System.out.println("To add a child to a class type \"add_child\"");
-		System.out.println("To remove a child from a class type \"remove_child\"");
-		System.out.println("To quit your project type \"quit\" ");
-		System.out.println("To list commands type \"help\" ");
-		System.out.println("To view single-lined command syntax type \"help_multi_arg\" ");
-		System.out.println(" ");
-	}
-
-	/**
-	 * The help with multiple arguments menu.
-	 */
-	public void helpMultipleArgs() {
-		System.out.println("Here is a list of the commands executed in one line without prompts.");
-		System.out.println("add  [className]");
-		System.out.println("delete [flag \"-f\" to confirm] [className]");
-		System.out.println("edit [originalClass] [newClass] ");
-		System.out.println("find [className]");
-		System.out.println("save [flag \"-f\" to overwrite] [filename]");
-		System.out.println("load [flag \"-f\" confirms unsaved changes lost] [filename] ");
-		System.out.println("add_child [childClass] [parentClass]");
-		System.out.println("remove_child [childClass] [parentClass]");
-		System.out.println("list_children [parentClass]");
-		System.out.println("list_parents [childClass]");
-		System.out.println("add_attribute  [className] [attributeName]");
-		System.out.println("edit_attribute  [className] [oldAttributeName] [newAttributeName] ");
-		System.out.println("delete_attribute  [className] [attributeName]");
-		System.out.println("list_attributes [className]");
-		
-		System.out.println(" ");
-	}
-
-	/**
-	 * Checks to see if a class name exists.
-	 */
-	public void find() {
-		String name = reader.readLine("Enter class name to find: ");
-		for (UMLItem i : env.getItems()) {
-			if (i.getName().equalsIgnoreCase(name)) {
-				logger.warning("Class " + name + " exists.");
-				return;
+	public void find(String[] input) {
+		for (int i = 1; i < input.length; i++) {
+			if (env.findItem(input[i]) != null) {
+				System.out.println("Class " + input[i] + " found.");
 			}
 		}
-		logger.warning("Class does not exist.");
+	}
+
+	/**
+	 * Lists all classes in the environment
+	 */
+	public void list(String[] input) {
+		if (input.length > 1) {
+			System.out.println(env.listClassesVerbose());
+			return;
+		}
+		System.out.println(env.listClasses());
+	}
+	
+	public void listClass(String[] input) {
+		if (input.length < 2) {
+			logger.warning("Usage: list_class [className]");
+			return;
+		}
+		UMLItem i = env.findItem(input[1]);
+		if (i == null) {
+			logger.warning("Classname " + input[1] + " not found.");
+			return;
+		}
+		System.out.println(env.listClass(i));
+	}
+
+	/**
+	 * Saves a file. Checks if the file name exists and if there is an overwrite
+	 * flag attached.
+	 *
+	 * @param input The input
+	 */
+	public void save(String[] input) {
+		String builtFileName = buildString(input);
+		LocalFile file = new LocalFile(env, builtFileName);
+		// Only allow existing files to overwrite if -f flag
+		if (file.hasExistingFileName(builtFileName) && !hasOverwriteFlag(input)) {
+			logger.warning(
+					"Filename: " + builtFileName + " already exists. Run command with \"-f\" flag to overwrite.");
+			return;
+		}
+		file.saveFile();
+	}
+
+	/**
+	 * Loads a file. Checks if the file name exists and if there is a flag to load
+	 * without saving prior.
+	 *
+	 * @param input The input
+	 */
+	public void load(String[] input) {
+		// Force users to use -f flag to confirm awareness of not saving
+		if (!hasOverwriteFlag(input)) {
+			System.out.println("Use flag \"-f\" to confirm awareness that unsaved changes will be lost.");
+			return;
+		}
+		String builtFileName = buildString(input);
+		LocalFile file = new LocalFile();
+		if (!file.hasExistingFileName(builtFileName)) {
+			logger.warning("Filename: " + builtFileName + " does not exist.");
+		} else {
+			file.setFileName(builtFileName);
+			env = file.loadFile();
+		}
+	}
+
+	/**
+	 * Adds a relationship between 2 UMLItems to environment
+	 * Command: add_relationship [parentClass] [childClass] [optional quantifier]  
+	 * @param input The input
+	 */
+	public void addRelationship(String[] input) {
+		if (input.length < 3) {
+			logger.warning("Invalid: add_relationship [childClass] [parentClass] - minimum 3 fields required, " + input.length
+					+ " found.");
+			return;
+		}
+		
+		UMLItem parentItem  = env.findItem(input[1]);
+		UMLItem childItem = env.findItem(input[2]);
+		if (parentItem == null) {
+			logger.warning("Class " + input[1] + " was not found.");
+			return;
+		} else if (childItem == null) {
+			logger.warning("Class " + input[2] + " was not found.");
+			return;
+		}
+		if (input.length > 3) {
+			int q = getQuantifier(input[3]);
+			if (q < 0) {
+				logger.warning("Quantifier needs to be of form: [N] | [1t1] | [1tM] | [Mt1] | [MtM]");
+				return;
+			}
+			Relationship r = new Relationship(parentItem, childItem, q);
+			env.addRelationship(r);
+		} else {
+			Relationship r = new Relationship(parentItem, childItem);
+			env.addRelationship(r);
+		}
+
+		System.out.println(env.listRelationships());
+	}
+
+	/**
+	 * Adds a relationship between 2 UMLItems to environment
+	 * Command: edit_relationship [parentClass] [childClass] [quantifier]  
+	 * @param input The input
+	 */
+	public void editRelationship(String[] input) {
+		if (input.length < 4) {
+			logger.warning("Invalid: edit_relationship [childClass] [parentClass] [quantifier] - 4 fields required, " + input.length
+					+ " found.");
+			return;
+		}
+		UMLItem parentItem  = env.findItem(input[1]);
+		UMLItem childItem = env.findItem(input[2]);
+		if (parentItem == null) {
+			logger.warning("Class " + input[1] + " was not found.");
+			return;
+		} else if (childItem == null) {
+			logger.warning("Class " + input[2] + " was not found.");
+			return;
+		}
+
+		Relationship r = env.findRelationship(new Relationship(parentItem, childItem));
+		if (r == null) {
+			logger.warning("Relationship not found. Add with command add_relationship");
+			return;
+		}
+		int q = getQuantifier(input[3]);
+		if (q < 0) {
+			logger.warning("Quantifier needs to be of form: [N] | [1t1] | [1tM] | [Mt1] | [MtM]");
+			return;
+		}
+		r.setQuantifier(q);
+		System.out.println(env.listRelationships());
+	}
+
+	
+	/**
+	 * Return integer corresponding to command past with arg
+	 *   This is further explained in the Relationship Class 
+	 * @param arg
+	 * @return
+	 */
+	private int getQuantifier(String arg) {
+		switch (arg.toLowerCase()) {
+		case ("n"):
+			return 0;
+		case ("1t1"):
+			return 1;
+		case ("1tm"):
+			return 2;
+		case ("mt1"):
+			return 3;
+		case ("mtm"):
+			return 4;
+		default:
+			return -1;
+		}
+	}
+
+	/**
+	 * Remove a class relationship from the environment
+	 * Command: remove_relationship [parentClass] [childClass] 
+	 * @param input
+	 * @return
+	 */
+	public void removeRelationship(String[] input) {
+		if (input.length != 3) {
+			logger.warning("Invalid: remove_relationship [parentClass] [childClass]");
+			return;
+		}
+		
+		UMLItem parentItem  = env.findItem(input[1]);
+		UMLItem childItem = env.findItem(input[2]);
+		if (childItem == null) {
+			logger.warning("Class " + input[2] + " was not found.");
+			return;
+		} else if (parentItem == null) {
+			logger.warning("Class " + input[1] + " was not found.");
+			return;
+		}
+		
+		if (!env.removeRelationship(new Relationship(parentItem, childItem))) {
+			logger.warning("Could not find relationship to remove.");
+			return;
+		}
+		
+		env.listRelationships();
+	}
+	
+	public void listRelationships() {
+		System.out.println(env.listRelationships());
+	}
+	
+	
+	/**
+	 * Removes a child class from another class given the input of child and parent
+	 * to be unlinked
+	 * 
+	 * @param input The input
+	 */
+	@Deprecated
+	public void removeChild(String[] input) {
+		if (input.length != 3) {
+			logger.warning(
+					"Invalid: removechild [childClass] [parentClass] - 3 fields required, " + input.length + " found.");
+		} else {
+			String childName = input[1];
+			String parentName = input[2];
+			UMLItem childItem = env.findItem(childName);
+			UMLItem parentItem = env.findItem(parentName);
+
+			env.removeChild(childName, parentName, childItem, parentItem);
+			System.out.println(env.listClasses());
+		}
+	}
+
+	/**
+	 * Lists the children of a given parent class
+	 * 
+	 * @param input
+	 */
+	@Deprecated
+	public void listChildren(String[] input) {
+		if (input.length != 2) {
+			logger.warning("Invalid: listchildren [parentClass] - 2 fields required, " + input.length + " found.");
+		} else {
+			String parentName = input[1];
+			String childList = env.listChildren(parentName);
+			System.out.println(childList);
+		}
+	}
+
+	/**
+	 * Lists the parents of a given child class
+	 * 
+	 * @param input The input
+	 */
+	@Deprecated
+	public void listParents(String[] input) {
+		if (input.length != 2) {
+			logger.warning("Invalid: listparents [childClass] - 2 fields required, " + input.length + " found.");
+		} else {
+			String childName = input[1];
+			String parentList = env.listParents(childName);
+			System.out.println(parentList);
+		}
+	}
+
+	/**
+	 * edit a field type currently in a class and gives list of fields currently in
+	 * the class
+	 * 
+	 * @param input The input
+	 */
+	public void editFieldType(String[] input) {
+		if (input.length != 5) {
+			logger.warning("Invalid: editfieldtype [Class] [Key] [Old Type] [New Type] - 5 fields required, "
+					+ input.length + " found");
+		} else {
+			String className = input[1];
+			String key = input[2];
+			String oldType = input[3];
+			String newType = input[4];
+
+			UMLItem item = env.findItem(className);
+			if (item == null) {
+				logger.warning("Inavalid Class Name");
+			}
+
+			FieldMapper mapper = new FieldMapper(env);
+			mapper.editFieldType(className, key, oldType, newType);
+			String fields = mapper.listMap(item.getFields());
+			System.out.println(fields);
+		}
+	}
+
+	/**
+	 * edit a Function type currently in a class and gives list of Functions
+	 * currently in the class
+	 * 
+	 * @param input The input
+	 */
+	public void editFunctionType(String[] input) {
+		if (input.length != 5) {
+			logger.warning("Invalid: editFunctiontype [Class] [Key] [Old Type] [New Type] - 5 fields required, "
+					+ input.length + " found");
+		} else {
+			String className = input[1];
+			String key = input[2];
+			String oldType = input[3];
+			String newType = input[4];
+
+			UMLItem item = env.findItem(className);
+			if (item == null) {
+				logger.warning("Inavalid Class Name");
+			}
+
+			FunctionMapper mapper = new FunctionMapper(env);
+			mapper.editFunctionType(className, key, oldType, newType);
+			String functions = mapper.listMap(item.getFunctions());
+			System.out.println(functions);
+		}
+	}
+
+	/**
+	 * edit a field variable and the type currently in a class and gives list of
+	 * fields currently in the class
+	 * 
+	 * @param input The input
+	 */
+	public void editFieldVar(String[] input) {
+		if (input.length != 6) {
+			logger.warning(
+					"Invalid: editfieldvar [Class] [Old Key] [New Key] [Old Type] [New Type] - 6 fields required, "
+							+ input.length + " found");
+		} else {
+			String className = input[1];
+			String oldKey = input[2];
+			String newKey = input[3];
+			String oldType = input[4];
+			String newType = input[5];
+
+			UMLItem item = env.findItem(className);
+			if (item == null) {
+				logger.warning("Inavalid Class Name");
+			}
+
+			FieldMapper mapper = new FieldMapper(env);
+			mapper.editFieldVar(className, oldKey, newKey, oldType, newType);
+			String fields = mapper.listMap(item.getFields());
+			System.out.println(fields);
+		}
+	}
+
+	/**
+	 * edit a function variable and the type currently in a class and gives list of
+	 * functions currently in the class
+	 * 
+	 * @param input The input
+	 */
+	public void editFunctionVar(String[] input) {
+		if (input.length != 6) {
+			logger.warning(
+					"Invalid: editfunctionvar [Class] [Old Key] [New Key] [Old Type] [New Type] - 6 fields required, "
+							+ input.length + " found");
+		} else {
+			String className = input[1];
+			String oldKey = input[2];
+			String newKey = input[3];
+			String oldType = input[4];
+			String newType = input[5];
+
+			UMLItem item = env.findItem(className);
+			if (item == null) {
+				logger.warning("Inavalid Class Name");
+			}
+
+			FunctionMapper mapper = new FunctionMapper(env);
+			mapper.editFunctionVar(className, oldKey, newKey, oldType, newType);
+			String functions = mapper.listMap(item.getFunctions());
+			System.out.println(functions);
+		}
+	}
+
+	/**
+	 * add a new field in an exisiting class and gives a list of the field currently
+	 * in the class
+	 * 
+	 * @param input The input
+	 */
+	public void addField(String[] input) {
+		if (input.length != 4) {
+			logger.warning("Invalid: addfield [Class] [type] [var] - 4 fields required, " + input.length + " found");
+		} else {
+			String className = input[1];
+			String type = input[2];
+			String var = input[3];
+
+			UMLItem item = env.findItem(className);
+			if (item == null) {
+				logger.warning("Inavalid Class Name");
+			}
+			UMLItem findType = env.findItem(type);
+			if (findType != null) {
+				env.addRelationship(new Relationship(findType, item));
+			}
+
+			FieldMapper mapper = new FieldMapper(env);
+			mapper.addField(className, type, var);
+			String fields = mapper.listMap(item.getFields());
+			System.out.println(fields);
+		}
+	}
+
+	/**
+	 * add a new Function in an exisiting class and gives a list of the Function
+	 * currently in the class
+	 * 
+	 * @param input The input
+	 */
+	public void addFunction(String[] input) {
+		if (input.length != 4) {
+			logger.warning("Invalid: addfunction [Class] [type] [var] - 4 fields required, " + input.length + " found");
+		} else {
+			String className = input[1];
+			String type = input[2];
+			String var = input[3];
+
+			UMLItem item = env.findItem(className);
+			if (item == null) {
+				logger.warning("Inavalid Class Name");
+			}
+
+			UMLItem findType = env.findItem(type);
+			if (findType != null) {
+				env.addRelationship(new Relationship(findType, item));
+			}
+			
+			FunctionMapper mapper = new FunctionMapper(env);
+			mapper.addFunction(className, type, var);
+			String functions = mapper.listMap(item.getFunctions());
+			System.out.println(functions);
+		}
+	}
+
+	/**
+	 * list all the Fields in an existing class
+	 * 
+	 * @param input The input
+	 */
+	public void listFields(String[] input) {
+		if (input.length != 2) {
+			logger.warning("Invalid: listFields [Class] - 2 fields required, " + input.length + " found");
+		} else {
+			String className = input[1];
+			UMLItem item = env.findItem(className);
+			if (item == null) {
+				logger.warning("Inavalid Class Name");
+			}
+			FieldMapper mapper = new FieldMapper(env);
+			String fields = mapper.listMap(item.getFields());
+			System.out.println(fields);
+		}
+	}
+
+	/**
+	 * list all the Functions in an existing class
+	 * 
+	 * @param input The input
+	 */
+	public void listFunction(String[] input) {
+		if (input.length != 2) {
+			logger.warning("Invalid: listFunctions [Class] - 2 fields required, " + input.length + " found");
+		} else {
+			String className = input[1];
+			UMLItem item = env.findItem(className);
+			if (item == null) {
+				logger.warning("Inavalid Class Name");
+			}
+			FunctionMapper mapper = new FunctionMapper(env);
+			String functions = mapper.listMap(item.getFunctions());
+			System.out.println(functions);
+		}
+	}
+
+	/**
+	 * delete a field currently in a class gives and gives list of fields remaining
+	 * in the class
+	 * 
+	 * @param input The input
+	 */
+	public void deleteField(String[] input) {
+		if (input.length != 3) {
+			logger.warning("Invalid: deleteField [Class] [Field] - 3 fields required, " + input.length + " found");
+		} else {
+			String className = input[1];
+			String var = input[2];
+
+			UMLItem item = env.findItem(className);
+			if (item == null) {
+				logger.warning("Inavalid Class Name");
+			}
+
+			FieldMapper mapper = new FieldMapper(env);
+			mapper.deleteField(className, var);
+			String fields = mapper.listMap(item.getFields());
+			System.out.println(fields);
+		}
+	}
+
+	/**
+	 * delete a Function currently in a class gives and gives list of Function s
+	 * remaining in the class
+	 * 
+	 * @param input The input
+	 */
+	public void deleteFunction(String[] input) {
+		if (input.length != 3) {
+			logger.warning(
+					"Invalid:  deleteFunction [Class] [Function] - 3 fields required, " + input.length + " found");
+		} else {
+			String className = input[1];
+			String var = input[2];
+
+			UMLItem item = env.findItem(className);
+			if (item == null) {
+				logger.warning("Inavalid Class Name");
+			}
+
+			FunctionMapper mapper = new FunctionMapper(env);
+			mapper.deleteFunction(className, var);
+			String functions = mapper.listMap(item.getFunctions());
+			System.out.println(functions);
+		}
+	}
+
+	/**
+	 * The help menu,
+	 */
+	public void help() {
+		HelpScreenConfig.printHelpScreen();
 	}
 
 	/**
@@ -408,7 +716,7 @@ public class Console {
 		if (answer.equalsIgnoreCase("y")) {
 			saveAndQuit();
 		} else {
-			logger.info("Quitting program");
+			System.out.println("Quitting program.");
 		}
 		System.exit(0);
 	}
@@ -429,442 +737,13 @@ public class Console {
 				file.saveFile();
 			}
 		} else {
-			logger.info("Save canceled. Quitting program.");
+			System.out.println("Save canceled. Quitting program.");
 		}
 	}
 
-	/**
-	 * Links a class to another via child/parent relationship
-	 */
-	public void addChild() {
-		String childClass = reader.readLine("Enter child class name: ");
-		UMLItem c = AddClass.getItem(env, childClass);
-
-		while (c == null) {
-			logger.warning("Child name " + childClass + " does not exist, enter valid name: ");
-			list();
-			childClass = reader.readLine("Enter child name: ");
-			c = AddClass.getItem(env, childClass);
-		}
-
-		String parentClass = reader.readLine("Enter parent class name: ");
-		UMLItem p = AddClass.getItem(env, parentClass);
-
-		while (p == null) {
-			logger.warning("parent name " + parentClass + " does not exist, enter valid name: ");
-			list();
-			parentClass = reader.readLine("Enter parent name: ");
-			p = AddClass.getItem(env, parentClass);
-		}
-
-		if (c.getParents().contains(p) && p.getChildren().contains(c)) {
-			logger.warning("Child " + childClass + "already linked to parent " + parentClass + ".");
-		} else if (c == p) {
-			logger.warning("Child " + childClass + "cannot be the same as parent " + parentClass + ".");
-		} else {
-			String answer = reader.readLine("Add child {" + childClass + "} to parent {" + parentClass + "}? {y/n}");
-			if (answer.equals("y")) {
-				p.addChild(c);
-				c.addParent(p);
-				logger.info("Child successfully added.");
-			} else if (answer.equals("n")) {
-				logger.info("Add child cancelled.");
-			} else {
-				logger.warning("Invalid response.");
-			}
-
-		}
-	}
-
-	/**
-	 * Removes child/parent relationship link between two classes
-	 */
-	public void removeChild() {
-		String childClass = reader.readLine("Enter child class name: ");
-		UMLItem c = AddClass.getItem(env, childClass);
-
-		while (c == null) {
-			logger.warning("Child name " + childClass + " does not exist, enter valid name: ");
-			list();
-			childClass = reader.readLine("Enter child name: ");
-			c = AddClass.getItem(env, childClass);
-		}
-
-		String parentClass = reader.readLine("Enter parent class name: ");
-		UMLItem p = AddClass.getItem(env, parentClass);
-
-		while (p == null) {
-			logger.warning("parent name " + parentClass + " does not exist, enter valid name: ");
-			list();
-			parentClass = reader.readLine("Enter parent name: ");
-			p = AddClass.getItem(env, parentClass);
-		}
-
-		if (!c.getParents().contains(p) && !p.getChildren().contains(c)) {
-			logger.warning("Child " + childClass + "not linked to parent " + parentClass + ".");
-		} else if (c == p) {
-			logger.warning("Child " + childClass + "cannot be the same as parent " + parentClass + ".");
-		} else {
-			String answer = reader
-					.readLine("Remove child {" + childClass + "} from parent {" + parentClass + "}? {y/n}");
-			if (answer.equals("y")) {
-				p.removeChild(c);
-				c.removeParent(p);
-				logger.info("Child successfully removed.");
-			} else if (answer.equals("n")) {
-				logger.info("Remove child cancelled.");
-			} else {
-				logger.warning("Invalid response.");
-			}
-
-		}
-	}
-
-	/**
-	 * Processes commands in single-line format to skip prompts. Commands taken are
-	 * add, edit, find, save and load. Check the help_multi_args command to see
-	 * exact specs for each.
-	 *
-	 * @param input The input
-	 */
-	public void multiArgCommand(String[] input) {
-		String command = input[0].toLowerCase();
-		if (command.equals("add")) {
-			multiArgAdd(input);
-		} else if (command.contentEquals("delete")) {
-			multiArgDelete(input);
-		} else if (command.equals("edit")) {
-			multiArgEdit(input);
-		} else if (command.equals("find")) {
-			multiArgFind(input);
-		} else if (command.equals("save")) {
-			multiArgSave(input);
-		} else if (command.equals("load")) {
-			multiArgLoad(input);
-		} else if (command.equals("add_child")) {
-			multiArgAddChild(input);
-		} else if (command.equals("remove_child")) {
-			multiArgRemoveChild(input);
-		} else if (command.equals("list_children")) {
-			multiArgListChildren(input);
-		} else if (command.equals("list_parents")) {
-			multiArgListParents(input);
-		} else if (command.equals("edit_attribute")) {
-			editAttribute(input);
-		} else if (command.equals("add_attribute")) {
-			addAttribute(input);
-		} else if (command.equals("delete_attribute")) {
-			deleteAttribute(input);
-		} else if(command.contentEquals("list_attributes")) {
-			listAttributes(input);
-		} else {
-			logger.warning("Invalid Command");
-		}
-	}
-
-	/**
-	 * Takes the input adds the new class(es) in environment, then gives a list of
-	 * the classes currently in the environment.
-	 *
-	 * @param input The input
-	 */
-	public void multiArgAdd(String[] input) {
-		// Adds class or promts that it is taken.
-		for (int i = 1; i < input.length; i++) {
-			String newClass = input[i];
-			if (!AddClass.addClass(env, newClass)) {
-				logger.warning(newClass + " is already a class.");
-			} else {
-				logger.info("Class successfully added: " + newClass);
-			}
-		}
-	}
-	
-	public void multiArgDelete(String[] input) {
-		if (input.length < 3) {
-			logger.warning("Usage: delete [flag \"-f\" to confirm delete] [className]");
-			return;
-		}
-		
-		if (!input[1].equals("-f")){
-			logger.warning("Usage: delete [flag \"-f\" to confirm delete] [className]");
-			return;
-		}
-		
-		UMLItem i = env.findItem(input[2]);
-		if (i==null) {
-			logger.warning("Class "+ input[2] + " does not exist.");
-			return;
-		}
-		
-		env.removeItem(i);
-		logger.info("Classname " + input[2] + " removed successfully.");
-		
-	}
-
-	/**
-	 * Takes the input and edits the name of the UMLEnvironment. Checks if there are
-	 * valid parameters and if the class exists and the new name is not currently a
-	 * class name.
-	 *
-	 * @param input The input
-	 */
-	public void multiArgEdit(String[] input) {
-		if (input.length < 3) {
-			logger.warning("Invalid: edit [oldClass] [newClass] - 3 fields required, " + input.length + " found.");
-		} else if (!classNameExists(input[1])) {
-			logger.warning("Class " + input[1] + " does not exist. Edit cancelled.");
-			list();
-		} else {
-			if (canOverwriteEdit(input[1], input[2])) {
-				AddClass.editItem(env, input[1], input[2]);
-				logger.info("Class " + input[1] + " changed to " + input[2] + ".");
-			} else {
-				logger.info("Edit cancelled.");
-			}
-		}
-	}
-
-	/**
-	 * Finds if a class exists in a given set of arguments.
-	 *
-	 * @param input The input
-	 */
-	public void multiArgFind(String[] input) {
-		for (int i = 1; i < input.length; i++) {
-			UMLItem item = AddClass.getItem(env, input[i]);
-			if (item != null) {
-				logger.info(i + " exists.");
-			} else {
-				logger.warning(i + " does not exist.");
-			}
-		}
-	}
-
-	/**
-	 * Saves a file. Checks if the file name exists and if there is an overwrite
-	 * flag attached.
-	 *
-	 * @param input The input
-	 */
-	public void multiArgSave(String[] input) {
-		String builtFileName = buildString(input);
-		LocalFile file = new LocalFile(env, builtFileName);
-		// Only allow existing files to overwrite if -f flag
-		if (file.hasExistingFileName(builtFileName) && !hasOverwriteFlag(input)) {
-			logger.warning(
-					"Filename: " + builtFileName + " already exists. Run command with \"-f\" flag to overwrite.");
-			return;
-		}
-		file.saveFile();
-	}
-
-	/**
-	 * Loads a file. Checks if the file name exists and if there is a flag to load
-	 * without saving prior.
-	 *
-	 * @param input The input
-	 */
-	public void multiArgLoad(String[] input) {
-		// Force users to use -f flag to confirm awareness of not saving
-		if (!hasOverwriteFlag(input)) {
-			System.out.println("Use flag \"-f\" to confirm awareness that unsaved changes will be lost.");
-			return;
-		}
-		String builtFileName = buildString(input);
-		LocalFile file = new LocalFile();
-		if (!file.hasExistingFileName(builtFileName)) {
-			logger.warning("Filename: " + builtFileName + " does not exist.");
-			return;
-		}
-		file.setFileName(builtFileName);
-		env = file.loadFile();
-	}
-
-	/**
-	 * Adds a child class to another class given the input of child and parent to be
-	 * linked
-	 * 
-	 * @param input
-	 */
-	public void multiArgAddChild(String[] input) {
-		if (input.length < 3) {
-			logger.warning(
-					"Invalid: addchild [childClass] [parentClass] - 3 fields required, " + input.length + " found.");
-			return;
-		} else if (!classNameExists(input[1])) {
-			logger.warning("Child class " + input[1] + " does not exist. Add child cancelled.");
-			list();
-			return;
-		} else if (!classNameExists(input[2])) {
-			logger.warning("Parent class " + input[2] + " does not exist. Add child cancelled.");
-			list();
-			return;
-		} else if (input[1] == input[2]) {
-			logger.warning(
-					"Child " + input[1] + " cannot be the same as parent " + input[2] + ". Add child cancelled.");
-			list();
-		}
-
-		UMLItem c = AddClass.getItem(env, input[1]);
-		UMLItem p = AddClass.getItem(env, input[2]);
-
-		if (c.getParents().contains(p) && p.getChildren().contains(c)) {
-			logger.warning("Child " + input[1] + " already linked to parent " + input[2] + ". Add child cancelled.");
-		} else {
-			p.addChild(c);
-			c.addParent(p);
-			logger.info("Child successfully added.");
-		}
-
-	}
-
-	/**
-	 * Removes a child class from another class given the input of child and parent
-	 * to be unlinked
-	 * 
-	 * @param input
-	 */
-	public void multiArgRemoveChild(String[] input) {
-		if (input.length < 3) {
-			logger.warning(
-					"Invalid: removechild [childClass] [parentClass] - 3 fields required, " + input.length + " found.");
-			return;
-		} else if (!classNameExists(input[1])) {
-			logger.warning("Child class " + input[1] + " does not exist. Remove child cancelled.");
-			list();
-			return;
-		} else if (!classNameExists(input[2])) {
-			logger.warning("Parent class " + input[2] + " does not exist. Remove child cancelled.");
-			list();
-			return;
-		}
-
-		UMLItem c = AddClass.getItem(env, input[1]);
-		UMLItem p = AddClass.getItem(env, input[2]);
-
-		if (!c.getParents().contains(p) && !p.getChildren().contains(c)) {
-			logger.warning("Child " + input[1] + " not linked to parent " + input[2] + ". Remove child cancelled.");
-		} else {
-			p.removeChild(c);
-			c.removeParent(p);
-			logger.info("Child successfully removed.");
-		}
-	}
-
-	/**
-	 * Lists the children of a given parent class
-	 * 
-	 * @param input
-	 */
-	public void multiArgListChildren(String[] input) {
-		if (input.length < 2) {
-			logger.warning("Invalid: listchildren [parentClass] - 2 fields required, " + input.length + " found.");
-			return;
-		} else if (!classNameExists(input[1])) {
-			logger.warning("Parent class " + input[1] + " does not exist. List children cancelled.");
-			list();
-			return;
-		} else {
-			UMLItem p = AddClass.getItem(env, input[1]);
-			StringBuilder builder = new StringBuilder();
-			builder.append("List of children [ ");
-			for (UMLItem i : p.getChildren()) {
-				builder.append("{" + i.getName() + "} ");
-			}
-			builder.append("]");
-			logger.info(builder.toString());
-		}
-	}
-
-	/**
-	 * Lists the parents of a given child class
-	 * 
-	 * @param input
-	 */
-	public void multiArgListParents(String[] input) {
-		if (input.length < 2) {
-			logger.warning("Invalid: listparents [childClass] - 2 fields required, " + input.length + " found.");
-			return;
-		} else if (!classNameExists(input[1])) {
-			logger.warning("Child class " + input[1] + " does not exist. List parents cancelled.");
-			list();
-			return;
-		} else {
-			UMLItem c = AddClass.getItem(env, input[1]);
-			StringBuilder builder = new StringBuilder();
-			builder.append("List of parents [ ");
-			for (UMLItem i : c.getParents()) {
-				builder.append("{" + i.getName() + "} ");
-			}
-			builder.append("]");
-			logger.info(builder.toString());
-		}
-	}
-
-	/**
-	 * Given command list_attributes  [className], log the attributes of given class
-	 * @param input
-	 */
-	public void listAttributes(String[] input) {
-		//System.out.println("list_attributes  [className]");
-		if (input.length < 2) {
-			logger.warning("Usage: list_attributes [className]");
-			return;
-		}
-		
-		UMLItem i = env.findItem(input[1]);
-		if (i == null) {
-			logger.warning("Class " + input[1] + " does not exist.");
-			return;
-		}
-		
-		if (i.getAttributes().size() == 0) {
-			logger.info("[ ]");
-		}
-		
-		StringBuilder str = new StringBuilder();
-		str.append("[ ");
-		for (String attr : i.getAttributes()) {
-			str.append("{" + attr + "} ");
-		}
-		str.append("]");
-		logger.info(str.toString());
-	}
-	
-	
 	////////////////////////////////////////////////
 	//////////////// HELPER METHODS ////////////////
 	////////////////////////////////////////////////
-
-	/**
-	 * Checks if a class name exists.
-	 * 
-	 * @return boolean If the class name exists
-	 */
-	public boolean classNameExists(String className) {
-		return (AddClass.getItem(env, className) != null);
-	}
-
-	/**
-	 * Gets a new class name.
-	 * 
-	 * @return newClass The new class name
-	 */
-	public String getNewClassName() {
-		boolean newClassNamed = false;
-		String newClass = "";
-		while (!newClassNamed) {
-			newClass = reader.readLine("Enter a new class name: ");
-			if (AddClass.getItem(env, newClass) != null) {
-				logger.warning("Class " + newClass + " already exists. Please choose another class name.");
-				list();
-			} else {
-				newClassNamed = true;
-			}
-		}
-		return newClass;
-	}
 
 	/**
 	 * Checks if the user has confirmed that a class can be overwritten.
@@ -880,6 +759,7 @@ public class Console {
 			if (answer.equalsIgnoreCase("y")) {
 				return true;
 			} else if (answer.equals("n")) {
+				System.out.println("Edit cancelled by user.");
 				overwriteActionComplete = true;
 			} else {
 				logger.warning("Invalid response.");
@@ -901,7 +781,7 @@ public class Console {
 			if (answer.equalsIgnoreCase("y")) {
 				return true;
 			} else if (answer.equalsIgnoreCase("n")) {
-				logger.info("Save canceled.");
+				System.out.println("Save canceled.");
 				saveActionComplete = true;
 			} else {
 				logger.warning("Invalid response.");
@@ -944,6 +824,14 @@ public class Console {
 		}
 		return false;
 	}
-	
-	
+
+	/**
+	 * Gets the UMLEnvironment
+	 * 
+	 * @return env The UMLEnvironment
+	 */
+	public UMLEnvironment getUMLEnvironment() {
+		return env;
+	}
+
 }
