@@ -21,6 +21,9 @@ public class LocalFileTest {
   /** The UMLEnvironment. */
   private UMLEnvironment env;
 
+  /**
+   * Setup test env
+   */
   @Before
   public void beforeStart() {
     env = new UMLEnvironment();

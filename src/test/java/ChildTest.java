@@ -10,6 +10,7 @@ import data.UMLEnvironment;
 import data.UMLItem;
 import utility.Console;
 
+@SuppressWarnings("javadoc")
 @Deprecated
 public class ChildTest {
   private UMLEnvironment env;

@@ -18,6 +18,10 @@ public class SingleLineCommandTest {
 	// private UMLEnvironment env = new UMLEnvironment();
 	private Console c = new Console();
 
+	/**
+	 * human readable format of environment
+	 * @return String 
+	 */
 	public String list() {
 		UMLEnvironment env = c.getUMLEnvironment();
 		String buildUp = "[ ";
@@ -46,18 +50,15 @@ public class SingleLineCommandTest {
 		c.checkInput(eric);
 		assertEquals("[ Matt Dan Eric ]", list());
 
-//    c.checkInput(matt);
-//    assertEquals("[ {Matt} {Dan} {Eric} ]", list());
-//    
-//    c.checkInput(eric);
-//    assertEquals("[ {Matt} {Dan} {Eric} ]", list());
-
 		c.checkInput(kasey);
 		assertEquals("[ Matt Dan Eric Kasey ]", list());
 
 	}
 
-	// Test currently not working based on new functionality of Console.
+	/**
+	 * Test currently not working based on new functionality of Console.
+	 * @throws IOException
+	 */
 	@Test
 	@Ignore
 	public void testEdit() throws IOException {

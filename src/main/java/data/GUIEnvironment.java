@@ -51,7 +51,7 @@ public class GUIEnvironment extends UMLEnvironment {
 	/**
 	 * Returns value for given key item, null if key item not in map
 	 * @param item
-	 * @return
+	 * @return UMLItem
 	 */
 	public GUITile getTileFor(UMLItem item) {
 		return tileMapping.get(item);

@@ -5,8 +5,18 @@ import java.util.Map;
 import org.junit.Test;
 import data.UMLItem;
 
+/**
+ * Test the fields and functions implementations
+ * @author Kasey Kocher
+ *
+ */
 public class FieldsFunctionsEnvTest {
 
+	/**
+	 * Takes HashMap for fields and functions 
+	 * @param m
+	 * @return String with human readable format for mapping
+	 */
 	public String printMap(HashMap<String, String> m) {
 		StringBuilder s = new StringBuilder();
 		s.append("[ ");
@@ -18,6 +28,9 @@ public class FieldsFunctionsEnvTest {
 		return s.toString();
 	}
 	
+	/**
+	 * test fields for regular functionality
+	 */
 	@Test
 	public void testFields() {
 		UMLItem i = new UMLItem();
@@ -43,6 +56,9 @@ public class FieldsFunctionsEnvTest {
 		assertEquals(printMap(i.getFields()) , "[ { whatevs2: bool } ]");
 	}
 	
+	/**
+	 * Test functions for regular functionality
+	 */
 	@Test
 	public void testFunctions() {
 		UMLItem i = new UMLItem();
