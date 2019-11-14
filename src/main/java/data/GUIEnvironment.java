@@ -102,11 +102,13 @@ public class GUIEnvironment extends UMLEnvironment {
 	/**
 	 * Filters all managed arrow relationships given a UMLItem
 	 * @param item
-	 * @return Hashmap of arrow relationship
+	 * @returns hash map where item entered is in pair for 
+	 * parent and child //tile a entered -> Pair 1(a,b) Pair 2(b,a) in map
 	 */
 	public HashMap<ParentChildPair, Arrow> getRelationshipsFor(UMLItem item) {
 		return (HashMap<ParentChildPair, Arrow>) arrowMapping.entrySet().stream()
 				.filter(pair -> (pair.getKey().getChild() == item) || (pair.getKey().getParent() == item))
 				.collect(Collectors.toMap(x -> x.getKey(), x -> x.getValue()));
 	}
+	
 }

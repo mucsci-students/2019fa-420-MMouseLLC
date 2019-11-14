@@ -29,8 +29,6 @@ public class GUI extends Application {
 
 	private int size = 0;
 	private GUIEnvironment env;
-	private boolean removed = false;
-	private final int TILE_OFFSET = 160;
 	private final int ADD_ATTR_OFFSET = 17;
 	private Pane mainLayout = new Pane();
 	private Group layout = new Group();
@@ -70,11 +68,6 @@ public class GUI extends Application {
 	private int getSize() {
 		return this.size;
 	}
-
-	private void setSize(int size) {
-		this.size = size;
-	}
-
 	/**
 	 * @author eric build window sets up the size of the window and the event
 	 * listeners needed to function inside the environment. Add, edit, delete should
@@ -104,6 +97,13 @@ public class GUI extends Application {
 		// default in edit mode when starting GUI
 		editMode.setSelected(true);
 
+		/*
+		 * @author lauren
+		 * 
+		 * editMode on action is an event listener for the edit mode button to be clicked.
+		 * when clicked it will go through everything in the environment and re-render it into what
+		 * the edit mode requires and shows. 
+		 */
 		editMode.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent clickEditButton) {
@@ -118,7 +118,6 @@ public class GUI extends Application {
 					if (editMode.isSelected()) {
 						for (UMLItem i : env.getItems()) {
 							GUITile tile = env.getTileFor(i);
-							UMLItem found = env.findItem(tile.nameBox.getText());
 							tile.nameBox.setVisible(false);
 							tile.nameLabel.setVisible(true);
 							tile.nameLabel.setText(tile.nameBox.getText());
@@ -131,15 +130,17 @@ public class GUI extends Application {
 							tile.pane.setMaxHeight(250 + (tileSize * ADD_ATTR_OFFSET));
 							tile.pane.setMinHeight(250 + (tileSize * ADD_ATTR_OFFSET));
 							tile.pane.getChildren().remove(tile.add);
-							UMLItem item = env.findItem(tile.nameBox.getText());
 							env.createMappingFor(i, tile);
 							tile.removeAttr.setVisible(true);
 							tile.pane.getChildren().remove(tile.add);
 							setMoveTileAction(tile, layout);
-							// updates paired arrows with new size of tiles
 							env.getRelationshipsFor(i).forEach(updateArrowWithParent());
 						}
-						// reset the main buttons to be appropriate
+						
+						for(UMLItem j : env.getItems()) {
+							env.getRelationshipsFor(j).forEach(updateArrowWithParent());
+						}
+						
 						displayMode.setSelected(false);
 						editMode.setSelected(true);
 						addButton.setDisable(false);
@@ -148,7 +149,13 @@ public class GUI extends Application {
 				}
 			}
 		});
-
+		/*
+		 * @author lauren
+		 * 
+		 * displayMode on action is an event listener for the display mode button to be clicked.
+		 * when clicked it will go through everything in the environment and re-render it into what
+		 * the display mode requires and shows. 
+		 */
 		displayMode.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent clickDisplayButton) {
@@ -163,7 +170,6 @@ public class GUI extends Application {
 					if (displayMode.isSelected()) {
 						for (UMLItem i : env.getItems()) {
 							GUITile tile = env.getTileFor(i);
-							UMLItem found = env.findItem(tile.nameBox.getText());
 							tile.nameBox.setVisible(false);
 							tile.nameLabel.setVisible(true);
 							tile.nameLabel.setText(tile.nameBox.getText());
@@ -176,14 +182,17 @@ public class GUI extends Application {
 							tile.pane.setMaxHeight(50 + (tileSize * ADD_ATTR_OFFSET));
 							tile.pane.setMinHeight(50 + (tileSize * ADD_ATTR_OFFSET));
 							tile.pane.getChildren().remove(tile.add);
-							UMLItem item = env.findItem(tile.nameBox.getText());
 							env.createMappingFor(i, tile);
 							tile.removeAttr.setVisible(false);
 							tile.pane.getChildren().remove(tile.add);
-							env.getRelationshipsFor(i).forEach(updateArrowWithParent());
 							
-
 						}
+						
+						for(UMLItem j : env.getItems()) {
+							env.getRelationshipsFor(j).forEach(updateArrowWithParent());
+						}
+						
+
 						// reset the main buttons to be appropriate
 						displayMode.setSelected(true);
 						editMode.setSelected(false);
@@ -434,7 +443,13 @@ public class GUI extends Application {
 
 		});
 	}
-
+	/*
+	 * @author eric
+	 * 
+	 * setAddAttributeAction is an action listener on the add attr button in the tile. This button
+	 * will take in a value and then update the list of attributes on a tile after it has been added. 
+	 * 
+	 */
 	public void setAddAttributeAction(GUITile t, Group layout) {
 		// Adds an attribute as text to the tile clicked
 		t.addAttr.setOnAction((event) -> {
@@ -499,7 +514,14 @@ public class GUI extends Application {
 
 		});
 	}
-
+	/*
+	 * @author matt and eric
+	 * 
+	 * setAddChildAction sets an action listener to the tile for the add child button.
+	 * This essentially adds the relationship to the environment and then draws the arrow
+	 * in the GUI based on each tile's positions at the current time. 
+	 * 
+	 */
 	public void setAddChildButtonAction(GUITile t, Group layout) {
 		// Moves the child specified under tile t and links with arrow
 		t.addChild.setOnAction((event) -> {
@@ -543,7 +565,16 @@ public class GUI extends Application {
 
 		});
 	}
-
+	
+	/*
+	 * @author eric
+	 * 
+	 * setMoveTileAction sets and event listener onto a tile that will allow is to 
+	 * listen for the tile being clicked on and the tile being dragged and released.
+	 * This updates the tiles position and re-renders the arrows to and from it while being
+	 * clicked and dragged and released. 
+	 * 
+	 */
 	public void setMoveTileAction(GUITile t, Group layout) {
 
 		t.pane.setOnMousePressed(e -> {
@@ -578,7 +609,14 @@ public class GUI extends Application {
 			env.getRelationshipsFor(item).forEach(updateArrowWithParent());
 		});
 	}
-	
+	/*
+	 * @author eric
+	 * 
+	 * setRemoveAttrButton sets an event listener to listen for when the remove attribute button is 
+	 * going to be clicked. When clicked it takes in an input and re-renders the tile being clicked
+	 * to the appropriate size and amount of attributes. 
+	 * 
+	 */
 	public void setRemoveAttrButton(GUITile t, Group layout) {
 		// Removes attribute from text field in tile t
 		t.removeAttr.setOnAction((event) -> {
@@ -637,7 +675,14 @@ public class GUI extends Application {
 			}
 		});
 	}
-
+	/*
+	 * @author eric
+	 * 
+	 * updateArrowWithParent takes in a map of parent and child to an arrow they share.
+	 * this function essentially calls the arrow modifier to translate where the arrow needs
+	 * to render in relation to the modifications happening to either parent or child. 
+	 * 
+	 */
 	private BiConsumer<? super ParentChildPair, ? super Arrow> updateArrowWithParent() {
 		return (ParentChildPair pair, Arrow arrow) -> {
 
@@ -652,7 +697,13 @@ public class GUI extends Application {
 
 		};
 	}
-
+	/*
+	 * @author eric
+	 * 
+	 * removeArrow takes in a map of parent child pairs to arrows and removes the arrow
+	 * and relationship from the pair and the arrow. This renders out to the GUI and also
+	 * updates the back end environment
+	 */
 	private BiConsumer<? super ParentChildPair, ? super Arrow> removeArrow() {
 		return (ParentChildPair pair, Arrow arrow) -> {
 			arrowLayout.getChildren().remove(arrow);
