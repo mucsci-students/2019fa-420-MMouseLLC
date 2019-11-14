@@ -7,17 +7,28 @@ import data.UMLEnvironment;
 import data.UMLItem;
 import utility.Console;
 
+/**
+ * Testing delete
+ *
+ */
 public class Delete {
 	/** The UMLEnvironment. */
 	  private UMLEnvironment env;
 	  private Console c = new Console();
 	  
-	  @Before
+	/**
+	 * Start the environment for test 
+	 */
+	@Before
 	  public void setEnv() {
 	    env = c.getUMLEnvironment();
 	  }
 	
-	  public String list(){
+	/**
+	 * Slick method for building up list of items
+	 * @return formatted list of items
+	 */
+	public String list(){
 		  String buildUp = "[ ";
 		  for (UMLItem i : env.getItems()){
 			  buildUp += i.getName() + " ";
@@ -27,6 +38,9 @@ public class Delete {
 	  }
 
 	
+	/**
+	 *  Test delete regularly
+	 */
 	@Test
 	public void testDelete() {
 		String[] input = {"add", "matt"};
@@ -43,6 +57,9 @@ public class Delete {
 		
 	}
 	
+	/**
+	 * Test delete when something does not exist
+	 */
 	@Test
 	public void testDeleteNotExist() {
 		String[] input = new String[3];

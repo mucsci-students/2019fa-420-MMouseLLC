@@ -51,7 +51,7 @@ public class GUIEnvironment extends UMLEnvironment {
 	/**
 	 * Returns value for given key item, null if key item not in map
 	 * @param item
-	 * @return
+	 * @return UMLItem
 	 */
 	public GUITile getTileFor(UMLItem item) {
 		return tileMapping.get(item);
@@ -102,7 +102,7 @@ public class GUIEnvironment extends UMLEnvironment {
 	/**
 	 * Filters all managed arrow relationships given a UMLItem
 	 * @param item
-	 * @return
+	 * @return Hashmap of arrow relationship
 	 */
 	public HashMap<ParentChildPair, Arrow> getRelationshipsFor(UMLItem item) {
 		return (HashMap<ParentChildPair, Arrow>) arrowMapping.entrySet().stream()

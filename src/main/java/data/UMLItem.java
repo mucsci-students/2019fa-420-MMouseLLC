@@ -3,7 +3,7 @@ package data;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-/*
+/**
  * UMLItem is a class that represents a single item in the UML Environment.
  * Getters and Setters are created here to define Id, Name, Parent, Children
  * and Attributes for the UMLItem.
@@ -49,8 +49,8 @@ public class UMLItem {
 	 * 
 	 * @param Id
 	 * @param Name
-	 * @param Parent- Single UMLItem
-	 * @param Child-  Single UMLItem
+	 * @param Parent Single UMLItem
+	 * @param Child  Single UMLItem
 	 */
 	public UMLItem(int id, String name, UMLItem parent, UMLItem child) {
 		this.id = id;
@@ -116,7 +116,7 @@ public class UMLItem {
 	/**
 	 * Return name associated with this class
 	 * 
-	 * @return
+	 * @return String name
 	 */
 	public String getName() {
 		return this.name;
@@ -343,7 +343,7 @@ public class UMLItem {
 	/**
 	 * Getter for parents list
 	 * 
-	 * @return
+	 * @return parents list
 	 */
 	@Deprecated
 	public ArrayList<UMLItem> getParents() {

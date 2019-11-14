@@ -25,6 +25,9 @@ public class Console {
 	/** The UMLEnvironment. */
 	private UMLEnvironment env;
 
+	/**
+	 * Setup environment
+	 */
 	public Console() {
 		this.env = new UMLEnvironment();
 	}
@@ -194,6 +197,10 @@ public class Console {
 		System.out.println(env.listClasses());
 	}
 	
+	/**
+	 * Console list everything associated with a provided class name
+	 * @param input name of Class
+	 */
 	public void listClass(String[] input) {
 		if (input.length < 2) {
 			logger.warning("Usage: list_class [className]");
@@ -347,7 +354,6 @@ public class Console {
 	 * Remove a class relationship from the environment
 	 * Command: remove_relationship [parentClass] [childClass] 
 	 * @param input
-	 * @return
 	 */
 	public void removeRelationship(String[] input) {
 		if (input.length != 3) {
@@ -373,6 +379,9 @@ public class Console {
 		env.listRelationships();
 	}
 	
+	/**
+	 * List all of the relationships in the running environment
+	 */
 	public void listRelationships() {
 		System.out.println(env.listRelationships());
 	}
