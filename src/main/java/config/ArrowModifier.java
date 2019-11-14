@@ -5,40 +5,43 @@ import data.GUIEnvironment;
 import data.UMLItem;
 import utility.GUITile;
 
+/**
+ * @author eric
+ * 
+ * ArrowModifer is an object that takes in a parent and a child to be created. 
+ * This modifier represents the changes happening to the arrow that connects
+ * the inputed parent and child. The functions makeNewArrow does the math for the
+ * creation of an arrow when none exists. The other function updateArrow takes advantage
+ * of each tile's "virtual x and y" which is where they are while dragging or after rendering
+ * when created or modified. This virtual address is how the arrows can be updated while dragging
+ * and dropping and rendering of the new heights and widths. 
+ */
 public class ArrowModifier {
-	
-	/*
-	 * @author eric
-	 * 
-	 * ArrowModifer is an object that takes in a parent and a child to be created. 
-	 * This modifier represents the changes happening to the arrow that connects
-	 * the inputed parent and child. The functions makeNewArrow does the math for the
-	 * creation of an arrow when none exists. The other function updateArrow takes advantage
-	 * of each tile's "virtual x and y" which is where they are while dragging or after rendering
-	 * when created or modified. This virtual address is how the arrows can be updated while dragging
-	 * and dropping and rendering of the new heights and widths. */
-	
 	
 	UMLItem parent = new UMLItem();
 	UMLItem child = new UMLItem();
 
+	/**
+	 * 
+	 * @param parent
+	 * @param child
+	 */
 	public ArrowModifier(UMLItem parent , UMLItem child) {
 		this.parent = parent;
 		this.child = child;
 	}
 	
 	
-	
+	/**
+	 * Make new arrow for the modifier's child and parent. Takes in an environment which the parent and child
+	 * have been created and creates the first arrow made in between them both. Based on the position of the tiles
+	 * this function automatically figures out from where on each tile it should be drawn to and from. 
+	 * 
+	 * @author eric
+	 * 
+	 * @return new arrow to be used after rendering
+	 */
 	public Arrow makeNewArrow(GUIEnvironment env) {
-		/**
-		 * Make new arrow for the modifier's child and parent. Takes in an environment which the parent and child
-		 * have been created and creates the first arrow made in between them both. Based on the position of the tiles
-		 * this function automatically figures out from where on each tile it should be drawn to and from. 
-		 * 
-		 * @author eric
-		 * 
-		 * @return new arrow to be used after rendering
-		 */
 		GUITile childTile = env.getTileFor(child);
 		GUITile parentTile = env.getTileFor(parent);
 		child.addParent(parent);
@@ -109,17 +112,16 @@ public class ArrowModifier {
 			return new Arrow(parentCoords[0], parentCoords[1], childCoords[0], childCoords[1], 5);
 		}
 	}
+	/**
+	 * Update arrow for the modifier's child and parent. Takes in an environment which the parent and child
+	 * have been modified and creates the new arrow made in between them both. Based on the position of the tiles
+	 * this function automatically figures out from where on each tile it should be drawn to and from. 
+	 * 
+	 * @author eric
+	 * 
+	 * @return new arrow to be used during rendering
+	 */
 	public Arrow updateArrow(GUIEnvironment env) {
-		
-		/**
-		 * Update arrow for the modifier's child and parent. Takes in an environment which the parent and child
-		 * have been modified and creates the new arrow made in between them both. Based on the position of the tiles
-		 * this function automatically figures out from where on each tile it should be drawn to and from. 
-		 * 
-		 * @author eric
-		 * 
-		 * @return new arrow to be used during rendering
-		 */
 		GUITile parentTile = env.getTileFor(parent);
 		GUITile childTile = env.getTileFor(child);
 		
