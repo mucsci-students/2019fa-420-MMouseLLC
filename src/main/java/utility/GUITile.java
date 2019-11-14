@@ -5,12 +5,13 @@ import javafx.scene.layout.*;
 
 public class GUITile extends Pane {
 	/*
-	 * final ToggleGroup group = new ToggleGroup(); ToggleButton displayMode = new
-	 * ToggleButton("Display Mode"); ToggleButton editMode = new
-	 * ToggleButton("Edit Mode");
+	 * @author eric
+	 * 
+	 * GUITile is the graphical representation of an UMLItem in the environment
+	 * It keeps track of all the things that makes an UMLItem and builds a usuable 
+	 * pane for the GUI interface. 
+	 * 
 	 */
-
-	// TilePane tile = new TilePane();
 	TextField textBox = new TextField("Enter Text");
 	TextField nameBox = new TextField("EnterName");
 	Label nameLabel = new Label(this.nameBox.getText());
@@ -27,7 +28,14 @@ public class GUITile extends Pane {
 	boolean hasAttr = false;
 
 	public double sceneX, sceneY, layoutX, layoutY;
-
+	/**
+	 * @author eric
+	 * 
+	 * This is the initial constructor to build a tile. 
+	 * calling all the functions needed to create each part of the tile
+	 * serperately. 
+	 * 
+	 */
 	public GUITile() {
 		buildPane();
 		buildNameBox();
@@ -40,7 +48,26 @@ public class GUITile extends Pane {
 		buildRemoveButton();
 		buildChildButton();
 	}
-
+	/**
+	 * @author eric
+	 * get virtual x keeps track of the current translate and layout which is while
+	 * it is being rendered in the environment. 
+	 */
+	public double getVirtualX() {
+		return this.pane.getLayoutX() + this.pane.getTranslateX();
+	}
+	/**
+	 * @author eric
+	 * get virtual y keeps track of the current translate and layout which is while
+	 * it is being rendered in the environment. 
+	 */
+	public double getVirtualY() {
+		return this.pane.getLayoutY() + this.pane.getTranslateY();
+	}
+	/**
+	 * @author eric
+	 * buildpane makes the make pane that hold the name, attr, buttons etc
+	 */
 	public void buildPane() {
 		this.pane.setMaxWidth(150);
 		this.pane.setMinWidth(150);
@@ -49,7 +76,10 @@ public class GUITile extends Pane {
 		this.pane.setLayoutY(100);
 		this.pane.setStyle("-fx-background-color: #eee; -fx-border-color: #000; -fx-border-width: 1;");
 	}
-
+	/**
+	 * @author eric
+	 * build name box is the box needed to enter the name initially when creating a tile
+	 */
 	public void buildNameBox() {
 		this.nameBox.setLayoutX(10);
 		this.nameBox.setLayoutY(20);
@@ -57,7 +87,11 @@ public class GUITile extends Pane {
 		this.nameBox.setMinWidth(120);
 		this.pane.getChildren().add(this.nameBox);
 	}
-
+	/**
+	 * @author eric
+	 * build name panel is the panel created after the add button is hit.
+	 * it takes the name out of the name box, sets its own name.
+	 */
 	public void buildNamePanel() {
 		this.nameLabel.setLayoutX(10);
 		this.nameLabel.setLayoutY(20);
@@ -66,7 +100,11 @@ public class GUITile extends Pane {
 		this.nameLabel.setVisible(false);
 		this.pane.getChildren().add(this.nameLabel);
 	}
-
+	/**
+	 * @author eric
+	 * build attr button makes the add attribute button for adding attributes
+	 * to the main pane
+	 */
 	public void buildAddAttrButton() {
 		this.addAttr.setLayoutX(10);
 		this.addAttr.setLayoutY(70);
@@ -75,7 +113,11 @@ public class GUITile extends Pane {
 		this.addAttr.setMinSize(120, 30);
 		this.pane.getChildren().add(this.addAttr);
 	}
-
+	/**
+	 * @author eric
+	 * build remove attr button makes the remove attribute button for removing attributes
+	 * from the main pane
+	 */
 	public void buildRemAttrButton() {
 		this.removeAttr.setLayoutX(10);
 		this.removeAttr.setLayoutY(110);
@@ -84,14 +126,21 @@ public class GUITile extends Pane {
 		this.removeAttr.setMinSize(120, 30);
 		this.pane.getChildren().add(this.removeAttr);
 	}
-
+	/**
+	 * @author eric
+	 * build attr label makes the label for attributes after adding attributes
+	 * to the main pane. this displays them after adding. 
+	 */
 	public void buildAttrLabel() {
 		this.displayAttr.setLayoutX(10);
 		this.displayAttr.setLayoutY(45);
 		this.displayAttr.setVisible(true);
 		this.pane.getChildren().add(this.displayAttr);
 	}
-
+	/**
+	 * @author eric
+	 * build edit button makes the edit button for editting the name of the tile
+	 */
 	private void buildEditButton() {
 		this.edit.setLayoutY(150);
 		this.edit.setLayoutX(10);
@@ -100,7 +149,10 @@ public class GUITile extends Pane {
 		this.edit.setVisible(false);
 		this.pane.getChildren().add(this.edit);
 	}
-
+	/**
+	 * @author eric
+	 * build add button makes the ad button for adding the tile to the environment 
+	 */
 	public void buildAddButton() {
 		this.add.setLayoutY(110);
 		this.add.setLayoutX(10);
@@ -108,7 +160,11 @@ public class GUITile extends Pane {
 		this.add.setMinSize(120, 30);
 		this.pane.getChildren().add(this.add);
 	}
-
+	/**
+	 * @author eric
+	 * build remove button makes the remove button for removing the tile from the 
+	 * environment
+	 */
 	public void buildRemoveButton() {
 		this.remove.setLayoutY(1);
 		this.remove.setLayoutX(1);
