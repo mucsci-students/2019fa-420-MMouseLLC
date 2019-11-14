@@ -278,14 +278,15 @@ public class GUI extends Application {
 		primary.setScene(scene);
 		primary.show();
 	}
-
+	
+	/**
+	 * @author eric t.add button event is a handler for saving an individual item
+	 * into the environment. it will check if adding was successful or not. if
+	 * success a confirmation window will appear. if fail an error window will
+	 * appear.
+	 */
 	public void setAddButtonAction(GUITile t) {
-		/*
-		 * @author eric t.add button event is a handler for saving an individual item
-		 * into the environment. it will check if adding was successful or not. if
-		 * success a confirmation window will appear. if fail an error window will
-		 * appear.
-		 */
+		
 		t.add.setOnAction((event) -> {
 			String[] nameTest = t.nameBox.getText().split(" ");
 
@@ -368,15 +369,15 @@ public class GUI extends Application {
 		});
 	}
 
+	/**
+	 * @author eric t.edit button event will appear after the confirmation of the
+	 * add class. the edit button will take in the old name of the selected class
+	 * and ask in a dialog box for a new name for the class. after input is entered
+	 * the new name will be checked if it exists, if it does not the class will be
+	 * changed to that name, if it does exist the user will be prompted to enter a
+	 * new name instead.
+	 */
 	public void setEditButtonAction(GUITile t) {
-		/*
-		 * @author eric t.edit button event will appear after the confirmation of the
-		 * add class. the edit button will take in the old name of the selected class
-		 * and ask in a dialog box for a new name for the class. after input is entered
-		 * the new name will be checked if it exists, if it does not the class will be
-		 * changed to that name, if it does exist the user will be prompted to enter a
-		 * new name instead.
-		 */
 
 		t.edit.setOnAction((event) -> {
 			TextInputDialog input = new TextInputDialog();
@@ -421,12 +422,13 @@ public class GUI extends Application {
 		});
 	}
 
+	/**
+	 * @author eric t.remove button event is set to remove an item from the
+	 * environment and also from the gui's main display when remove button is
+	 * pressed on a specific uml item.
+	 */
 	public void setRemoveButtonAction(GUITile t, Group layout) {
-		/*
-		 * @author eric t.remove button event is set to remove an item from the
-		 * environment and also from the gui's main display when remove button is
-		 * pressed on a specific uml item.
-		 */
+		
 		t.remove.setOnAction((event) -> {
 			Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Delete " + t.nameBox.getText() + "? ",
 					ButtonType.YES, ButtonType.NO);
@@ -443,7 +445,8 @@ public class GUI extends Application {
 
 		});
 	}
-	/*
+	
+	/**
 	 * @author eric
 	 * 
 	 * setAddAttributeAction is an action listener on the add attr button in the tile. This button
@@ -514,7 +517,8 @@ public class GUI extends Application {
 
 		});
 	}
-	/*
+	
+	/**
 	 * @author matt and eric
 	 * 
 	 * setAddChildAction sets an action listener to the tile for the add child button.
@@ -566,7 +570,7 @@ public class GUI extends Application {
 		});
 	}
 	
-	/*
+	/**
 	 * @author eric
 	 * 
 	 * setMoveTileAction sets and event listener onto a tile that will allow is to 
@@ -609,7 +613,8 @@ public class GUI extends Application {
 			env.getRelationshipsFor(item).forEach(updateArrowWithParent());
 		});
 	}
-	/*
+	
+	/**
 	 * @author eric
 	 * 
 	 * setRemoveAttrButton sets an event listener to listen for when the remove attribute button is 

@@ -3,19 +3,20 @@ package utility;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 
+/**
+ * @author eric
+ * 
+ * GUITile is the graphical representation of an UMLItem in the environment
+ * It keeps track of all the things that makes an UMLItem and builds a usuable 
+ * pane for the GUI interface. 
+ * 
+ */
 public class GUITile extends Pane {
-	/*
-	 * @author eric
-	 * 
-	 * GUITile is the graphical representation of an UMLItem in the environment
-	 * It keeps track of all the things that makes an UMLItem and builds a usuable 
-	 * pane for the GUI interface. 
-	 * 
-	 */
 	TextField textBox = new TextField("Enter Text");
 	TextField nameBox = new TextField("EnterName");
 	Label nameLabel = new Label(this.nameBox.getText());
 	TextArea textArea = new TextArea();
+	/** Square holding everything in GUI */
 	public Pane pane = new Pane();
 	Button add = new Button("Add Class");
 	Button edit = new Button("Edit Name");
@@ -27,7 +28,9 @@ public class GUITile extends Pane {
 	Label displayAttr = new Label("");
 	boolean hasAttr = false;
 
+	/** Coordinates for where offsets will be in GUI pane */
 	public double sceneX, sceneY, layoutX, layoutY;
+	
 	/**
 	 * @author eric
 	 * 
@@ -175,6 +178,9 @@ public class GUITile extends Pane {
 		this.pane.getChildren().add(this.remove);
 	}
 
+	/**
+	 * Make button for removing child button from env
+	 */
 	public void buildChildButton() {
 		this.addChild.setLayoutY(190);
 		this.addChild.setLayoutX(10);
