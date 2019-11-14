@@ -1,5 +1,11 @@
 package data;
 
+/**
+ * Storage of a Relationship between two UMLItem objects
+ * Original intent is used in UMLEnvironment as a list of relationships
+ * @author Matt Fossett
+ *
+ */
 public class Relationship extends ParentChildPair{
     
     private int quantifier;
@@ -32,7 +38,7 @@ public class Relationship extends ParentChildPair{
     
     /**
      * Return the int representation of the contained quantifier
-     * @return
+     * @return int quantifier
      */
     public int getQuantifier() {
     	return quantifier;
@@ -49,7 +55,7 @@ public class Relationship extends ParentChildPair{
     
     /**
      * Return quantifier as its verbose String name
-     * @return
+     * @return String of Quantifier names
      */
     public String getQuantifierName() {
     	return quantifierNames[quantifier];

@@ -1,15 +1,8 @@
 package utility;
 
-import java.awt.AWTException;
-import java.awt.Event;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 import java.util.function.BiConsumer;
-import java.util.function.BiFunction;
-import java.util.function.Function;
-
 import config.ArrowModifier;
 import data.Arrow;
 import data.GUIEnvironment;
@@ -22,12 +15,8 @@ import javafx.scene.Scene;
 import javafx.stage.*;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
-import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
 
-import java.awt.Robot;
-
-/*
+/**
  * @author eric 
  * @author grant
  * @author Matt
@@ -49,7 +38,7 @@ public class GUI extends Application {
 	private ToggleButton displayMode = new ToggleButton("Display Mode");
 	private ToggleButton editMode = new ToggleButton("Edit Mode");
 
-	/*
+	/**
 	 * @author eric main calls the built in application function "launch" to create
 	 * the initial window
 	 */
@@ -57,7 +46,7 @@ public class GUI extends Application {
 		launch(args);
 	}
 
-	/*
+	/**
 	 * @author eric start is built in but here is overridden so we can call our own
 	 * start routine when the gui is created.
 	 */
@@ -66,7 +55,7 @@ public class GUI extends Application {
 		buildWindow(primary);
 	}
 
-	/*
+	/**
 	 * @author eric increase size is adding the size of open windows inside the gui
 	 * area. these are not all necessarily saved items in the environment.
 	 */
@@ -74,7 +63,7 @@ public class GUI extends Application {
 		this.size++;
 	}
 
-	/*
+	/**
 	 * @author eric get size returns the amount of open windows in the gui window.
 	 * these are not all necessarily saved in the environment.
 	 */
@@ -86,7 +75,7 @@ public class GUI extends Application {
 		this.size = size;
 	}
 
-	/*
+	/**
 	 * @author eric build window sets up the size of the window and the event
 	 * listeners needed to function inside the environment. Add, edit, delete should
 	 * all be made on their respected buttons for each individual item inside the

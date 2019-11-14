@@ -2,7 +2,6 @@ package config;
 
 import data.Arrow;
 import data.GUIEnvironment;
-import data.UMLEnvironment;
 import data.UMLItem;
 import utility.GUITile;
 

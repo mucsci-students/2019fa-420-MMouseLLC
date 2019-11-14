@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
 
-/*
+/**
  * UMLEnvironment is an object meant to keep track of all the UMLItems that 
  * exist at any given point in the running of the program. The purpose of this 
  * class will be to help define what can and cannot be used during the duration
@@ -20,16 +20,13 @@ public class UMLEnvironment {
   ArrayList<UMLItem> items;
   ArrayList<Relationship> relationships;
 
+  /**
+   * Construct a new UMLEnvironment
+   */
   public UMLEnvironment() {
     this.items = new ArrayList<>();
     this.relationships = new ArrayList<>();
     
-  }
-
-  public UMLEnvironment(UMLItem item) {
-    this.items = new ArrayList<>();
-    this.items.add(item);
-    this.relationships = new ArrayList<>();
   }
 
   /**
@@ -41,12 +38,10 @@ public class UMLEnvironment {
    */
   public UMLItem findItem(String itemName) {
     for (UMLItem i : items) {
-      if (i.getName().equals(itemName)) {
-        //System.out.println("Class " + itemName + " found.");
+      if (i.getName().equals(itemName)) { 
         return i;
       }
     }
-    //logger.warning("Class " + itemName + " not found.");
     return null;
   }
 
@@ -139,9 +134,6 @@ public class UMLEnvironment {
     builder.append("]");
     return builder.toString();
   }
-  
-  
-  
 
   /**
    * Adds a child to a parent in the environment. Checks if the child/parent
@@ -273,7 +265,7 @@ public class UMLEnvironment {
    * Find and return Relationship r in list of relationships
    *   else return null
    * @param r
-   * @return
+   * @return Relationship or null if not found
    */
   public Relationship findRelationship(Relationship r) {
 	  for (Relationship i : relationships) {
@@ -288,7 +280,7 @@ public class UMLEnvironment {
    * Find and return a Relationship 
    * @param parent
    * @param child
-   * @return
+   * @return Relationship or null if not found
    */
   public Relationship findRelationship(UMLItem parent, UMLItem child) {
 	  for (Relationship i : relationships) {
@@ -299,6 +291,10 @@ public class UMLEnvironment {
 	  return null;
   }
   
+  /**
+   * 
+   * @return ArrayList of running relationships
+   */
   public ArrayList<Relationship> getRelationships(){
 	  return relationships;
   }
@@ -337,7 +333,7 @@ public class UMLEnvironment {
    * Given a map String=>String, return a String in Array style showing all members
    * Ex: [ { height: int } { Matt: String } ] 
    * @param m
-   * @return
+   * @return Human Readable String of Map
    */
   public String listMap(HashMap<String, String> m) {
 		StringBuilder s = new StringBuilder();
@@ -376,7 +372,7 @@ public class UMLEnvironment {
   /**
    * Builds string containing verbose info on every class in environment
    *   Calls listClass
-   * @return
+   * @return Human readable String
    */
   public String listClassesVerbose() {
 	  StringBuilder s = new StringBuilder();
