@@ -11,7 +11,7 @@ import utility.Console;
  * Testing delete
  *
  */
-public class Delete {
+public class DeleteTest {
 	/** The UMLEnvironment. */
 	  private UMLEnvironment env;
 	  private Console c = new Console();

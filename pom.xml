@@ -44,23 +44,24 @@
         <version>0.7.6.201602180812</version>
         <executions>
           <execution>
-            <id>prepare-agent</id>
+            <id>prepare-integration-tests</id>
+            <phase>pre-integration-test</phase>
             <goals>
               <goal>prepare-agent</goal>
             </goals>
-          </execution>
-	  <execution>
-            <id>coverage-initialize</id>
-            <goals>
-              <goal>prepare-agent</goal>
-            </goals>
+            <configuration>
+              <destFile>${basedir}/target/coverage-reports/jacoco-unit.exec</destFile>
+            </configuration>
           </execution>
           <execution>
-            <id>coverage-report</id>
+            <id>jacoco-site</id>
             <phase>post-integration-test</phase>
             <goals>
               <goal>report</goal>
             </goals>
+            <configuration>
+              <dataFile>${basedir}/target/coverage-reports/jacoco-unit.exec</dataFile>
+            </configuration>
           </execution>
         </executions>
       </plugin>
