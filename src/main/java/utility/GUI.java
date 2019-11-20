@@ -557,7 +557,7 @@ public class GUI extends Application {
 			UMLItem child = env.findItem(nameTest[0]);
 			UMLItem parent = env.findItem(t.nameBox.getText());
 			ArrowModifier mod = new ArrowModifier(parent, child);
-			Arrow arr = mod.makeNewArrow(env);
+			Arrow arr = mod.makeNewArrow(env, layout);
 			arrowLayout.getChildren().add(arr);
 			env.addArrow(parent, child, arr);
 			if (child == null) {
