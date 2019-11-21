@@ -2,6 +2,7 @@ package config;
 
 import data.Arrow;
 import data.GUIEnvironment;
+import data.Relationship;
 import data.UMLItem;
 import utility.GUITile;
 
@@ -44,9 +45,11 @@ public class ArrowModifier {
 	public Arrow makeNewArrow(GUIEnvironment env) {
 		GUITile childTile = env.getTileFor(child);
 		GUITile parentTile = env.getTileFor(parent);
-		child.addParent(parent);
-		parent.addChild(child);
+		//TODO
+		//child.addParent(parent);
+		//parent.addChild(child);
 		
+		env.addRelationship(new Relationship(parent, child));
 		//if child is on the right of the parent
 		if((parentTile.pane.getLayoutX() + parentTile.pane.getWidth()) < childTile.pane.getLayoutX()) {
 			//If child is above and to the right do this arrow draw:
