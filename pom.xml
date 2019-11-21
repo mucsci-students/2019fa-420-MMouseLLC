@@ -37,16 +37,25 @@
 	<configuration>
           <forkCount>0</forkCount>
         </configuration>
-      </plugin>
       <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>cobertura-maven-plugin</artifactId>
-        <version>2.7</version>
-          <configuration>
-            <format>xml</format>
-           <maxmem>256m</maxmem>
-           <!-- aggregated reports for multi-module projects -->
-            <aggregate>true</aggregate>
+        <groupId>com.github.timurstrekalov</groupId>
+        <artifactId>saga-maven-plugin</artifactId>
+        <version>1.5.5</version>
+        <executions>
+          <execution>
+              <goals>
+                  <goal>coverage</goal>
+              </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <baseDir>http://localhost:${jasmine.serverPort}</baseDir>
+          <outputDir>${project.build.directory}/saga-coverage</outputDir>
+          <noInstrumentPatterns>
+              <pattern>.*/spec/.*</pattern>
+              <pattern>.*/classpath/.*</pattern>
+              <pattern>.*/webjars/.*</pattern>
+          </noInstrumentPatterns>
         </configuration>
       </plugin>
       <plugin>
@@ -135,6 +144,12 @@
       <artifactId>cobertura</artifactId>
       <version>2.1.1</version>
       <scope>test</scope>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/com.github.timurstrekalov/saga-maven-plugin -->
+    <dependency>
+      <groupId>com.github.timurstrekalov</groupId>
+      <artifactId>saga-maven-plugin</artifactId>
+      <version>1.5.5</version>
     </dependency>
   </dependencies>
 </project>
