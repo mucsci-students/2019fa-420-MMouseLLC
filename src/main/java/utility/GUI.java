@@ -7,6 +7,7 @@ import config.ArrowModifier;
 import data.Arrow;
 import data.GUIEnvironment;
 import data.ParentChildPair;
+import data.Relationship;
 import data.UMLItem;
 import javafx.application.Application;
 import javafx.event.*;
@@ -213,7 +214,7 @@ public class GUI extends Application {
 		 * based on which tile is selected.
 		 */
 		EventHandler<ActionEvent> clickAddEvent = new EventHandler<ActionEvent>() {
-
+			
 			public void handle(ActionEvent e) {
 				GUITile t = new GUITile();
 				if (getSize() == 0) {
@@ -756,8 +757,11 @@ public class GUI extends Application {
 			arrowLayout.getChildren().remove(arrow);
 			env.removeArrow(pair.getParent(), pair.getChild());
 			env.removeArrow(pair.getChild(), pair.getParent());
-			pair.getChild().removeParent(pair.getParent());
-			pair.getParent().removeChild(pair.getChild());
+			//TODO remove these comments
+			//pair.getChild().removeParent(pair.getParent());
+			//pair.getParent().removeChild(pair.getChild());
+			Relationship r = env.findRelationship(pair.getParent(), pair.getChild());
+			env.removeRelationship(r);
 			
 		};
 	}
