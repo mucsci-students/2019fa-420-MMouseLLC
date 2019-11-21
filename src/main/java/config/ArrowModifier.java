@@ -47,13 +47,12 @@ public class ArrowModifier {
 	}
 
 	public Label removeQuant(Group layout) {
-		Label dummyLabel = new Label();
 		quantLabel.setText("");
-		layout.getChildren().remove(quantLabel);
+		layout.getChildren().add(quantLabel);
 		layout.getChildren().remove(editQuant);
 		layout.getChildren().remove(quantBox);
 		layout.getChildren().remove(quantButton);
-		return dummyLabel;
+		return quantLabel;
 	}
 
 	/**
