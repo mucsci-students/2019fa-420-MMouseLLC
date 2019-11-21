@@ -8,7 +8,6 @@
   <properties>
      <maven.compiler.source>11</maven.compiler.source>
      <maven.compiler.target>11</maven.compiler.target>
-     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
   <build>
     <plugins>
@@ -27,7 +26,6 @@
         <configuration>
           <source>11</source>
           <target>11</target>
-	  <encoding>UTF-8</encoding>
         </configuration>        
       </plugin>
       <plugin>
@@ -37,26 +35,19 @@
 	<configuration>
           <forkCount>0</forkCount>
         </configuration>
+      </plugin>
       <plugin>
-        <groupId>com.github.timurstrekalov</groupId>
-        <artifactId>saga-maven-plugin</artifactId>
-        <version>1.5.5</version>
+        <groupId>org.jacoco</groupId>
+        <artifactId>jacoco-maven-plugin</artifactId>
+        <version>0.7.6.201602180812</version>
         <executions>
           <execution>
-              <goals>
-                  <goal>coverage</goal>
-              </goals>
+            <id>prepare-agent</id>
+            <goals>
+              <goal>prepare-agent</goal>
+            </goals>
           </execution>
         </executions>
-        <configuration>
-          <baseDir>http://localhost:${jasmine.serverPort}</baseDir>
-          <outputDir>${project.build.directory}/saga-coverage</outputDir>
-          <noInstrumentPatterns>
-              <pattern>.*/spec/.*</pattern>
-              <pattern>.*/classpath/.*</pattern>
-              <pattern>.*/webjars/.*</pattern>
-          </noInstrumentPatterns>
-        </configuration>
       </plugin>
       <plugin>
     	<groupId>org.eluder.coveralls</groupId>
@@ -137,19 +128,6 @@
       <artifactId>javafx-controls</artifactId>
       <version>11</version>
       <type>pom</type>
-    </dependency>
-    <!-- Dependency needed for maven to use cobertura -->
-    <dependency>
-      <groupId>net.sourceforge.cobertura</groupId>
-      <artifactId>cobertura</artifactId>
-      <version>2.1.1</version>
-      <scope>test</scope>
-    </dependency>
-    <!-- https://mvnrepository.com/artifact/com.github.timurstrekalov/saga-maven-plugin -->
-    <dependency>
-      <groupId>com.github.timurstrekalov</groupId>
-      <artifactId>saga-maven-plugin</artifactId>
-      <version>1.5.5</version>
     </dependency>
   </dependencies>
 </project>
