@@ -226,8 +226,6 @@ public class GUI extends Application {
 					t.pane.setTranslateY(0);
 					t.layoutX = t.pane.getLayoutX();
 					t.layoutY = t.pane.getLayoutY();
-					// t.pane.setLayoutX(getSize() * TILE_OFFSET); <- old way for not stacking on
-					// creation
 				}
 				layout.getChildren().add(t.pane);
 				increaseSize();
@@ -322,6 +320,10 @@ public class GUI extends Application {
 					t.nameBox.setVisible(false);
 					t.nameLabel.setVisible(true);
 					t.nameLabel.setText(t.nameBox.getText());
+					if(t.nameLabel.getText().toString().length() > 17) {
+						t.pane.setMinWidth(t.pane.getWidth() + (t.nameLabel.getText().toString().length() - 19) * 8);
+						t.nameLabel.setMinWidth(t.pane.getWidth() + (t.nameLabel.getText().toString().length() - 19) * 8);
+					}
 					t.edit.setVisible(true);
 					t.remove.setVisible(true);
 					t.addAttr.setVisible(true);
@@ -338,6 +340,10 @@ public class GUI extends Application {
 					t.nameBox.setVisible(false);
 					t.nameLabel.setVisible(true);
 					t.nameLabel.setText(t.nameBox.getText());
+					if(t.nameLabel.getText().toString().length() > 17) {
+						t.pane.setMinWidth(t.pane.getWidth() + (t.nameLabel.getText().toString().length() - 19) * 8);
+						t.nameLabel.setMinWidth(t.pane.getWidth() + (t.nameLabel.getText().toString().length() - 19) * 8);
+					}
 					t.edit.setVisible(false);
 					t.remove.setVisible(false);
 					t.addAttr.setVisible(false);
@@ -357,15 +363,15 @@ public class GUI extends Application {
 						t.nameBox.getText() + " could not be added. Name already exists.\nPlease choose another name.");
 				b.show();
 			}
-			t.pane.setLayoutX(t.layoutX + t.pane.getTranslateX() + 10);
-			t.pane.setLayoutY(t.layoutY + t.pane.getTranslateY() + 10);
+			t.pane.setLayoutX(t.getVirtualX());
+			t.pane.setLayoutY(t.getVirtualY());
 			t.layoutX = t.pane.getLayoutX();
 			t.layoutY = t.pane.getLayoutY();
 
 			t.pane.setTranslateX(0);
 			t.pane.setTranslateY(0);
-			t.pane.setLayoutX(10);
-			t.pane.setLayoutY(110);
+			//t.pane.setLayoutX(10);
+			//t.pane.setLayoutY(110);
 		});
 	}
 
@@ -407,8 +413,26 @@ public class GUI extends Application {
 				env.editItem(t.nameBox.getText(), answer.get(), env.findItem(t.nameBox.getText()));
 
 				if (env.findItem(answer.get()) != null) {
+					if(answer.get().toString().length() < t.nameBox.getText().toString().length()) {
+						t.pane.setMaxWidth(t.pane.getWidth() + (answer.get().toString().length() - 17) * 8);
+					}
 					t.nameBox.setText(answer.get());
 					t.nameLabel.setText(answer.get());
+					UMLItem found = env.findItem(t.nameLabel.getText());
+					ArrayList<String> testArr = new ArrayList<String>(found.getAttributes());
+					String newAttr = "";
+					for (int i = 0; i < testArr.size(); i++) {
+						newAttr += "\u2022" + testArr.get(i).toString() + "\n";
+					}
+					int maxAttr = 0;
+					for(int i = 0; i < testArr.size(); i++) {
+						if(testArr.get(i).toString().length() > 17 && testArr.get(i).toString().length() > maxAttr) {
+							maxAttr = testArr.get(i).toString().length();
+						}
+					}
+					if(maxAttr > t.nameBox.getText().toString().length()) {
+						t.pane.setMaxWidth(t.pane.getWidth() + (maxAttr - 17) * 8);
+					}
 				} else {
 					Alert b = new Alert(Alert.AlertType.ERROR,
 							answer.get() + " already exists. Please choose another name.");
@@ -497,6 +521,15 @@ public class GUI extends Application {
 					for (int i = 0; i < test.size(); i++) {
 						newAttr = t.displayAttr.getText() + "\u2022" + test.get(i).toString() + "\n";
 						t.displayAttr.setText(newAttr);
+					}
+					int maxAttr = 0;
+					for(int i = 0; i < test.size(); i++) {
+						if(test.get(i).toString().length() > 17 && test.get(i).toString().length() > maxAttr) {
+							maxAttr = test.get(i).toString().length();
+						}
+					}
+					if(maxAttr > t.nameBox.getText().toString().length()) {
+						t.pane.setMaxWidth(t.pane.getWidth() + (maxAttr - 17) * 8);
 					}
 					t.pane.setMinHeight(t.pane.getHeight() + ADD_ATTR_OFFSET);
 					t.pane.setMaxHeight(t.pane.getHeight() + ADD_ATTR_OFFSET);
@@ -668,6 +701,15 @@ public class GUI extends Application {
 					String newAttr = "";
 					for (int i = 0; i < testArr.size(); i++) {
 						newAttr += "\u2022" + testArr.get(i).toString() + "\n";
+					}
+					int maxAttr = 0;
+					for(int i = 0; i < testArr.size(); i++) {
+						if(testArr.get(i).toString().length() > 17 && testArr.get(i).toString().length() > maxAttr) {
+							maxAttr = testArr.get(i).toString().length();
+						}
+					}
+					if(maxAttr > t.nameBox.getText().toString().length()) {
+						t.pane.setMaxWidth(t.pane.getWidth() + (maxAttr - 17) * 8);
 					}
 					t.displayAttr.setText(newAttr);
 					t.pane.setMinHeight(t.pane.getHeight() - ADD_ATTR_OFFSET);

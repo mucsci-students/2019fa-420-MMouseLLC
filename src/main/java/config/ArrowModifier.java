@@ -96,7 +96,7 @@ public class ArrowModifier {
 			double[] childCoords = { childTile.pane.getLayoutX(), childTile.pane.getLayoutY() };
 
 			parentCoords[0] += parentTile.pane.getWidth() / 2.0;
-			childCoords[0] += parentTile.pane.getWidth() / 2.0;
+			childCoords[0] += childTile.pane.getWidth() / 2.0;
 			childCoords[1] += childTile.pane.getHeight();
 
 			return new Arrow(parentCoords[0], parentCoords[1], childCoords[0], childCoords[1], 5);
@@ -107,7 +107,7 @@ public class ArrowModifier {
 
 			parentCoords[0] += parentTile.pane.getWidth() / 2.0;
 			parentCoords[1] += parentTile.pane.getHeight();
-			childCoords[0] += parentTile.pane.getWidth() / 2.0;
+			childCoords[0] += childTile.pane.getWidth() / 2.0;
 
 			return new Arrow(parentCoords[0], parentCoords[1], childCoords[0], childCoords[1], 5);
 		}
@@ -173,7 +173,7 @@ public class ArrowModifier {
 				double[] childCoords = { childTile.pane.getTranslateX() + childTile.layoutX, childTile.pane.getTranslateY() + childTile.layoutY  };
 
 				parentCoords[0] += parentTile.pane.getWidth() / 2.0;
-				childCoords[0] += parentTile.pane.getWidth() / 2.0;
+				childCoords[0] += childTile.pane.getWidth() / 2.0;
 				childCoords[1] += childTile.pane.getHeight();
 
 				return new Arrow(parentCoords[0], parentCoords[1], childCoords[0], childCoords[1], 5);
@@ -184,7 +184,7 @@ public class ArrowModifier {
 
 				parentCoords[0] += parentTile.pane.getWidth() / 2.0;
 				parentCoords[1] += parentTile.pane.getHeight();
-				childCoords[0] += parentTile.pane.getWidth() / 2.0;
+				childCoords[0] += childTile.pane.getWidth() / 2.0;
 
 				return new Arrow(parentCoords[0], parentCoords[1], childCoords[0], childCoords[1], 5);
 			}
