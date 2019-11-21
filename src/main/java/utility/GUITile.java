@@ -2,6 +2,7 @@ package utility;
 
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
+import javafx.scene.text.TextAlignment;
 
 /**
  * @author eric
@@ -20,12 +21,15 @@ public class GUITile extends Pane {
 	public Pane pane = new Pane();
 	Button add = new Button("Add Class");
 	Button edit = new Button("Edit Name");
-	Button remove = new Button("X");
-	Button addAttr = new Button("Add Attribute");
+	Button remove = new Button("x");
+	//Button addAttr = new Button("Add Attribute");
 	Button addChild = new Button("Add Child");
 	Button move = new Button("M");
-	Button removeAttr = new Button("Remove Attribute");
+	//Button removeAttr = new Button("Remove Attribute");
 	Label displayAttr = new Label("");
+	Button field = new Button("+");
+	Button function = new Button("+");
+	Label ffDivider = new Label("---------------");
 	boolean hasAttr = false;
 
 	/** Coordinates for where offsets will be in GUI pane */
@@ -43,13 +47,18 @@ public class GUITile extends Pane {
 		buildPane();
 		buildNameBox();
 		buildNamePanel();
-		buildAddAttrButton();
-		buildRemAttrButton();
+		//buildAddAttrButton();
+		//buildRemAttrButton();
 		buildAttrLabel();
 		buildEditButton();
 		buildAddButton();
 		buildRemoveButton();
 		buildChildButton();
+		
+		buildFieldButton();
+		buildFunctionButton();
+		buildffDividePanel();
+		
 	}
 	/**
 	 * @author eric
@@ -85,7 +94,7 @@ public class GUITile extends Pane {
 	 */
 	public void buildNameBox() {
 		this.nameBox.setLayoutX(10);
-		this.nameBox.setLayoutY(20);
+		this.nameBox.setLayoutY(30);
 		this.nameBox.setMaxWidth(120);
 		this.nameBox.setMinWidth(120);
 		this.pane.getChildren().add(this.nameBox);
@@ -97,38 +106,67 @@ public class GUITile extends Pane {
 	 */
 	public void buildNamePanel() {
 		this.nameLabel.setLayoutX(10);
-		this.nameLabel.setLayoutY(20);
+		this.nameLabel.setLayoutY(30);
 		this.nameLabel.setMaxWidth(120);
 		this.nameLabel.setMinWidth(120);
 		this.nameLabel.setVisible(false);
 		this.pane.getChildren().add(this.nameLabel);
+	}
+	
+	public void buildffDividePanel() {
+		this.ffDivider.setLayoutX(30);
+		this.ffDivider.setLayoutY(75);
+		this.ffDivider.setMaxWidth(120);
+		this.ffDivider.setMinWidth(120);
+		this.ffDivider.setVisible(false);
+		this.pane.getChildren().add(this.ffDivider);
+	}
+	
+	public void buildFieldButton() {
+		this.field.setLayoutY(50);
+		this.field.setLayoutX(1);
+		this.field.setMaxSize(26, 26);
+		this.field.setMinSize(26, 26);
+		this.field.setVisible(false);
+		this.field.setStyle("-fx-background-color: ADD8E6; -fx-text-fill: black");
+		this.pane.getChildren().add(this.field);
+	}
+	
+	public void buildFunctionButton() {
+		this.function.setLayoutY(90);
+		this.function.setLayoutX(1);
+		this.function.setMaxSize(26, 26);
+		this.function.setMinSize(26, 26);
+		this.function.setVisible(false);
+		this.function.setStyle("-fx-background-color: FFFF99;");
+		this.pane.getChildren().add(this.function);
 	}
 	/**
 	 * @author eric
 	 * build attr button makes the add attribute button for adding attributes
 	 * to the main pane
 	 */
-	public void buildAddAttrButton() {
+	/*public void buildAddAttrButton() {
 		this.addAttr.setLayoutX(10);
 		this.addAttr.setLayoutY(70);
 		this.addAttr.setVisible(false);
 		this.addAttr.setMaxSize(120, 30);
 		this.addAttr.setMinSize(120, 30);
 		this.pane.getChildren().add(this.addAttr);
-	}
+	}*/
 	/**
 	 * @author eric
 	 * build remove attr button makes the remove attribute button for removing attributes
 	 * from the main pane
 	 */
-	public void buildRemAttrButton() {
+	/*public void buildRemAttrButton() {
 		this.removeAttr.setLayoutX(10);
 		this.removeAttr.setLayoutY(110);
 		this.removeAttr.setVisible(false);
 		this.removeAttr.setMaxSize(120, 30);
 		this.removeAttr.setMinSize(120, 30);
 		this.pane.getChildren().add(this.removeAttr);
-	}
+	}*/
 	/**
 	 * @author eric
 	 * build attr label makes the label for attributes after adding attributes
@@ -171,8 +209,8 @@ public class GUITile extends Pane {
 	public void buildRemoveButton() {
 		this.remove.setLayoutY(1);
 		this.remove.setLayoutX(1);
-		this.remove.setMaxSize(15, 15);
-		this.remove.setMinSize(15, 15);
+		this.remove.setMaxSize(26, 26);
+		this.remove.setMinSize(26, 26);
 		this.remove.setVisible(true);
 		this.remove.setStyle("-fx-background-color: DD0000;");
 		this.pane.getChildren().add(this.remove);
