@@ -695,7 +695,7 @@ public class GUI extends Application {
 			UMLItem child = pair.getChild();
 
 			ArrowModifier mod = new ArrowModifier(parent, child);
-			Arrow newArrow = mod.updateArrow(env);
+			Arrow newArrow = mod.updateArrow(env, layout);
 			arrowLayout.getChildren().remove(arrow);
 			env.replaceArrow(pair, newArrow);
 			arrowLayout.getChildren().add(newArrow);
