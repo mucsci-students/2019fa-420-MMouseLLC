@@ -31,11 +31,6 @@ public class ArrowModifier {
 
 	UMLItem parent = new UMLItem();
 	UMLItem child = new UMLItem();
-	Label quantLabel = new Label();
-	Button editQuant = new Button("edit quantifier");
-	Button quantButton = new Button("add quantifier");
-	TextField quantBox = new TextField("quantifier");
-
 	/**
 	 * 
 	 * @param parent
@@ -45,16 +40,6 @@ public class ArrowModifier {
 		this.parent = parent;
 		this.child = child;
 	}
-
-	public Label removeQuant(Group layout) {
-		quantLabel.setText("");
-		layout.getChildren().add(quantLabel);
-		layout.getChildren().remove(editQuant);
-		layout.getChildren().remove(quantBox);
-		layout.getChildren().remove(quantButton);
-		return quantLabel;
-	}
-
 	/**
 	 * Make new arrow for the modifier's child and parent. Takes in an environment
 	 * which the parent and child have been created and creates the first arrow made
@@ -71,10 +56,6 @@ public class ArrowModifier {
 		GUITile parentTile = env.getTileFor(parent);
 		child.addParent(parent);
 		parent.addChild(child);
-		quantBox.setMaxWidth(120);
-		layout.getChildren().add(quantButton);
-		layout.getChildren().add(quantBox);
-		// if child is on the right of the parent
 		if ((parentTile.pane.getLayoutX() + parentTile.pane.getWidth()) < childTile.pane.getLayoutX()) {
 			// If child is above and to the right do this arrow draw:
 			if (childTile.pane.getLayoutY() + childTile.pane.getHeight() < parentTile.pane.getLayoutY()) {
@@ -82,78 +63,14 @@ public class ArrowModifier {
 						parentTile.pane.getLayoutY() };
 				double[] childCoords = { childTile.pane.getLayoutX(),
 						childTile.pane.getLayoutY() + childTile.pane.getHeight() };
-
-				quantButton.setLayoutX((parentCoords[0] + childCoords[0]) / 2);
-				quantButton.setLayoutY(((parentCoords[1] + childCoords[1]) / 2) + 40);
-				quantBox.setLayoutX((parentCoords[0] + childCoords[0]) / 2);
-				quantBox.setLayoutY(((parentCoords[1] + childCoords[1]) / 2) + 10);
-				quantButton.setOnAction(new EventHandler<ActionEvent>() {
-
-					public void handle(ActionEvent clickQuantButton) {
-						quantLabel = new Label(quantBox.getText());
-						quantLabel.setMinWidth(120);
-						quantLabel.setLayoutX((parentCoords[0] + childCoords[0]) / 2);
-						quantLabel.setLayoutY((parentCoords[1] + childCoords[1]) / 2);
-						editQuant.setLayoutX((parentCoords[0] + childCoords[0]) / 2);
-						editQuant.setLayoutY(((parentCoords[1] + childCoords[1]) / 2) + 20);
-						quantLabel.setMaxWidth(120);
-						layout.getChildren().add(quantLabel);
-						layout.getChildren().add(editQuant);
-						layout.getChildren().remove(quantBox);
-						layout.getChildren().remove(quantButton);
-					}
-				});
-
-				editQuant.setOnAction(new EventHandler<ActionEvent>() {
-					public void handle(ActionEvent clickEditEvent) {
-						TextInputDialog input = new TextInputDialog();
-						input.setHeaderText("Enter New quantifier: ");
-						input.setHeight(50);
-						input.setWidth(120);
-						Optional<String> answer = input.showAndWait();
-						quantLabel.setText(answer.get());
-					}
-
-				});
-
+				
 				return new Arrow(parentCoords[0], parentCoords[1], childCoords[0], childCoords[1], 5);
 				// if child is on right and below parent
 			} else if (childTile.pane.getLayoutY() > parentTile.pane.getHeight() + parentTile.pane.getLayoutY()) {
 				double[] parentCoords = { parentTile.pane.getLayoutX() + parentTile.pane.getWidth(),
 						parentTile.pane.getLayoutY() + parentTile.pane.getHeight() };
 				double[] childCoords = { childTile.pane.getLayoutX(), childTile.pane.getLayoutY() };
-
-				quantButton.setLayoutX((parentCoords[0] + childCoords[0]) / 2);
-				quantButton.setLayoutY(((parentCoords[1] + childCoords[1]) / 2) + 40);
-				quantBox.setLayoutX((parentCoords[0] + childCoords[0]) / 2);
-				quantBox.setLayoutY(((parentCoords[1] + childCoords[1]) / 2) + 10);
-				quantButton.setOnAction(new EventHandler<ActionEvent>() {
-
-					public void handle(ActionEvent clickQuantButton) {
-						quantLabel = new Label(quantBox.getText());
-						quantLabel.setMinWidth(120);
-						quantLabel.setLayoutX((parentCoords[0] + childCoords[0]) / 2);
-						quantLabel.setLayoutY((parentCoords[1] + childCoords[1]) / 2);
-						editQuant.setLayoutX((parentCoords[0] + childCoords[0]) / 2);
-						editQuant.setLayoutY(((parentCoords[1] + childCoords[1]) / 2) + 20);
-						quantLabel.setMaxWidth(120);
-						layout.getChildren().add(quantLabel);
-						layout.getChildren().add(editQuant);
-						layout.getChildren().remove(quantBox);
-						layout.getChildren().remove(quantButton);
-					}
-				});
-				editQuant.setOnAction(new EventHandler<ActionEvent>() {
-					public void handle(ActionEvent clickEditEvent) {
-						TextInputDialog input = new TextInputDialog();
-						input.setHeaderText("Enter New quantifier: ");
-						input.setHeight(50);
-						input.setWidth(120);
-						Optional<String> answer = input.showAndWait();
-						quantLabel.setText(answer.get());
-					}
-
-				});
+				
 				return new Arrow(parentCoords[0], parentCoords[1], childCoords[0], childCoords[1], 5);
 				// if child is in between on the right
 			} else {
@@ -161,38 +78,7 @@ public class ArrowModifier {
 						parentTile.pane.getLayoutY() + parentTile.pane.getHeight() / 2 };
 				double[] childCoords = { childTile.pane.getLayoutX(),
 						childTile.pane.getLayoutY() + childTile.pane.getHeight() / 2 };
-
-				quantButton.setLayoutX((parentCoords[0] + childCoords[0]) / 2);
-				quantButton.setLayoutY(((parentCoords[1] + childCoords[1]) / 2) + 40);
-				quantBox.setLayoutX((parentCoords[0] + childCoords[0]) / 2);
-				quantBox.setLayoutY(((parentCoords[1] + childCoords[1]) / 2) + 10);
-				quantButton.setOnAction(new EventHandler<ActionEvent>() {
-
-					public void handle(ActionEvent clickQuantButton) {
-						quantLabel.setText(quantBox.getText());
-						quantLabel.setMinWidth(120);
-						quantLabel.setLayoutX((parentCoords[0] + childCoords[0]) / 2);
-						quantLabel.setLayoutY((parentCoords[1] + childCoords[1]) / 2);
-						editQuant.setLayoutX((parentCoords[0] + childCoords[0]) / 2);
-						editQuant.setLayoutY(((parentCoords[1] + childCoords[1]) / 2) + 20);
-						quantLabel.setMaxWidth(120);
-						layout.getChildren().add(quantLabel);
-						layout.getChildren().add(editQuant);
-						layout.getChildren().remove(quantBox);
-						layout.getChildren().remove(quantButton);
-					}
-				});
-				editQuant.setOnAction(new EventHandler<ActionEvent>() {
-					public void handle(ActionEvent clickEditEvent) {
-						TextInputDialog input = new TextInputDialog();
-						input.setHeaderText("Enter New quantifier: ");
-						input.setHeight(50);
-						input.setWidth(120);
-						Optional<String> answer = input.showAndWait();
-						quantLabel.setText(answer.get());
-					}
-
-				});
+				
 				return new Arrow(parentCoords[0], parentCoords[1], childCoords[0], childCoords[1], 5);
 			}
 
@@ -203,38 +89,7 @@ public class ArrowModifier {
 				double[] parentCoords = { parentTile.pane.getLayoutX(), parentTile.pane.getLayoutY() };
 				double[] childCoords = { childTile.pane.getLayoutX() + childTile.pane.getWidth(),
 						childTile.pane.getLayoutY() + childTile.pane.getHeight() };
-
-				quantButton.setLayoutX((parentCoords[0] + childCoords[0]) / 2);
-				quantButton.setLayoutY(((parentCoords[1] + childCoords[1]) / 2) + 40);
-				quantBox.setLayoutX((parentCoords[0] + childCoords[0]) / 2);
-				quantBox.setLayoutY(((parentCoords[1] + childCoords[1]) / 2) + 10);
-				quantButton.setOnAction(new EventHandler<ActionEvent>() {
-
-					public void handle(ActionEvent clickQuantButton) {
-						quantLabel.setText(quantBox.getText());	
-						quantLabel.setMinWidth(120);
-						quantLabel.setLayoutX((parentCoords[0] + childCoords[0]) / 2);
-						quantLabel.setLayoutY((parentCoords[1] + childCoords[1]) / 2);
-						editQuant.setLayoutX((parentCoords[0] + childCoords[0]) / 2);
-						editQuant.setLayoutY(((parentCoords[1] + childCoords[1]) / 2) + 20);
-						quantLabel.setMaxWidth(120);
-						layout.getChildren().add(quantLabel);
-						layout.getChildren().add(editQuant);
-						layout.getChildren().remove(quantBox);
-						layout.getChildren().remove(quantButton);
-					}
-				});
-				editQuant.setOnAction(new EventHandler<ActionEvent>() {
-					public void handle(ActionEvent clickEditEvent) {
-						TextInputDialog input = new TextInputDialog();
-						input.setHeaderText("Enter New quantifier: ");
-						input.setHeight(50);
-						input.setWidth(120);
-						Optional<String> answer = input.showAndWait();
-						quantLabel.setText(answer.get());
-					}
-
-				});
+				
 				return new Arrow(parentCoords[0], parentCoords[1], childCoords[0], childCoords[1], 5);
 				// child is below
 			} else if (childTile.pane.getLayoutY() > parentTile.pane.getHeight() + parentTile.pane.getLayoutY()) {
@@ -242,38 +97,7 @@ public class ArrowModifier {
 						parentTile.pane.getLayoutY() + parentTile.pane.getHeight() };
 				double[] childCoords = { childTile.pane.getLayoutX() + childTile.pane.getWidth(),
 						childTile.pane.getLayoutY() };
-
-				quantButton.setLayoutX((parentCoords[0] + childCoords[0]) / 2);
-				quantButton.setLayoutY(((parentCoords[1] + childCoords[1]) / 2) + 40);
-				quantBox.setLayoutX((parentCoords[0] + childCoords[0]) / 2);
-				quantBox.setLayoutY(((parentCoords[1] + childCoords[1]) / 2) + 10);
-				quantButton.setOnAction(new EventHandler<ActionEvent>() {
-
-					public void handle(ActionEvent clickQuantButton) {
-						quantLabel.setText(quantBox.getText());
-						quantLabel.setMinWidth(120);
-						quantLabel.setLayoutX((parentCoords[0] + childCoords[0]) / 2);
-						quantLabel.setLayoutY((parentCoords[1] + childCoords[1]) / 2);
-						editQuant.setLayoutX((parentCoords[0] + childCoords[0]) / 2);
-						editQuant.setLayoutY(((parentCoords[1] + childCoords[1]) / 2) + 20);
-						quantLabel.setMaxWidth(120);
-						layout.getChildren().add(quantLabel);
-						layout.getChildren().add(editQuant);
-						layout.getChildren().remove(quantBox);
-						layout.getChildren().remove(quantButton);
-					}
-				});
-				editQuant.setOnAction(new EventHandler<ActionEvent>() {
-					public void handle(ActionEvent clickEditEvent) {
-						TextInputDialog input = new TextInputDialog();
-						input.setHeaderText("Enter New quantifier: ");
-						input.setHeight(50);
-						input.setWidth(120);
-						Optional<String> answer = input.showAndWait();
-						quantLabel.setText(answer.get());
-					}
-
-				});
+				
 				return new Arrow(parentCoords[0], parentCoords[1], childCoords[0], childCoords[1], 5);
 				// child is in between on left
 			} else {
@@ -281,38 +105,7 @@ public class ArrowModifier {
 						parentTile.pane.getLayoutY() + parentTile.pane.getHeight() / 2 };
 				double[] childCoords = { childTile.pane.getLayoutX() + childTile.pane.getWidth(),
 						childTile.pane.getLayoutY() + childTile.pane.getHeight() / 2 };
-
-				quantButton.setLayoutX((parentCoords[0] + childCoords[0]) / 2);
-				quantButton.setLayoutY(((parentCoords[1] + childCoords[1]) / 2) + 40);
-				quantBox.setLayoutX((parentCoords[0] + childCoords[0]) / 2);
-				quantBox.setLayoutY(((parentCoords[1] + childCoords[1]) / 2) + 10);
-				quantButton.setOnAction(new EventHandler<ActionEvent>() {
-
-					public void handle(ActionEvent clickQuantButton) {
-						quantLabel.setText(quantBox.getText());	
-						quantLabel.setMinWidth(120);
-						quantLabel.setLayoutX((parentCoords[0] + childCoords[0]) / 2);
-						quantLabel.setLayoutY((parentCoords[1] + childCoords[1]) / 2);
-						editQuant.setLayoutX((parentCoords[0] + childCoords[0]) / 2);
-						editQuant.setLayoutY(((parentCoords[1] + childCoords[1]) / 2) + 20);
-						quantLabel.setMaxWidth(120);
-						layout.getChildren().add(quantLabel);
-						layout.getChildren().add(editQuant);
-						layout.getChildren().remove(quantBox);
-						layout.getChildren().remove(quantButton);
-					}
-				});
-				editQuant.setOnAction(new EventHandler<ActionEvent>() {
-					public void handle(ActionEvent clickEditEvent) {
-						TextInputDialog input = new TextInputDialog();
-						input.setHeaderText("Enter New quantifier: ");
-						input.setHeight(50);
-						input.setWidth(120);
-						Optional<String> answer = input.showAndWait();
-						quantLabel.setText(answer.get());
-					}
-
-				});
+				
 				return new Arrow(parentCoords[0], parentCoords[1], childCoords[0], childCoords[1], 5);
 			}
 		} // Parent is below and in between left and right
@@ -323,38 +116,7 @@ public class ArrowModifier {
 			parentCoords[0] += parentTile.pane.getWidth() / 2.0;
 			childCoords[0] += parentTile.pane.getWidth() / 2.0;
 			childCoords[1] += childTile.pane.getHeight();
-
-			quantButton.setLayoutX((parentCoords[0] + childCoords[0]) / 2);
-			quantButton.setLayoutY(((parentCoords[1] + childCoords[1]) / 2) + 40);
-			quantBox.setLayoutX((parentCoords[0] + childCoords[0]) / 2);
-			quantBox.setLayoutY(((parentCoords[1] + childCoords[1]) / 2) + 10);
-			quantButton.setOnAction(new EventHandler<ActionEvent>() {
-
-				public void handle(ActionEvent clickQuantButton) {
-					quantLabel.setText(quantBox.getText());
-					quantLabel.setMinWidth(120);
-					quantLabel.setLayoutX((parentCoords[0] + childCoords[0]) / 2);
-					quantLabel.setLayoutY((parentCoords[1] + childCoords[1]) / 2);
-					editQuant.setLayoutX((parentCoords[0] + childCoords[0]) / 2);
-					editQuant.setLayoutY(((parentCoords[1] + childCoords[1]) / 2) + 20);
-					quantLabel.setMaxWidth(120);
-					layout.getChildren().add(quantLabel);
-					layout.getChildren().add(editQuant);
-					layout.getChildren().remove(quantBox);
-					layout.getChildren().remove(quantButton);
-				}
-			});
-			editQuant.setOnAction(new EventHandler<ActionEvent>() {
-				public void handle(ActionEvent clickEditEvent) {
-					TextInputDialog input = new TextInputDialog();
-					input.setHeaderText("Enter New quantifier: ");
-					input.setHeight(50);
-					input.setWidth(120);
-					Optional<String> answer = input.showAndWait();
-					quantLabel.setText(answer.get());
-				}
-
-			});
+			
 
 			return new Arrow(parentCoords[0], parentCoords[1], childCoords[0], childCoords[1], 5);
 		} // Parent is above and in between left and right
@@ -365,38 +127,7 @@ public class ArrowModifier {
 			parentCoords[0] += parentTile.pane.getWidth() / 2.0;
 			parentCoords[1] += parentTile.pane.getHeight();
 			childCoords[0] += parentTile.pane.getWidth() / 2.0;
-
-			quantButton.setLayoutX((parentCoords[0] + childCoords[0]) / 2);
-			quantButton.setLayoutY(((parentCoords[1] + childCoords[1]) / 2) + 40);
-			quantBox.setLayoutX((parentCoords[0] + childCoords[0]) / 2);
-			quantBox.setLayoutY(((parentCoords[1] + childCoords[1]) / 2) + 10);
-			quantButton.setOnAction(new EventHandler<ActionEvent>() {
-
-				public void handle(ActionEvent clickQuantButton) {
-					quantLabel.setText(quantBox.getText());
-					quantLabel.setMinWidth(120);
-					quantLabel.setLayoutX((parentCoords[0] + childCoords[0]) / 2);
-					quantLabel.setLayoutY((parentCoords[1] + childCoords[1]) / 2);
-					editQuant.setLayoutX((parentCoords[0] + childCoords[0]) / 2);
-					editQuant.setLayoutY(((parentCoords[1] + childCoords[1]) / 2) + 20);
-					quantLabel.setMaxWidth(120);
-					layout.getChildren().add(quantLabel);
-					layout.getChildren().add(editQuant);
-					layout.getChildren().remove(quantBox);
-					layout.getChildren().remove(quantButton);
-				}
-			});
-			editQuant.setOnAction(new EventHandler<ActionEvent>() {
-				public void handle(ActionEvent clickEditEvent) {
-					TextInputDialog input = new TextInputDialog();
-					input.setHeaderText("Enter New quantifier: ");
-					input.setHeight(50);
-					input.setWidth(120);
-					Optional<String> answer = input.showAndWait();
-					quantLabel.setText(answer.get());
-				}
-
-			});
+			
 			return new Arrow(parentCoords[0], parentCoords[1], childCoords[0], childCoords[1], 5);
 		}
 	}
@@ -425,23 +156,7 @@ public class ArrowModifier {
 							parentTile.pane.getTranslateY() + parentTile.layoutY };
 					double[] childCoords = { childTile.pane.getTranslateX() + childTile.layoutX,
 							childTile.pane.getTranslateY() + childTile.layoutY + childTile.pane.getHeight() };
-
-					quantLabel.setLayoutX((parentTile.getVirtualX() + childTile.getVirtualX()) / 2);
-					quantLabel.setLayoutY((parentTile.getVirtualY() + childTile.getVirtualY()) / 2);
-					editQuant.setLayoutX((parentTile.getVirtualX() + childTile.getVirtualX()) / 2);
-					editQuant.setLayoutY(((parentTile.getVirtualY() + childTile.getVirtualY()) / 2) + 20);
-					editQuant.setOnAction(new EventHandler<ActionEvent>() {
-						public void handle(ActionEvent clickEditEvent) {
-							TextInputDialog input = new TextInputDialog();
-							input.setHeaderText("Enter New quantifier: ");
-							input.setHeight(50);
-							input.setWidth(120);
-							Optional<String> answer = input.showAndWait();
-							quantLabel.setText(answer.get());
-						}
-
-					});
-
+					
 					return new Arrow(parentCoords[0], parentCoords[1], childCoords[0], childCoords[1], 5);
 				} // If child is below and to the right do this arrow draw:
 				else if (childTile.getVirtualY() > parentTile.pane.getHeight() + parentTile.getVirtualY()) {
@@ -450,22 +165,7 @@ public class ArrowModifier {
 							parentTile.pane.getTranslateY() + parentTile.layoutY + parentTile.pane.getHeight() };
 					double[] childCoords = { childTile.pane.getTranslateX() + childTile.layoutX,
 							childTile.pane.getTranslateY() + childTile.layoutY };
-
-					quantLabel.setLayoutX((parentTile.getVirtualX() + childTile.getVirtualX()) / 2);
-					quantLabel.setLayoutY((parentTile.getVirtualY() + childTile.getVirtualY()) / 2);
-					editQuant.setLayoutX((parentTile.getVirtualX() + childTile.getVirtualX()) / 2);
-					editQuant.setLayoutY(((parentTile.getVirtualY() + childTile.getVirtualY()) / 2) + 20);
-					editQuant.setOnAction(new EventHandler<ActionEvent>() {
-						public void handle(ActionEvent clickEditEvent) {
-							TextInputDialog input = new TextInputDialog();
-							input.setHeaderText("Enter New quantifier: ");
-							input.setHeight(50);
-							input.setWidth(120);
-							Optional<String> answer = input.showAndWait();
-							quantLabel.setText(answer.get());
-						}
-
-					});
+					
 
 					return new Arrow(parentCoords[0], parentCoords[1], childCoords[0], childCoords[1], 5);
 				} // If child is to right and in between up and down
@@ -475,22 +175,7 @@ public class ArrowModifier {
 							parentTile.pane.getTranslateY() + parentTile.layoutY + parentTile.pane.getHeight() / 2 };
 					double[] childCoords = { childTile.pane.getTranslateX() + childTile.layoutX,
 							childTile.pane.getTranslateY() + childTile.layoutY + childTile.pane.getHeight() / 2 };
-
-					quantLabel.setLayoutX((parentTile.getVirtualX() + childTile.getVirtualX()) / 2);
-					quantLabel.setLayoutY((parentTile.getVirtualY() + childTile.getVirtualY()) / 2);
-					editQuant.setLayoutX((parentTile.getVirtualX() + childTile.getVirtualX()) / 2);
-					editQuant.setLayoutY(((parentTile.getVirtualY() + childTile.getVirtualY()) / 2) + 20);
-					editQuant.setOnAction(new EventHandler<ActionEvent>() {
-						public void handle(ActionEvent clickEditEvent) {
-							TextInputDialog input = new TextInputDialog();
-							input.setHeaderText("Enter New quantifier: ");
-							input.setHeight(50);
-							input.setWidth(120);
-							Optional<String> answer = input.showAndWait();
-							quantLabel.setText(answer.get());
-						}
-
-					});
+					
 
 					return new Arrow(parentCoords[0], parentCoords[1], childCoords[0], childCoords[1], 5);
 				}
@@ -503,22 +188,7 @@ public class ArrowModifier {
 					double[] childCoords = {
 							childTile.pane.getTranslateX() + childTile.layoutX + childTile.pane.getWidth(),
 							childTile.pane.getTranslateY() + childTile.layoutY + childTile.pane.getHeight() };
-
-					quantLabel.setLayoutX((parentTile.getVirtualX() + childTile.getVirtualX()) / 2);
-					quantLabel.setLayoutY((parentTile.getVirtualY() + childTile.getVirtualY()) / 2);
-					editQuant.setLayoutX((parentTile.getVirtualX() + childTile.getVirtualX()) / 2);
-					editQuant.setLayoutY(((parentTile.getVirtualY() + childTile.getVirtualY()) / 2) + 20);
-					editQuant.setOnAction(new EventHandler<ActionEvent>() {
-						public void handle(ActionEvent clickEditEvent) {
-							TextInputDialog input = new TextInputDialog();
-							input.setHeaderText("Enter New quantifier: ");
-							input.setHeight(50);
-							input.setWidth(120);
-							Optional<String> answer = input.showAndWait();
-							quantLabel.setText(answer.get());
-						}
-
-					});
+					
 
 					return new Arrow(parentCoords[0], parentCoords[1], childCoords[0], childCoords[1], 5);
 					// child is below
@@ -528,22 +198,7 @@ public class ArrowModifier {
 					double[] childCoords = {
 							childTile.pane.getTranslateX() + childTile.layoutX + childTile.pane.getWidth(),
 							childTile.pane.getTranslateY() + childTile.layoutY };
-
-					quantLabel.setLayoutX((parentTile.getVirtualX() + childTile.getVirtualX()) / 2);
-					quantLabel.setLayoutY((parentTile.getVirtualY() + childTile.getVirtualY()) / 2);
-					editQuant.setLayoutX((parentTile.getVirtualX() + childTile.getVirtualX()) / 2);
-					editQuant.setLayoutY(((parentTile.getVirtualY() + childTile.getVirtualY()) / 2) + 20);
-					editQuant.setOnAction(new EventHandler<ActionEvent>() {
-						public void handle(ActionEvent clickEditEvent) {
-							TextInputDialog input = new TextInputDialog();
-							input.setHeaderText("Enter New quantifier: ");
-							input.setHeight(50);
-							input.setWidth(120);
-							Optional<String> answer = input.showAndWait();
-							quantLabel.setText(answer.get());
-						}
-
-					});
+					
 
 					return new Arrow(parentCoords[0], parentCoords[1], childCoords[0], childCoords[1], 5);
 					// child is in between up and down on left
@@ -553,22 +208,6 @@ public class ArrowModifier {
 					double[] childCoords = {
 							childTile.pane.getTranslateX() + childTile.layoutX + childTile.pane.getWidth(),
 							childTile.pane.getTranslateY() + childTile.layoutY + childTile.pane.getHeight() / 2 };
-
-					quantLabel.setLayoutX((parentTile.getVirtualX() + childTile.getVirtualX()) / 2);
-					quantLabel.setLayoutY((parentTile.getVirtualY() + childTile.getVirtualY()) / 2);
-					editQuant.setLayoutX((parentTile.getVirtualX() + childTile.getVirtualX()) / 2);
-					editQuant.setLayoutY(((parentTile.getVirtualY() + childTile.getVirtualY()) / 2) + 20);
-					editQuant.setOnAction(new EventHandler<ActionEvent>() {
-						public void handle(ActionEvent clickEditEvent) {
-							TextInputDialog input = new TextInputDialog();
-							input.setHeaderText("Enter New quantifier: ");
-							input.setHeight(50);
-							input.setWidth(120);
-							Optional<String> answer = input.showAndWait();
-							quantLabel.setText(answer.get());
-						}
-
-					});
 
 					return new Arrow(parentCoords[0], parentCoords[1], childCoords[0], childCoords[1], 5);
 				}
@@ -582,23 +221,7 @@ public class ArrowModifier {
 				parentCoords[0] += parentTile.pane.getWidth() / 2.0;
 				childCoords[0] += parentTile.pane.getWidth() / 2.0;
 				childCoords[1] += childTile.pane.getHeight();
-
-				quantLabel.setLayoutX((parentTile.getVirtualX() + childTile.getVirtualX()) / 2);
-				quantLabel.setLayoutY((parentTile.getVirtualY() + childTile.getVirtualY()) / 2);
-				editQuant.setLayoutX((parentTile.getVirtualX() + childTile.getVirtualX()) / 2);
-				editQuant.setLayoutY(((parentTile.getVirtualY() + childTile.getVirtualY()) / 2) + 20);
-				editQuant.setOnAction(new EventHandler<ActionEvent>() {
-					public void handle(ActionEvent clickEditEvent) {
-						TextInputDialog input = new TextInputDialog();
-						input.setHeaderText("Enter New quantifier: ");
-						input.setHeight(50);
-						input.setWidth(120);
-						Optional<String> answer = input.showAndWait();
-						quantLabel.setText(answer.get());
-					}
-
-				});
-
+				
 				return new Arrow(parentCoords[0], parentCoords[1], childCoords[0], childCoords[1], 5);
 			} // Parent is above and in between left and right
 			else if ((parentTile.getVirtualY() < childTile.getVirtualY())) {
@@ -610,22 +233,7 @@ public class ArrowModifier {
 				parentCoords[0] += parentTile.pane.getWidth() / 2.0;
 				parentCoords[1] += parentTile.pane.getHeight();
 				childCoords[0] += parentTile.pane.getWidth() / 2.0;
-
-				quantLabel.setLayoutX((parentTile.getVirtualX() + childTile.getVirtualX()) / 2);
-				quantLabel.setLayoutY((parentTile.getVirtualY() + childTile.getVirtualY()) / 2);
-				editQuant.setLayoutX((parentTile.getVirtualX() + childTile.getVirtualX()) / 2);
-				editQuant.setLayoutY(((parentTile.getVirtualY() + childTile.getVirtualY()) / 2) + 20);
-				editQuant.setOnAction(new EventHandler<ActionEvent>() {
-					public void handle(ActionEvent clickEditEvent) {
-						TextInputDialog input = new TextInputDialog();
-						input.setHeaderText("Enter New quantifier: ");
-						input.setHeight(50);
-						input.setWidth(120);
-						Optional<String> answer = input.showAndWait();
-						quantLabel.setText(answer.get());
-					}
-
-				});
+			
 
 				return new Arrow(parentCoords[0], parentCoords[1], childCoords[0], childCoords[1], 5);
 			}

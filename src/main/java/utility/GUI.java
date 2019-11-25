@@ -559,6 +559,10 @@ public class GUI extends Application {
 			ArrowModifier mod = new ArrowModifier(parent, child);
 			Arrow arr = mod.makeNewArrow(env, layout);
 			arrowLayout.getChildren().add(arr);
+			arrowLayout.getChildren().add(arr.editQuant);
+			arrowLayout.getChildren().add(arr.quantLabel);
+			arrowLayout.getChildren().add(arr.quantBox);
+			arrowLayout.getChildren().add(arr.quantButton);
 			env.addArrow(parent, child, arr);
 			if (child == null) {
 				Alert a = new Alert(Alert.AlertType.ERROR, nameTest[0] + " does not exist.");
@@ -693,12 +697,40 @@ public class GUI extends Application {
 
 			UMLItem parent = pair.getParent();
 			UMLItem child = pair.getChild();
-
+			GUITile parentTile = env.getTileFor(parent);
+			GUITile childTile = env.getTileFor(child);
+			
+			
 			ArrowModifier mod = new ArrowModifier(parent, child);
+			
 			Arrow newArrow = mod.updateArrow(env, layout);
+			if(arrow.quantAdded) {
+				newArrow.quantAdded = true;
+				newArrow.quantLabel.setText(arrow.quantLabel.getText());
+				newArrow.quantLabel.setVisible(true);
+				newArrow.editQuant.setVisible(true);
+				newArrow.quantBox.setVisible(false);
+				newArrow.quantButton.setVisible(false);
+			}
+			if(arrow.isRemoved) {
+				newArrow.isRemoved = true;
+				newArrow.quantLabel.setVisible(false);
+				newArrow.editQuant.setVisible(false);
+				newArrow.quantBox.setVisible(false);
+				newArrow.quantButton.setVisible(false);
+			}
+			arrowLayout.getChildren().remove(arrow);
+			arrowLayout.getChildren().remove(arrow.editQuant);
+			arrowLayout.getChildren().remove(arrow.quantLabel);
+			arrowLayout.getChildren().remove(arrow.quantBox);
+			arrowLayout.getChildren().remove(arrow.quantButton);
 			arrowLayout.getChildren().remove(arrow);
 			env.replaceArrow(pair, newArrow);
 			arrowLayout.getChildren().add(newArrow);
+			arrowLayout.getChildren().add(newArrow.editQuant);
+			arrowLayout.getChildren().add(newArrow.quantLabel);
+			arrowLayout.getChildren().add(newArrow.quantBox);
+			arrowLayout.getChildren().add(newArrow.quantButton);
 
 		};
 	}
@@ -711,7 +743,16 @@ public class GUI extends Application {
 	 */
 	private BiConsumer<? super ParentChildPair, ? super Arrow> removeArrow() {
 		return (ParentChildPair pair, Arrow arrow) -> {
+			arrow.isRemoved = true;
+			arrow.quantLabel.setVisible(false);
+			arrow.editQuant.setVisible(false);
+			arrow.quantBox.setVisible(false);
+			arrow.quantButton.setVisible(false);
 			arrowLayout.getChildren().remove(arrow);
+			arrowLayout.getChildren().remove(arrow.editQuant);
+			arrowLayout.getChildren().remove(arrow.quantLabel);
+			arrowLayout.getChildren().remove(arrow.quantBox);
+			arrowLayout.getChildren().remove(arrow.quantButton);
 			env.removeArrow(pair.getParent(), pair.getChild());
 			env.removeArrow(pair.getChild(), pair.getParent());
 			pair.getChild().removeParent(pair.getParent());
