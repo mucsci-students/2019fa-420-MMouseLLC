@@ -169,7 +169,7 @@ public class ArrowModifier {
 				quantButton.setOnAction(new EventHandler<ActionEvent>() {
 
 					public void handle(ActionEvent clickQuantButton) {
-						quantLabel = new Label(quantBox.getText());
+						quantLabel.setText(quantBox.getText());
 						quantLabel.setMinWidth(120);
 						quantLabel.setLayoutX((parentCoords[0] + childCoords[0]) / 2);
 						quantLabel.setLayoutY((parentCoords[1] + childCoords[1]) / 2);
@@ -211,7 +211,7 @@ public class ArrowModifier {
 				quantButton.setOnAction(new EventHandler<ActionEvent>() {
 
 					public void handle(ActionEvent clickQuantButton) {
-						quantLabel = new Label(quantBox.getText());
+						quantLabel.setText(quantBox.getText());	
 						quantLabel.setMinWidth(120);
 						quantLabel.setLayoutX((parentCoords[0] + childCoords[0]) / 2);
 						quantLabel.setLayoutY((parentCoords[1] + childCoords[1]) / 2);
@@ -250,7 +250,7 @@ public class ArrowModifier {
 				quantButton.setOnAction(new EventHandler<ActionEvent>() {
 
 					public void handle(ActionEvent clickQuantButton) {
-						quantLabel = new Label(quantBox.getText());
+						quantLabel.setText(quantBox.getText());
 						quantLabel.setMinWidth(120);
 						quantLabel.setLayoutX((parentCoords[0] + childCoords[0]) / 2);
 						quantLabel.setLayoutY((parentCoords[1] + childCoords[1]) / 2);
@@ -289,7 +289,7 @@ public class ArrowModifier {
 				quantButton.setOnAction(new EventHandler<ActionEvent>() {
 
 					public void handle(ActionEvent clickQuantButton) {
-						quantLabel = new Label(quantBox.getText());
+						quantLabel.setText(quantBox.getText());	
 						quantLabel.setMinWidth(120);
 						quantLabel.setLayoutX((parentCoords[0] + childCoords[0]) / 2);
 						quantLabel.setLayoutY((parentCoords[1] + childCoords[1]) / 2);
@@ -331,7 +331,7 @@ public class ArrowModifier {
 			quantButton.setOnAction(new EventHandler<ActionEvent>() {
 
 				public void handle(ActionEvent clickQuantButton) {
-					quantLabel = new Label(quantBox.getText());
+					quantLabel.setText(quantBox.getText());
 					quantLabel.setMinWidth(120);
 					quantLabel.setLayoutX((parentCoords[0] + childCoords[0]) / 2);
 					quantLabel.setLayoutY((parentCoords[1] + childCoords[1]) / 2);
@@ -373,7 +373,7 @@ public class ArrowModifier {
 			quantButton.setOnAction(new EventHandler<ActionEvent>() {
 
 				public void handle(ActionEvent clickQuantButton) {
-					quantLabel = new Label(quantBox.getText());
+					quantLabel.setText(quantBox.getText());
 					quantLabel.setMinWidth(120);
 					quantLabel.setLayoutX((parentCoords[0] + childCoords[0]) / 2);
 					quantLabel.setLayoutY((parentCoords[1] + childCoords[1]) / 2);
