@@ -2,6 +2,7 @@ package utility;
 
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.scene.text.TextAlignment;
 
 /**
@@ -27,6 +28,10 @@ public class GUITile extends Pane {
 	Button move = new Button("M");
 	//Button removeAttr = new Button("Remove Attribute");
 	Label displayAttr = new Label("");
+	Label displayFieldType = new Label("");
+	Label displayFieldVar = new Label("");
+	Label displayFunctionType = new Label("");
+	Label displayFunctionVar = new Label("");
 	Button field = new Button("+");
 	Button function = new Button("+");
 	Label ffDivider = new Label("---------------");
@@ -49,7 +54,7 @@ public class GUITile extends Pane {
 		buildNamePanel();
 		//buildAddAttrButton();
 		//buildRemAttrButton();
-		buildAttrLabel();
+		//buildAttrLabel();
 		buildEditButton();
 		buildAddButton();
 		buildRemoveButton();
@@ -58,6 +63,10 @@ public class GUITile extends Pane {
 		buildFieldButton();
 		buildFunctionButton();
 		buildffDividePanel();
+		buildFieldTypeLabel();
+		buildFieldVarLabel();
+		buildFunctionTypeLabel();
+		buildFunctionVarLabel();
 		
 	}
 	/**
@@ -114,6 +123,7 @@ public class GUITile extends Pane {
 	}
 	
 	public void buildffDividePanel() {
+		this.ffDivider.setTextFill(Color.web("339900"));
 		this.ffDivider.setLayoutX(30);
 		this.ffDivider.setLayoutY(75);
 		this.ffDivider.setMaxWidth(120);
@@ -123,23 +133,53 @@ public class GUITile extends Pane {
 	}
 	
 	public void buildFieldButton() {
-		this.field.setLayoutY(50);
 		this.field.setLayoutX(1);
+		this.field.setLayoutY(50);
 		this.field.setMaxSize(26, 26);
 		this.field.setMinSize(26, 26);
 		this.field.setVisible(false);
-		this.field.setStyle("-fx-background-color: ADD8E6; -fx-text-fill: black");
+		this.field.setStyle("-fx-background-color: ADD8E6;");
 		this.pane.getChildren().add(this.field);
 	}
 	
+	public void buildFieldTypeLabel() {
+		this.displayFieldType.setLayoutX(35);
+		this.displayFieldType.setLayoutY(50);
+		this.displayFieldType.setVisible(true);
+		this.displayFieldType.setTextFill(Color.web("8B008B"));
+		this.pane.getChildren().add(this.displayFieldType);
+	}
+	public void buildFieldVarLabel() {
+		this.displayFieldVar.setLayoutX(80);
+		this.displayFieldVar.setLayoutY(50);
+		this.displayFieldVar.setVisible(true);
+		this.displayFieldVar.setTextFill(Color.web("CD853F"));
+		this.pane.getChildren().add(this.displayFieldVar);
+	}
+	
 	public void buildFunctionButton() {
-		this.function.setLayoutY(90);
 		this.function.setLayoutX(1);
+		this.function.setLayoutY(90);
 		this.function.setMaxSize(26, 26);
 		this.function.setMinSize(26, 26);
 		this.function.setVisible(false);
 		this.function.setStyle("-fx-background-color: FFFF99;");
 		this.pane.getChildren().add(this.function);
+	}
+	
+	public void buildFunctionTypeLabel() {
+		this.displayFunctionType.setLayoutX(35);
+		this.displayFunctionType.setLayoutY(90);
+		this.displayFunctionType.setVisible(true);
+		this.displayFunctionType.setTextFill(Color.web("8B008B"));
+		this.pane.getChildren().add(this.displayFunctionType);
+	}
+	public void buildFunctionVarLabel() {
+		this.displayFunctionVar.setLayoutX(80);
+		this.displayFunctionVar.setLayoutY(90);
+		this.displayFunctionVar.setVisible(true);
+		this.displayFunctionVar.setTextFill(Color.web("CD853F"));
+		this.pane.getChildren().add(this.displayFunctionVar);
 	}
 	/**
 	 * @author eric
@@ -172,12 +212,12 @@ public class GUITile extends Pane {
 	 * build attr label makes the label for attributes after adding attributes
 	 * to the main pane. this displays them after adding. 
 	 */
-	public void buildAttrLabel() {
+	/*public void buildAttrLabel() {
 		this.displayAttr.setLayoutX(10);
 		this.displayAttr.setLayoutY(45);
 		this.displayAttr.setVisible(true);
 		this.pane.getChildren().add(this.displayAttr);
-	}
+	}*/
 	/**
 	 * @author eric
 	 * build edit button makes the edit button for editting the name of the tile

@@ -11,15 +11,15 @@ public class Main {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		// If we have a command line arg run the GUI environment
+		//If we have a command line arg run the GUI environment
 		//if (args.length > 0) {
 			runGUI(args);
 		//} else {
-			// run CLI
-		//	run();
+			 //run CLI
+			run();
 		//}
 	}
-	
+
 	/**
 	 * Run the Console
 	 */
@@ -36,6 +36,7 @@ public class Main {
 
 	/**
 	 * Run Graphical User Interface
+	 * 
 	 * @param args
 	 */
 	public static void runGUI(String[] args) {

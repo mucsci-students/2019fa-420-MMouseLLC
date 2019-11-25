@@ -1,6 +1,7 @@
 package utility;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Optional;
 import java.util.function.BiConsumer;
 import config.ArrowModifier;
@@ -14,6 +15,7 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.stage.*;
 import javafx.scene.control.*;
+import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.layout.*;
 
 /**
@@ -29,7 +31,7 @@ public class GUI extends Application {
 
 	private int size = 0;
 	private GUIEnvironment env;
-	private final int ADD_ATTR_OFFSET = 17;
+	private final int ADD_ATTR_OFFSET = 20;
 	private Pane mainLayout = new Pane();
 	private Group layout = new Group();
 	private Group arrowLayout = new Group();
@@ -462,23 +464,111 @@ public class GUI extends Application {
 	public void setFieldButtonAction(GUITile t, Group layout) {
 
 		t.field.setOnAction((event) -> {
-			Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Feild pressed",
-					ButtonType.YES, ButtonType.NO);
-			alert.showAndWait();
+			TextInputDialog input = new TextInputDialog();
+			input.setTitle("Field Input");
+			input.setHeaderText("Enter the type and name for the new field:");
+			Label typeLabel = new Label("Type: ");
+			Label varLabel = new Label("Name: ");
+			TextField answerType = new TextField();
+			TextField answerVar = new TextField();
+
+			GridPane grid = new GridPane();
+			grid.add(typeLabel, 1, 1);
+			grid.add(answerType, 2, 1);
+			grid.add(varLabel, 1, 2);
+			grid.add(answerVar, 2, 2);
+			input.getDialogPane().setContent(grid);
+
+			input.setHeight(50);
+			input.setWidth(120);
+			input.showAndWait();
+			// going to want to add type and name to data set then loop through
+			// and add all from fields with name from where tehy're being accounded
+			// for/stored
+			UMLItem found = env.findItem(t.nameBox.getText());
+			t.displayFieldType.setText("");
+			t.displayFieldVar.setText("");
+			String newType = "";
+			String newVar = "";
+			found.addField(answerType.getText(), answerVar.getText());
+			HashMap<String, String> test = new HashMap<>(found.getFields());
+			for (String i : test.keySet()) {
+				newType = t.displayFieldType.getText() + test.get(i) + "\n";
+				newVar = t.displayFieldVar.getText() + i + "\n";
+				t.displayFieldType.setText(newType);
+				t.displayFieldVar.setText(newVar);
+			}
+			// t.displayFieldType.setText("");
+			// t.displayFieldVar.setText("");
+			// t.displayFieldType.setText(answer1.getText()+"\n");
+			// t.displayFieldVar.setText(answer2.getText()+"\n");
+
+			t.pane.setMinHeight(t.pane.getHeight() + ADD_ATTR_OFFSET);
+			t.pane.setMaxHeight(t.pane.getHeight() + ADD_ATTR_OFFSET);
+			t.ffDivider.setLayoutY(t.ffDivider.getLayoutY() + ADD_ATTR_OFFSET);
+			t.displayFunctionType.setLayoutY(t.displayFunctionType.getLayoutY() + ADD_ATTR_OFFSET);
+			t.displayFunctionVar.setLayoutY(t.displayFunctionVar.getLayoutY() + ADD_ATTR_OFFSET);
+			t.field.setLayoutY(t.field.getLayoutY() + ADD_ATTR_OFFSET);
+			t.function.setLayoutY(t.function.getLayoutY() + ADD_ATTR_OFFSET);
+			t.edit.setLayoutY(t.edit.getLayoutY() + ADD_ATTR_OFFSET);
+			t.addChild.setLayoutY(t.addChild.getLayoutY() + ADD_ATTR_OFFSET);
 			System.out.println("Field button pressed");
 		});
 
 	}
-	
+
 	public void setFunctionButtonAction(GUITile t, Group layout) {
 
 		t.function.setOnAction((event) -> {
-			Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Function pressed",
-					ButtonType.YES, ButtonType.NO);
-			alert.showAndWait();
-			System.out.println("Function button pressed");
-		});
+			TextInputDialog input = new TextInputDialog();
+			input.setTitle("Function Input");
+			input.setHeaderText("Enter the type and name for the new function:");
+			Label typeLabel = new Label("Type: ");
+			Label varLabel = new Label("Name: ");
+			TextField answerType = new TextField();
+			TextField answerVar = new TextField();
 
+			GridPane grid = new GridPane();
+			grid.add(typeLabel, 1, 1);
+			grid.add(answerType, 2, 1);
+			grid.add(varLabel, 1, 2);
+			grid.add(answerVar, 2, 2);
+			input.getDialogPane().setContent(grid);
+
+			input.setHeight(50);
+			input.setWidth(120);
+			input.showAndWait();
+			// going to want to add type and name to data set then loop through
+			// and add all from functions with name from where tehy're being accounded
+			// for/stored
+
+			UMLItem found = env.findItem(t.nameBox.getText());
+			t.displayFunctionType.setText("");
+			t.displayFunctionVar.setText("");
+			String newType = "";
+			String newVar = "";
+			found.addFunction(answerType.getText(), answerVar.getText());
+			HashMap<String, String> test = new HashMap<>(found.getFunctions());
+			for (String i : test.keySet()) {
+				newType = t.displayFunctionType.getText() + test.get(i) + "\n";
+				newVar = t.displayFunctionVar.getText() + i + "()\n";
+				t.displayFunctionType.setText(newType);
+				t.displayFunctionVar.setText(newVar);
+			}
+			// for (String i : test.values()) {
+			// newAttr = t.displayFunctionVar.getText() + test.get(i) + "\n";
+			// t.displayFunctionVar.setText(newAttr);
+			// }
+			
+			t.pane.setMinHeight(t.pane.getHeight() + ADD_ATTR_OFFSET);
+			t.pane.setMaxHeight(t.pane.getHeight() + ADD_ATTR_OFFSET);
+			t.function.setLayoutY(t.function.getLayoutY() + ADD_ATTR_OFFSET);
+			t.edit.setLayoutY(t.edit.getLayoutY() + ADD_ATTR_OFFSET);
+			t.addChild.setLayoutY(t.addChild.getLayoutY() + ADD_ATTR_OFFSET);
+			System.out.println("Function button pressed");
+			System.out.println(found.getFunctions());
+			System.out.println(found.getFunctions().size());
+		});
 	}
 
 	/**
@@ -489,47 +579,49 @@ public class GUI extends Application {
 	 *         of attributes on a tile after it has been added.
 	 * 
 	 */
-	
-	  /*public void setAddAttributeAction(GUITile t, Group layout) { // Adds an
-	  attribute as text to the tile clicked t.addAttr.setOnAction((event) -> {
-	  TextInputDialog input = new TextInputDialog();
-	  input.setHeaderText("Enter attribute to add for " + t.nameBox.getText() +
-	 ":\nMust be one word no spaces\nExample: NewAttribute"); input.setHeight(50);
-	  input.setWidth(120); Optional<String> answer = input.showAndWait(); String[]
-	  attrTest = answer.toString().split(" ");
-	  
-	  if (attrTest.length > 1) { Alert a = new Alert(Alert.AlertType.ERROR,
-	  "Attribute cannot contain spaces.\nExample: New Attr should be NewAttr");
-	  a.show(); return; }
-	  
-	  boolean isWhitespace = answer.get().matches("^\\s*$"); // checks if name
-	  entered is only whitespace.
-	  
-	  if (isWhitespace) { Alert a = new Alert(Alert.AlertType.ERROR,
-	  "Attribute cannot be only whitespace.\nExample: NewAttr"); a.show(); return;
-	  } if (answer.isPresent()) { UMLItem found =
-	  env.findItem(t.nameBox.getText()); if (found != null) { ArrayList<String>
-	  testName = new ArrayList<String>(found.getAttributes()); for (int i = 0; i <
-	  testName.size(); i++) { if (answer.get().equals(testName.get(i))) { Alert a =
-	  new Alert(Alert.AlertType.ERROR, "Attribute " + testName.get(i).toString() +
-	  " already exists. Please enter an original name."); a.show(); return; } }
-	 t.displayAttr.setText(""); String newAttr = "";
-	  found.addAttribute(answer.get()); ArrayList<String> test = new
-	  ArrayList<>(found.getAttributes()); for (int i = 0; i < test.size(); i++) {
-	  newAttr = t.displayAttr.getText() + "\u2022" + test.get(i).toString() + "\n";
-	  t.displayAttr.setText(newAttr); } t.pane.setMinHeight(t.pane.getHeight() +
-	  ADD_ATTR_OFFSET); t.pane.setMaxHeight(t.pane.getHeight() + ADD_ATTR_OFFSET);
-	  t.edit.setLayoutY(t.edit.getLayoutY() + ADD_ATTR_OFFSET);
-	  t.addAttr.setLayoutY(t.addAttr.getLayoutY() + ADD_ATTR_OFFSET);
-	  t.removeAttr.setLayoutY(t.removeAttr.getLayoutY() + ADD_ATTR_OFFSET);
-	  t.addChild.setLayoutY(t.addChild.getLayoutY() + ADD_ATTR_OFFSET);
-	  
-	  newAttr = t.displayAttr.getText() + "\u2022" + answer.get() + "\n"; } else {
-	  Alert a = new Alert(Alert.AlertType.ERROR,
-	  "Something went wrong finding the class."); a.show(); } } else { Alert a =
-	  new Alert(Alert.AlertType.ERROR, "Attribute cannot be blank."); a.show(); }
-	  
-	  }); }*/
+
+	/*
+	 * public void setAddAttributeAction(GUITile t, Group layout) { // Adds an
+	 * attribute as text to the tile clicked t.addAttr.setOnAction((event) -> {
+	 * TextInputDialog input = new TextInputDialog();
+	 * input.setHeaderText("Enter attribute to add for " + t.nameBox.getText() +
+	 * ":\nMust be one word no spaces\nExample: NewAttribute"); input.setHeight(50);
+	 * input.setWidth(120); Optional<String> answer = input.showAndWait(); String[]
+	 * attrTest = answer.toString().split(" ");
+	 * 
+	 * if (attrTest.length > 1) { Alert a = new Alert(Alert.AlertType.ERROR,
+	 * "Attribute cannot contain spaces.\nExample: New Attr should be NewAttr");
+	 * a.show(); return; }
+	 * 
+	 * boolean isWhitespace = answer.get().matches("^\\s*$"); // checks if name
+	 * entered is only whitespace.
+	 * 
+	 * if (isWhitespace) { Alert a = new Alert(Alert.AlertType.ERROR,
+	 * "Attribute cannot be only whitespace.\nExample: NewAttr"); a.show(); return;
+	 * } if (answer.isPresent()) { UMLItem found =
+	 * env.findItem(t.nameBox.getText()); if (found != null) { ArrayList<String>
+	 * testName = new ArrayList<String>(found.getAttributes()); for (int i = 0; i <
+	 * testName.size(); i++) { if (answer.get().equals(testName.get(i))) { Alert a =
+	 * new Alert(Alert.AlertType.ERROR, "Attribute " + testName.get(i).toString() +
+	 * " already exists. Please enter an original name."); a.show(); return; } }
+	 * t.displayAttr.setText(""); String newAttr = "";
+	 * found.addAttribute(answer.get()); ArrayList<String> test = new
+	 * ArrayList<>(found.getAttributes()); for (int i = 0; i < test.size(); i++) {
+	 * newAttr = t.displayAttr.getText() + "\u2022" + test.get(i).toString() + "\n";
+	 * t.displayAttr.setText(newAttr); } t.pane.setMinHeight(t.pane.getHeight() +
+	 * ADD_ATTR_OFFSET); t.pane.setMaxHeight(t.pane.getHeight() + ADD_ATTR_OFFSET);
+	 * t.edit.setLayoutY(t.edit.getLayoutY() + ADD_ATTR_OFFSET);
+	 * t.addAttr.setLayoutY(t.addAttr.getLayoutY() + ADD_ATTR_OFFSET);
+	 * t.removeAttr.setLayoutY(t.removeAttr.getLayoutY() + ADD_ATTR_OFFSET);
+	 * t.addChild.setLayoutY(t.addChild.getLayoutY() + ADD_ATTR_OFFSET);
+	 * 
+	 * newAttr = t.displayAttr.getText() + "\u2022" + answer.get() + "\n"; } else {
+	 * Alert a = new Alert(Alert.AlertType.ERROR,
+	 * "Something went wrong finding the class."); a.show(); } } else { Alert a =
+	 * new Alert(Alert.AlertType.ERROR, "Attribute cannot be blank."); a.show(); }
+	 * 
+	 * }); }
+	 */
 
 	/**
 	 * @author matt and eric
