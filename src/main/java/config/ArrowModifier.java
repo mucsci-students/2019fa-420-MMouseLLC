@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import data.Arrow;
 import data.GUIEnvironment;
+import data.Relationship;
 import data.UMLItem;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -54,16 +55,17 @@ public class ArrowModifier {
 	public Arrow makeNewArrow(GUIEnvironment env, Group layout) {
 		GUITile childTile = env.getTileFor(child);
 		GUITile parentTile = env.getTileFor(parent);
-		child.addParent(parent);
-		parent.addChild(child);
-		if ((parentTile.pane.getLayoutX() + parentTile.pane.getWidth()) < childTile.pane.getLayoutX()) {
-			// If child is above and to the right do this arrow draw:
-			if (childTile.pane.getLayoutY() + childTile.pane.getHeight() < parentTile.pane.getLayoutY()) {
-				double[] parentCoords = { parentTile.pane.getLayoutX() + parentTile.pane.getWidth(),
-						parentTile.pane.getLayoutY() };
-				double[] childCoords = { childTile.pane.getLayoutX(),
-						childTile.pane.getLayoutY() + childTile.pane.getHeight() };
-				
+		//TODO
+		//child.addParent(parent);
+		//parent.addChild(child);
+		
+		env.addRelationship(new Relationship(parent, child));
+		//if child is on the right of the parent
+		if((parentTile.pane.getLayoutX() + parentTile.pane.getWidth()) < childTile.pane.getLayoutX()) {
+			//If child is above and to the right do this arrow draw:
+			if(childTile.pane.getLayoutY() + childTile.pane.getHeight() < parentTile.pane.getLayoutY()) {
+				double[] parentCoords = { parentTile.pane.getLayoutX() + parentTile.pane.getWidth(), parentTile.pane.getLayoutY() };
+				double[] childCoords = { childTile.pane.getLayoutX(), childTile.pane.getLayoutY() + childTile.pane.getHeight() };
 				return new Arrow(parentCoords[0], parentCoords[1], childCoords[0], childCoords[1], 5);
 				// if child is on right and below parent
 			} else if (childTile.pane.getLayoutY() > parentTile.pane.getHeight() + parentTile.pane.getLayoutY()) {
@@ -114,7 +116,7 @@ public class ArrowModifier {
 			double[] childCoords = { childTile.pane.getLayoutX(), childTile.pane.getLayoutY() };
 
 			parentCoords[0] += parentTile.pane.getWidth() / 2.0;
-			childCoords[0] += parentTile.pane.getWidth() / 2.0;
+			childCoords[0] += childTile.pane.getWidth() / 2.0;
 			childCoords[1] += childTile.pane.getHeight();
 			
 
@@ -126,8 +128,7 @@ public class ArrowModifier {
 
 			parentCoords[0] += parentTile.pane.getWidth() / 2.0;
 			parentCoords[1] += parentTile.pane.getHeight();
-			childCoords[0] += parentTile.pane.getWidth() / 2.0;
-			
+			childCoords[0] += childTile.pane.getWidth() / 2.0;
 			return new Arrow(parentCoords[0], parentCoords[1], childCoords[0], childCoords[1], 5);
 		}
 	}
@@ -219,7 +220,7 @@ public class ArrowModifier {
 						childTile.pane.getTranslateY() + childTile.layoutY };
 
 				parentCoords[0] += parentTile.pane.getWidth() / 2.0;
-				childCoords[0] += parentTile.pane.getWidth() / 2.0;
+				childCoords[0] += childTile.pane.getWidth() / 2.0;
 				childCoords[1] += childTile.pane.getHeight();
 				
 				return new Arrow(parentCoords[0], parentCoords[1], childCoords[0], childCoords[1], 5);
@@ -232,8 +233,7 @@ public class ArrowModifier {
 
 				parentCoords[0] += parentTile.pane.getWidth() / 2.0;
 				parentCoords[1] += parentTile.pane.getHeight();
-				childCoords[0] += parentTile.pane.getWidth() / 2.0;
-			
+				childCoords[0] += childTile.pane.getWidth() / 2.0;
 
 				return new Arrow(parentCoords[0], parentCoords[1], childCoords[0], childCoords[1], 5);
 			}
