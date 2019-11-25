@@ -599,7 +599,11 @@ public class GUI extends Application {
 				a.show();
 				return;
 			}
-			
+			if (child == parent) {
+				Alert a = new Alert(Alert.AlertType.ERROR, nameTest[0] + "A Parent cannot be it's own child.");
+				a.show();
+				return;
+			}
 
 		});
 	}
