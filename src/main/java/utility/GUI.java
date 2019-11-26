@@ -244,8 +244,10 @@ public class GUI extends Application {
 				setRemoveButtonAction(t, layout);
 				setFieldButtonAction(t, layout);
 				setRemoveFieldAction(t, layout);
+				setEditFieldAction(t, layout);
 				setFunctionButtonAction(t, layout);
 				setRemoveFunctionAction(t, layout);
+				setEditFunctionAction(t, layout);
 				// setAddAttributeAction(t, layout);
 				setAddChildButtonAction(t, layout);
 				setMoveTileAction(t, layout);
@@ -495,7 +497,10 @@ public class GUI extends Application {
 
 			input.setHeight(50);
 			input.setWidth(120);
-			input.showAndWait();
+			Optional<String> result = input.showAndWait();
+			if (!result.isPresent()) {
+				return;
+			}
 
 			String[] typeTest = answerType.getText().toString().split(" ");
 			String[] varTest = answerVar.getText().toString().split(" ");
@@ -519,7 +524,8 @@ public class GUI extends Application {
 				if (found != null) {
 					HashMap<String, String> testName = new HashMap<>(found.getFunctions());
 					for (String i : testName.keySet()) {
-						if (answerType.getText().equals(testName.get(i)) && answerVar.getText().contentEquals(i)) {
+						if (answerType.getText().trim().equals(testName.get(i))
+								&& answerVar.getText().trim().contentEquals(i)) {
 							Alert a = new Alert(Alert.AlertType.ERROR, "Field " + testName.get(i).toString()
 									+ " already exists. Please enter an original field.");
 							a.show();
@@ -531,7 +537,7 @@ public class GUI extends Application {
 				t.displayFieldVar.setText("");
 				String newType = "";
 				String newVar = "";
-				found.addField(answerType.getText(), answerVar.getText());
+				found.addField(answerType.getText().trim(), answerVar.getText().trim());
 				HashMap<String, String> test = new HashMap<>(found.getFields());
 				for (String i : test.keySet()) {
 					newType = t.displayFieldType.getText() + test.get(i) + "\n";
@@ -555,9 +561,98 @@ public class GUI extends Application {
 				t.edit.setLayoutY(t.edit.getLayoutY() + ADD_ATTR_OFFSET);
 				t.addChild.setLayoutY(t.addChild.getLayoutY() + ADD_ATTR_OFFSET);
 				System.out.println("Field button pressed");
+				System.out.println(found.getFields());
 			}
 		});
 
+	}
+
+	public void setEditFieldAction(GUITile t, Group layout) {
+		t.editField.setOnAction((event) -> {
+			TextInputDialog input = new TextInputDialog();
+			input.setTitle("Edit Field Input");
+			input.setHeaderText("Enter the field to be edited and the new field information: ");
+			Label oldTypeLabel = new Label("Old type: ");
+			Label oldVarLabel = new Label("Old name: ");
+			Label newTypeLabel = new Label("New type: ");
+			Label newVarLabel = new Label("New name: ");
+			Label divider = new Label("-------------------");
+			TextField answerOldType = new TextField();
+			TextField answerOldVar = new TextField();
+			TextField answerNewType = new TextField();
+			TextField answerNewVar = new TextField();
+
+			GridPane grid = new GridPane();
+			grid.add(oldTypeLabel, 1, 1);
+			grid.add(answerOldType, 2, 1);
+			grid.add(oldVarLabel, 1, 2);
+			grid.add(answerOldVar, 2, 2);
+			grid.add(divider, 1, 3);
+			grid.add(newTypeLabel, 1, 4);
+			grid.add(answerNewType, 2, 4);
+			grid.add(newVarLabel, 1, 5);
+			grid.add(answerNewVar, 2, 5);
+			input.getDialogPane().setContent(grid);
+
+			input.setHeight(50);
+			input.setWidth(120);
+			Optional<String> result = input.showAndWait();
+			if (!result.isPresent()) {
+				return;
+			}
+
+			String[] oldTypeTest = answerOldType.getText().toString().split(" ");
+			String[] oldVarTest = answerOldVar.getText().toString().split(" ");
+			String[] newTypeTest = answerNewType.getText().toString().split(" ");
+			String[] newVarTest = answerNewVar.getText().toString().split(" ");
+			boolean oldTypeIsWhitespace = answerOldType.getText().matches("^\\s*$");
+			boolean oldVarIsWhitespace = answerOldVar.getText().matches("^\\s*$");
+			boolean newTypeIsWhitespace = answerNewType.getText().matches("^\\s*$");
+			boolean newVarIsWhitespace = answerNewVar.getText().matches("^\\s*$");
+			if (oldTypeTest.length > 1 || oldVarTest.length > 1 || newTypeTest.length > 1 || newVarTest.length > 1) {
+				Alert a = new Alert(Alert.AlertType.ERROR,
+						"Fields cannot contain spaces.\nPlease retry inputs without spaces\nNothing has been edited from fields.");
+				a.show();
+				return;
+			} else if (oldTypeIsWhitespace || oldVarIsWhitespace || newTypeIsWhitespace || newVarIsWhitespace) {
+				Alert a = new Alert(Alert.AlertType.ERROR,
+						"Field inputs cannot be only whitespace.\nNothing has been edited from fields.");
+				a.show();
+				return;
+			} else {
+
+				UMLItem found = env.findItem(t.nameBox.getText());
+				if (found != null) {
+					HashMap<String, String> testName = new HashMap<>(found.getFields());
+					for (String i : testName.keySet()) {
+						if (answerNewType.getText().trim().equals(testName.get(i))
+								&& answerNewVar.getText().trim().contentEquals(i)) {
+							Alert a = new Alert(Alert.AlertType.ERROR, "Field " + testName.get(i).toString()
+									+ " already exists. Please enter an original field.");
+							a.show();
+							return;
+						}
+					}
+					t.displayFieldType.setText("");
+					t.displayFieldVar.setText("");
+
+					String newType = "";
+					String newVar = "";
+
+					found.editField(answerOldVar.getText().trim(), answerNewVar.getText().trim(),
+							answerNewType.getText().trim());
+					HashMap<String, String> test = new HashMap<>(found.getFields());
+					for (String i : test.keySet()) {
+						newType = t.displayFieldType.getText() + test.get(i) + "\n";
+						newVar = t.displayFieldVar.getText() + i + "\n";
+						t.displayFieldType.setText(newType);
+						t.displayFieldVar.setText(newVar);
+					}
+				}
+				System.out.println(found.getFields());
+			}
+
+		});
 	}
 
 	public void setRemoveFieldAction(GUITile t, Group layout) {
@@ -581,7 +676,10 @@ public class GUI extends Application {
 
 			input.setHeight(50);
 			input.setWidth(120);
-			input.showAndWait();
+			Optional<String> result = input.showAndWait();
+			if (!result.isPresent()) {
+				return;
+			}
 
 			String[] typeTest = answerType.getText().toString().split(" ");
 			String[] varTest = answerVar.getText().toString().split(" ");
@@ -607,8 +705,8 @@ public class GUI extends Application {
 				String newType = "";
 				String newVar = "";
 				if (found != null) {
-					System.out.println(found.existingField(answerVar.getText()));
-					if (!found.existingField(answerVar.getText())) {
+					System.out.println(found.existingField(answerVar.getText().trim()));
+					if (!found.existingField(answerVar.getText().trim())) {
 						HashMap<String, String> test = new HashMap<>(found.getFields());
 						for (String i : test.keySet()) {
 							newType = t.displayFieldType.getText() + test.get(i) + "\n";
@@ -621,7 +719,7 @@ public class GUI extends Application {
 						return;
 
 					} else {
-						found.removeField(answerVar.getText());
+						found.removeField(answerVar.getText().trim());
 						HashMap<String, String> test = new HashMap<>(found.getFields());
 						for (String i : test.keySet()) {
 							newType = t.displayFieldType.getText() + test.get(i) + "\n";
@@ -674,66 +772,158 @@ public class GUI extends Application {
 
 			input.setHeight(50);
 			input.setWidth(120);
-			input.showAndWait();
+			Optional<String> result = input.showAndWait();
+			if (!result.isPresent()) {
+				return;
+			}
 
-			String[] typeTest = answerType.getText().toString().split(" ");
-			String[] varTest = answerVar.getText().toString().split(" ");
-			boolean typeIsWhitespace = answerType.getText().matches("^\\s*$");
-			boolean varIsWhitespace = answerVar.getText().matches("^\\s*$");
-			if (typeTest.length > 1 || varTest.length > 1) {
+				String[] typeTest = answerType.getText().toString().split(" ");
+				String[] varTest = answerVar.getText().toString().split(" ");
+				boolean typeIsWhitespace = answerType.getText().matches("^\\s*$");
+				boolean varIsWhitespace = answerVar.getText().matches("^\\s*$");
+				if (typeTest.length > 1 || varTest.length > 1) {
+					Alert a = new Alert(Alert.AlertType.ERROR,
+							"Functions cannot contain spaces.\nPlease retry inputs without spaces");
+					a.show();
+					return;
+				} else if (typeIsWhitespace || varIsWhitespace) {
+					Alert a = new Alert(Alert.AlertType.ERROR, "Function inputs cannot be only whitespace.");
+					a.show();
+					return;
+				} else {
+					// going to want to add type and name to data set then loop through
+					// and add all from functions with name from where tehy're being accounded
+					// for/stored
+					UMLItem found = env.findItem(t.nameBox.getText());
+					if (found != null) {
+						HashMap<String, String> testName = new HashMap<>(found.getFunctions());
+						for (String i : testName.keySet()) {
+							if (answerType.getText().trim().equals(testName.get(i))
+									&& answerVar.getText().trim().contentEquals(i)) {
+								Alert a = new Alert(Alert.AlertType.ERROR, "Function " + testName.get(i).toString()
+										+ " already exists. Please enter an original field.");
+								a.show();
+								return;
+							}
+						}
+					}
+					t.displayFunctionType.setText("");
+					t.displayFunctionVar.setText("");
+
+					String newType = "";
+					String newVar = "";
+					found.addFunction(answerType.getText().trim(), answerVar.getText().trim());
+					HashMap<String, String> test = new HashMap<>(found.getFunctions());
+					for (String i : test.keySet()) {
+						newType = t.displayFunctionType.getText() + test.get(i) + "\n";
+						newVar = t.displayFunctionVar.getText() + i + "()\n";
+						t.displayFunctionType.setText(newType);
+						t.displayFunctionVar.setText(newVar);
+					}
+					// for (String i : test.values()) {
+					// newAttr = t.displayFunctionVar.getText() + test.get(i) + "\n";
+					// t.displayFunctionVar.setText(newAttr);
+					// }
+
+					t.pane.setMinHeight(t.pane.getHeight() + ADD_ATTR_OFFSET);
+					t.pane.setMaxHeight(t.pane.getHeight() + ADD_ATTR_OFFSET);
+					t.function.setLayoutY(t.function.getLayoutY() + ADD_ATTR_OFFSET);
+					t.removeFunction.setLayoutY(t.removeFunction.getLayoutY() + ADD_ATTR_OFFSET);
+					t.editFunction.setLayoutY(t.editFunction.getLayoutY() + ADD_ATTR_OFFSET);
+					t.edit.setLayoutY(t.edit.getLayoutY() + ADD_ATTR_OFFSET);
+					t.addChild.setLayoutY(t.addChild.getLayoutY() + ADD_ATTR_OFFSET);
+					System.out.println("Function button pressed");
+					System.out.println(found.getFunctions());
+					System.out.println(found.getFunctions().size());
+				}
+		});
+	}
+
+	public void setEditFunctionAction(GUITile t, Group layout) {
+		t.editFunction.setOnAction((event) -> {
+			TextInputDialog input = new TextInputDialog();
+			input.setTitle("Edit Function Input");
+			input.setHeaderText("Enter the function to be edited and the new function information: ");
+			Label oldTypeLabel = new Label("Old type: ");
+			Label oldVarLabel = new Label("Old name: ");
+			Label newTypeLabel = new Label("New type: ");
+			Label newVarLabel = new Label("New name: ");
+			Label divider = new Label("-------------------");
+			TextField answerOldType = new TextField();
+			TextField answerOldVar = new TextField();
+			TextField answerNewType = new TextField();
+			TextField answerNewVar = new TextField();
+
+			GridPane grid = new GridPane();
+			grid.add(oldTypeLabel, 1, 1);
+			grid.add(answerOldType, 2, 1);
+			grid.add(oldVarLabel, 1, 2);
+			grid.add(answerOldVar, 2, 2);
+			grid.add(divider, 1, 3);
+			grid.add(newTypeLabel, 1, 4);
+			grid.add(answerNewType, 2, 4);
+			grid.add(newVarLabel, 1, 5);
+			grid.add(answerNewVar, 2, 5);
+			input.getDialogPane().setContent(grid);
+
+			input.setHeight(50);
+			input.setWidth(120);
+			Optional<String> result = input.showAndWait();
+			if (!result.isPresent()) {
+				return;
+			}
+
+			String[] oldTypeTest = answerOldType.getText().toString().split(" ");
+			String[] oldVarTest = answerOldVar.getText().toString().split(" ");
+			String[] newTypeTest = answerNewType.getText().toString().split(" ");
+			String[] newVarTest = answerNewVar.getText().toString().split(" ");
+			boolean oldTypeIsWhitespace = answerOldType.getText().matches("^\\s*$");
+			boolean oldVarIsWhitespace = answerOldVar.getText().matches("^\\s*$");
+			boolean newTypeIsWhitespace = answerNewType.getText().matches("^\\s*$");
+			boolean newVarIsWhitespace = answerNewVar.getText().matches("^\\s*$");
+			if (oldTypeTest.length > 1 || oldVarTest.length > 1 || newTypeTest.length > 1 || newVarTest.length > 1) {
 				Alert a = new Alert(Alert.AlertType.ERROR,
-						"Functions cannot contain spaces.\nPlease retry inputs without spaces");
+						"Functions cannot contain spaces.\nPlease retry inputs without spaces\nNothing has been edited from functions.");
 				a.show();
 				return;
-			} else if (typeIsWhitespace || varIsWhitespace) {
-				Alert a = new Alert(Alert.AlertType.ERROR, "Function inputs cannot be only whitespace.");
+			} else if (oldTypeIsWhitespace || oldVarIsWhitespace || newTypeIsWhitespace || newVarIsWhitespace) {
+				Alert a = new Alert(Alert.AlertType.ERROR,
+						"Function inputs cannot be only whitespace.\nNothing has been edited from functions.");
 				a.show();
 				return;
-			} else {
-				// going to want to add type and name to data set then loop through
-				// and add all from functions with name from where tehy're being accounded
-				// for/stored
+			}  else {
+
 				UMLItem found = env.findItem(t.nameBox.getText());
 				if (found != null) {
 					HashMap<String, String> testName = new HashMap<>(found.getFunctions());
 					for (String i : testName.keySet()) {
-						if (answerType.getText().equals(testName.get(i)) && answerVar.getText().contentEquals(i)) {
+						if (answerNewType.getText().trim().equals(testName.get(i))
+								&& answerNewVar.getText().trim().contentEquals(i)) {
 							Alert a = new Alert(Alert.AlertType.ERROR, "Function " + testName.get(i).toString()
 									+ " already exists. Please enter an original field.");
 							a.show();
 							return;
 						}
 					}
-				}
-				t.displayFunctionType.setText("");
-				t.displayFunctionVar.setText("");
+					t.displayFunctionType.setText("");
+					t.displayFunctionVar.setText("");
 
-				String newType = "";
-				String newVar = "";
-				found.addFunction(answerType.getText(), answerVar.getText());
-				HashMap<String, String> test = new HashMap<>(found.getFunctions());
-				for (String i : test.keySet()) {
-					newType = t.displayFunctionType.getText() + test.get(i) + "\n";
-					newVar = t.displayFunctionVar.getText() + i + "()\n";
-					t.displayFunctionType.setText(newType);
-					t.displayFunctionVar.setText(newVar);
-				}
-				// for (String i : test.values()) {
-				// newAttr = t.displayFunctionVar.getText() + test.get(i) + "\n";
-				// t.displayFunctionVar.setText(newAttr);
-				// }
+					String newType = "";
+					String newVar = "";
 
-				t.pane.setMinHeight(t.pane.getHeight() + ADD_ATTR_OFFSET);
-				t.pane.setMaxHeight(t.pane.getHeight() + ADD_ATTR_OFFSET);
-				t.function.setLayoutY(t.function.getLayoutY() + ADD_ATTR_OFFSET);
-				t.removeFunction.setLayoutY(t.removeFunction.getLayoutY() + ADD_ATTR_OFFSET);
-				t.editFunction.setLayoutY(t.editFunction.getLayoutY() + ADD_ATTR_OFFSET);
-				t.edit.setLayoutY(t.edit.getLayoutY() + ADD_ATTR_OFFSET);
-				t.addChild.setLayoutY(t.addChild.getLayoutY() + ADD_ATTR_OFFSET);
-				System.out.println("Function button pressed");
+					found.editFunction(answerOldVar.getText().trim(), answerNewVar.getText().trim(),
+							answerNewType.getText().trim());
+					HashMap<String, String> test = new HashMap<>(found.getFunctions());
+					for (String i : test.keySet()) {
+						newType = t.displayFunctionType.getText() + test.get(i) + "\n";
+						newVar = t.displayFunctionVar.getText() + i + "()\n";
+						t.displayFunctionType.setText(newType);
+						t.displayFunctionVar.setText(newVar);
+					}
+				}
 				System.out.println(found.getFunctions());
-				System.out.println(found.getFunctions().size());
 			}
+
 		});
 	}
 
@@ -757,7 +947,10 @@ public class GUI extends Application {
 
 			input.setHeight(50);
 			input.setWidth(120);
-			input.showAndWait();
+			Optional<String> result = input.showAndWait();
+			if (!result.isPresent()) {
+				return;
+			}
 
 			String[] typeTest = answerType.getText().toString().split(" ");
 			String[] varTest = answerVar.getText().toString().split(" ");
@@ -787,8 +980,8 @@ public class GUI extends Application {
 				String newType = "";
 				String newVar = "";
 				if (found != null) {
-					System.out.println(found.existingFunction(answerVar.getText()));
-					if (!found.existingFunction(answerVar.getText())) {
+					System.out.println(found.existingFunction(answerVar.getText().trim()));
+					if (!found.existingFunction(answerVar.getText().trim())) {
 						HashMap<String, String> test = new HashMap<>(found.getFunctions());
 						for (String i : test.keySet()) {
 							newType = t.displayFunctionType.getText() + test.get(i) + "\n";
@@ -801,7 +994,7 @@ public class GUI extends Application {
 						return;
 
 					} else {
-						found.removeFunction(answerVar.getText());
+						found.removeFunction(answerVar.getText().trim());
 						HashMap<String, String> test = new HashMap<>(found.getFunctions());
 						for (String i : test.keySet()) {
 							newType = t.displayFunctionType.getText() + test.get(i) + "\n";
