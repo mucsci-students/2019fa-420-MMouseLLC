@@ -243,7 +243,9 @@ public class GUI extends Application {
 				setEditButtonAction(t);
 				setRemoveButtonAction(t, layout);
 				setFieldButtonAction(t, layout);
+				setRemoveFieldAction(t, layout);
 				setFunctionButtonAction(t, layout);
+				setRemoveFunctionAction(t, layout);
 				// setAddAttributeAction(t, layout);
 				setAddChildButtonAction(t, layout);
 				setMoveTileAction(t, layout);
@@ -336,6 +338,8 @@ public class GUI extends Application {
 					t.field.setVisible(true);
 					t.function.setVisible(true);
 					t.ffDivider.setVisible(true);
+					t.fieldsLabel.setVisible(true);
+					t.functionsLabel.setVisible(true);
 					// t.addAttr.setVisible(true);
 					t.addChild.setVisible(true);
 					t.move.setVisible(true);
@@ -355,6 +359,12 @@ public class GUI extends Application {
 					t.field.setVisible(false);
 					t.function.setVisible(false);
 					t.ffDivider.setVisible(true);
+					t.fieldsLabel.setVisible(true);
+					t.functionsLabel.setVisible(true);
+					t.editField.setVisible(false);
+					t.editFunction.setVisible(false);
+					t.removeField.setVisible(false);
+					t.removeFunction.setVisible(false);
 					// t.addAttr.setVisible(false);
 					t.addChild.setVisible(false);
 					t.move.setVisible(false);
@@ -497,11 +507,9 @@ public class GUI extends Application {
 				newVar = t.displayFieldVar.getText() + i + "\n";
 				t.displayFieldType.setText(newType);
 				t.displayFieldVar.setText(newVar);
+				t.removeField.setVisible(true);
+				t.editField.setVisible(true);
 			}
-			// t.displayFieldType.setText("");
-			// t.displayFieldVar.setText("");
-			// t.displayFieldType.setText(answer1.getText()+"\n");
-			// t.displayFieldVar.setText(answer2.getText()+"\n");
 
 			t.pane.setMinHeight(t.pane.getHeight() + ADD_ATTR_OFFSET);
 			t.pane.setMaxHeight(t.pane.getHeight() + ADD_ATTR_OFFSET);
@@ -509,12 +517,73 @@ public class GUI extends Application {
 			t.displayFunctionType.setLayoutY(t.displayFunctionType.getLayoutY() + ADD_ATTR_OFFSET);
 			t.displayFunctionVar.setLayoutY(t.displayFunctionVar.getLayoutY() + ADD_ATTR_OFFSET);
 			t.field.setLayoutY(t.field.getLayoutY() + ADD_ATTR_OFFSET);
+			t.editField.setLayoutY(t.editField.getLayoutY() + ADD_ATTR_OFFSET);
+			t.removeField.setLayoutY(t.removeField.getLayoutY() + ADD_ATTR_OFFSET);
 			t.function.setLayoutY(t.function.getLayoutY() + ADD_ATTR_OFFSET);
+			t.removeFunction.setLayoutY(t.removeFunction.getLayoutY() + ADD_ATTR_OFFSET);
+			t.editFunction.setLayoutY(t.editFunction.getLayoutY() + ADD_ATTR_OFFSET);
+			t.functionsLabel.setLayoutY(t.functionsLabel.getLayoutY() + ADD_ATTR_OFFSET);
 			t.edit.setLayoutY(t.edit.getLayoutY() + ADD_ATTR_OFFSET);
 			t.addChild.setLayoutY(t.addChild.getLayoutY() + ADD_ATTR_OFFSET);
 			System.out.println("Field button pressed");
 		});
 
+	}
+
+	public void setRemoveFieldAction(GUITile t, Group layout) {
+
+		t.removeField.setOnAction((event) -> {
+			System.out.println("remove F pressed");
+			TextInputDialog input = new TextInputDialog();
+			input.setTitle("Remove Field Input");
+			input.setHeaderText("Enter the type and name for the field to be removed:");
+			Label typeLabel = new Label("Type: ");
+			Label varLabel = new Label("Name: ");
+			TextField answerType = new TextField();
+			TextField answerVar = new TextField();
+
+			GridPane grid = new GridPane();
+			grid.add(typeLabel, 1, 1);
+			grid.add(answerType, 2, 1);
+			grid.add(varLabel, 1, 2);
+			grid.add(answerVar, 2, 2);
+			input.getDialogPane().setContent(grid);
+
+			input.setHeight(50);
+			input.setWidth(120);
+			input.showAndWait();
+
+			UMLItem found = env.findItem(t.nameBox.getText());
+			t.displayFieldType.setText("");
+			t.displayFieldVar.setText("");
+
+			String newType = "";
+			String newVar = "";
+
+			found.removeField(answerVar.getText());
+			HashMap<String, String> test = new HashMap<>(found.getFields());
+			for (String i : test.keySet()) {
+				newType = t.displayFieldType.getText() + test.get(i) + "\n";
+				newVar = t.displayFieldVar.getText() + i + "\n";
+				t.displayFieldType.setText(newType);
+				t.displayFieldVar.setText(newVar);
+			}
+
+			t.pane.setMinHeight(t.pane.getHeight() - ADD_ATTR_OFFSET);
+			t.pane.setMaxHeight(t.pane.getHeight() - ADD_ATTR_OFFSET);
+			t.ffDivider.setLayoutY(t.ffDivider.getLayoutY() - ADD_ATTR_OFFSET);
+			t.displayFunctionType.setLayoutY(t.displayFunctionType.getLayoutY() - ADD_ATTR_OFFSET);
+			t.displayFunctionVar.setLayoutY(t.displayFunctionVar.getLayoutY() - ADD_ATTR_OFFSET);
+			t.field.setLayoutY(t.field.getLayoutY() - ADD_ATTR_OFFSET);
+			t.removeField.setLayoutY(t.removeField.getLayoutY() - ADD_ATTR_OFFSET);
+			t.function.setLayoutY(t.function.getLayoutY() - ADD_ATTR_OFFSET);
+			t.editFunction.setLayoutY(t.editFunction.getLayoutY() - ADD_ATTR_OFFSET);
+			t.removeFunction.setLayoutY(t.removeFunction.getLayoutY() - ADD_ATTR_OFFSET);
+			t.edit.setLayoutY(t.edit.getLayoutY() - ADD_ATTR_OFFSET);
+			t.addChild.setLayoutY(t.addChild.getLayoutY() - ADD_ATTR_OFFSET);
+			System.out.println("Field button pressed");
+			System.out.println(found.getFields());
+		});
 	}
 
 	public void setFunctionButtonAction(GUITile t, Group layout) {
@@ -538,6 +607,7 @@ public class GUI extends Application {
 			input.setHeight(50);
 			input.setWidth(120);
 			input.showAndWait();
+
 			// going to want to add type and name to data set then loop through
 			// and add all from functions with name from where tehy're being accounded
 			// for/stored
@@ -545,9 +615,70 @@ public class GUI extends Application {
 			UMLItem found = env.findItem(t.nameBox.getText());
 			t.displayFunctionType.setText("");
 			t.displayFunctionVar.setText("");
+
 			String newType = "";
 			String newVar = "";
 			found.addFunction(answerType.getText(), answerVar.getText());
+			HashMap<String, String> test = new HashMap<>(found.getFunctions());
+			for (String i : test.keySet()) {
+				newType = t.displayFunctionType.getText() + test.get(i) + "\n";
+				newVar = t.displayFunctionVar.getText() + i + "()\n";
+				t.displayFunctionType.setText(newType);
+				t.displayFunctionVar.setText(newVar);
+				t.removeFunction.setVisible(true);
+				t.editFunction.setVisible(true);
+			}
+			// for (String i : test.values()) {
+			// newAttr = t.displayFunctionVar.getText() + test.get(i) + "\n";
+			// t.displayFunctionVar.setText(newAttr);
+			// }
+
+			t.pane.setMinHeight(t.pane.getHeight() + ADD_ATTR_OFFSET);
+			t.pane.setMaxHeight(t.pane.getHeight() + ADD_ATTR_OFFSET);
+			t.function.setLayoutY(t.function.getLayoutY() + ADD_ATTR_OFFSET);
+			t.removeFunction.setLayoutY(t.removeFunction.getLayoutY() + ADD_ATTR_OFFSET);
+			t.editFunction.setLayoutY(t.editFunction.getLayoutY() + ADD_ATTR_OFFSET);
+			t.edit.setLayoutY(t.edit.getLayoutY() + ADD_ATTR_OFFSET);
+			t.addChild.setLayoutY(t.addChild.getLayoutY() + ADD_ATTR_OFFSET);
+			System.out.println("Function button pressed");
+			System.out.println(found.getFunctions());
+			System.out.println(found.getFunctions().size());
+		});
+	}
+	
+	public void setRemoveFunctionAction(GUITile t, Group layout) {
+
+		t.removeFunction.setOnAction((event) -> {
+			TextInputDialog input = new TextInputDialog();
+			input.setTitle("Remove Function Input");
+			input.setHeaderText("Enter the type and name for the functionto be removed:");
+			Label typeLabel = new Label("Type: ");
+			Label varLabel = new Label("Name: ");
+			TextField answerType = new TextField();
+			TextField answerVar = new TextField();
+
+			GridPane grid = new GridPane();
+			grid.add(typeLabel, 1, 1);
+			grid.add(answerType, 2, 1);
+			grid.add(varLabel, 1, 2);
+			grid.add(answerVar, 2, 2);
+			input.getDialogPane().setContent(grid);
+
+			input.setHeight(50);
+			input.setWidth(120);
+			input.showAndWait();
+
+			// going to want to add type and name to data set then loop through
+			// and add all from functions with name from where tehy're being accounded
+			// for/stored
+
+			UMLItem found = env.findItem(t.nameBox.getText());
+			t.displayFunctionType.setText("");
+			t.displayFunctionVar.setText("");
+
+			String newType = "";
+			String newVar = "";
+			found.removeFunction(answerVar.getText());
 			HashMap<String, String> test = new HashMap<>(found.getFunctions());
 			for (String i : test.keySet()) {
 				newType = t.displayFunctionType.getText() + test.get(i) + "\n";
@@ -559,12 +690,14 @@ public class GUI extends Application {
 			// newAttr = t.displayFunctionVar.getText() + test.get(i) + "\n";
 			// t.displayFunctionVar.setText(newAttr);
 			// }
-			
-			t.pane.setMinHeight(t.pane.getHeight() + ADD_ATTR_OFFSET);
-			t.pane.setMaxHeight(t.pane.getHeight() + ADD_ATTR_OFFSET);
-			t.function.setLayoutY(t.function.getLayoutY() + ADD_ATTR_OFFSET);
-			t.edit.setLayoutY(t.edit.getLayoutY() + ADD_ATTR_OFFSET);
-			t.addChild.setLayoutY(t.addChild.getLayoutY() + ADD_ATTR_OFFSET);
+
+			t.pane.setMinHeight(t.pane.getHeight() - ADD_ATTR_OFFSET);
+			t.pane.setMaxHeight(t.pane.getHeight() - ADD_ATTR_OFFSET);
+			t.function.setLayoutY(t.function.getLayoutY() - ADD_ATTR_OFFSET);
+			t.removeFunction.setLayoutY(t.removeFunction.getLayoutY() - ADD_ATTR_OFFSET);
+			t.editFunction.setLayoutY(t.editFunction.getLayoutY() - ADD_ATTR_OFFSET);
+			t.edit.setLayoutY(t.edit.getLayoutY() - ADD_ATTR_OFFSET);
+			t.addChild.setLayoutY(t.addChild.getLayoutY() - ADD_ATTR_OFFSET);
 			System.out.println("Function button pressed");
 			System.out.println(found.getFunctions());
 			System.out.println(found.getFunctions().size());

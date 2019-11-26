@@ -35,6 +35,13 @@ public class GUITile extends Pane {
 	Button field = new Button("+");
 	Button function = new Button("+");
 	Label ffDivider = new Label("---------------");
+	Button removeField = new Button("x");
+	Button removeFunction = new Button("x");
+	Label fieldsLabel = new Label("Fields");
+	Label functionsLabel = new Label("Functions");
+	Button editField = new Button("e");
+	Button editFunction = new Button("e");
+	
 	boolean hasAttr = false;
 
 	/** Coordinates for where offsets will be in GUI pane */
@@ -67,7 +74,12 @@ public class GUITile extends Pane {
 		buildFieldVarLabel();
 		buildFunctionTypeLabel();
 		buildFunctionVarLabel();
-		
+		buildRemoveField();
+		buildRemoveFunction();
+		buildf1Label();
+		buildf2Label();
+		buildEditField();
+		buildEditFunction();
 	}
 	/**
 	 * @author eric
@@ -123,63 +135,120 @@ public class GUITile extends Pane {
 	}
 	
 	public void buildffDividePanel() {
-		this.ffDivider.setTextFill(Color.web("339900"));
 		this.ffDivider.setLayoutX(30);
-		this.ffDivider.setLayoutY(75);
+		this.ffDivider.setLayoutY(95);
 		this.ffDivider.setMaxWidth(120);
 		this.ffDivider.setMinWidth(120);
 		this.ffDivider.setVisible(false);
 		this.pane.getChildren().add(this.ffDivider);
 	}
 	
+	public void buildf1Label() {
+		this.fieldsLabel.setTextFill(Color.web("6F3800"));
+		this.fieldsLabel.setLayoutX(30);
+		this.fieldsLabel.setLayoutY(50);
+		this.fieldsLabel.setMaxWidth(120);
+		this.fieldsLabel.setMinWidth(120);
+		this.fieldsLabel.setVisible(false);
+		this.pane.getChildren().add(this.fieldsLabel);
+	}
+	public void buildf2Label() {
+		this.functionsLabel.setTextFill(Color.web("6F3800"));
+		this.functionsLabel.setLayoutX(30);
+		this.functionsLabel.setLayoutY(110);
+		this.functionsLabel.setMaxWidth(120);
+		this.functionsLabel.setMinWidth(120);
+		this.functionsLabel.setVisible(false);
+		this.pane.getChildren().add(this.functionsLabel);
+	}
+	
 	public void buildFieldButton() {
 		this.field.setLayoutX(1);
-		this.field.setLayoutY(50);
+		this.field.setLayoutY(70);
 		this.field.setMaxSize(26, 26);
 		this.field.setMinSize(26, 26);
 		this.field.setVisible(false);
-		this.field.setStyle("-fx-background-color: ADD8E6;");
+		this.field.setStyle("-fx-background-color: A6F1A6;");
 		this.pane.getChildren().add(this.field);
 	}
 	
 	public void buildFieldTypeLabel() {
 		this.displayFieldType.setLayoutX(35);
-		this.displayFieldType.setLayoutY(50);
+		this.displayFieldType.setLayoutY(70);
 		this.displayFieldType.setVisible(true);
-		this.displayFieldType.setTextFill(Color.web("8B008B"));
+		this.displayFieldType.setTextFill(Color.web("8565C4"));
 		this.pane.getChildren().add(this.displayFieldType);
 	}
 	public void buildFieldVarLabel() {
 		this.displayFieldVar.setLayoutX(80);
-		this.displayFieldVar.setLayoutY(50);
+		this.displayFieldVar.setLayoutY(70);
 		this.displayFieldVar.setVisible(true);
-		this.displayFieldVar.setTextFill(Color.web("CD853F"));
+		this.displayFieldVar.setTextFill(Color.web("FFA82E"));
 		this.pane.getChildren().add(this.displayFieldVar);
+	}
+	
+	public void buildRemoveField() {
+		this.removeField.setLayoutX(50);
+		this.removeField.setLayoutY(70);
+		this.removeField.setMaxSize(26, 26);
+		this.removeField.setMinSize(26, 26);
+		this.removeField.setStyle("-fx-background-color: FF6961;");
+		this.removeField.setVisible(false);
+		this.pane.getChildren().add(this.removeField);
+	}
+	
+	public void buildEditField() {
+		this.editField.setLayoutX(100);
+		this.editField.setLayoutY(70);
+		this.editField.setMaxSize(26, 26);
+		this.editField.setMinSize(26, 26);
+		this.editField.setStyle("-fx-background-color: A3D1FF;");
+		this.editField.setVisible(false);
+		this.pane.getChildren().add(this.editField);
 	}
 	
 	public void buildFunctionButton() {
 		this.function.setLayoutX(1);
-		this.function.setLayoutY(90);
+		this.function.setLayoutY(130);
 		this.function.setMaxSize(26, 26);
 		this.function.setMinSize(26, 26);
 		this.function.setVisible(false);
-		this.function.setStyle("-fx-background-color: FFFF99;");
+		this.function.setStyle("-fx-background-color: A6F1A6;");
 		this.pane.getChildren().add(this.function);
 	}
 	
 	public void buildFunctionTypeLabel() {
 		this.displayFunctionType.setLayoutX(35);
-		this.displayFunctionType.setLayoutY(90);
+		this.displayFunctionType.setLayoutY(130);
 		this.displayFunctionType.setVisible(true);
-		this.displayFunctionType.setTextFill(Color.web("8B008B"));
+		this.displayFunctionType.setTextFill(Color.web("8565C4"));
 		this.pane.getChildren().add(this.displayFunctionType);
 	}
 	public void buildFunctionVarLabel() {
 		this.displayFunctionVar.setLayoutX(80);
-		this.displayFunctionVar.setLayoutY(90);
+		this.displayFunctionVar.setLayoutY(130);
 		this.displayFunctionVar.setVisible(true);
-		this.displayFunctionVar.setTextFill(Color.web("CD853F"));
+		this.displayFunctionVar.setTextFill(Color.web("FFA82E"));
 		this.pane.getChildren().add(this.displayFunctionVar);
+	}
+	
+	public void buildRemoveFunction() {
+		this.removeFunction.setLayoutX(50);
+		this.removeFunction.setLayoutY(130);
+		this.removeFunction.setMaxSize(26, 26);
+		this.removeFunction.setMinSize(26, 26);
+		this.removeFunction.setStyle("-fx-background-color: FF6961;");
+		this.removeFunction.setVisible(false);
+		this.pane.getChildren().add(this.removeFunction);
+	}
+	public void buildEditFunction() {
+		this.editFunction.setLayoutX(100);
+		this.editFunction.setLayoutY(130);
+		this.editFunction.setMaxSize(26, 26);
+		this.editFunction.setMinSize(26, 26);
+		this.editFunction.setStyle("-fx-background-color: A3D1FF;");
+		this.editFunction.setVisible(false);
+		this.pane.getChildren().add(this.editFunction);
 	}
 	/**
 	 * @author eric
@@ -223,7 +292,7 @@ public class GUITile extends Pane {
 	 * build edit button makes the edit button for editting the name of the tile
 	 */
 	private void buildEditButton() {
-		this.edit.setLayoutY(150);
+		this.edit.setLayoutY(170);
 		this.edit.setLayoutX(10);
 		this.edit.setMaxSize(120, 30);
 		this.edit.setMinSize(120, 30);
@@ -252,7 +321,7 @@ public class GUITile extends Pane {
 		this.remove.setMaxSize(26, 26);
 		this.remove.setMinSize(26, 26);
 		this.remove.setVisible(true);
-		this.remove.setStyle("-fx-background-color: DD0000;");
+		this.remove.setStyle("-fx-background-color: FF6961;");
 		this.pane.getChildren().add(this.remove);
 	}
 
@@ -260,7 +329,7 @@ public class GUITile extends Pane {
 	 * Make button for removing child button from env
 	 */
 	public void buildChildButton() {
-		this.addChild.setLayoutY(190);
+		this.addChild.setLayoutY(210);
 		this.addChild.setLayoutX(10);
 		this.addChild.setMaxSize(120, 30);
 		this.addChild.setMinSize(120, 30);
