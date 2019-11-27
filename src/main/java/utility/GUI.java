@@ -132,6 +132,10 @@ public class GUI extends Application {
 							tile.field.setVisible(true);
 							tile.function.setVisible(true);
 							tile.ffDivider.setVisible(true);
+							tile.editField.setVisible(true);
+							tile.editFunction.setVisible(true);
+							tile.removeField.setVisible(true);
+							tile.removeFunction.setVisible(true);
 							int tileSize = i.getAttributes().size();
 							tile.pane.setMaxHeight(250 + (tileSize * ADD_ATTR_OFFSET));
 							tile.pane.setMinHeight(250 + (tileSize * ADD_ATTR_OFFSET));
@@ -184,12 +188,16 @@ public class GUI extends Application {
 							tile.field.setVisible(false);
 							tile.function.setVisible(false);
 							tile.ffDivider.setVisible(true);
+							tile.editField.setVisible(false);
+							tile.editFunction.setVisible(false);
+							tile.removeField.setVisible(false);
+							tile.removeFunction.setVisible(false);
 							// tile.addAttr.setVisible(false);
 							tile.addChild.setVisible(false);
 							tile.move.setVisible(false);
 							int tileSize = i.getAttributes().size();
-							tile.pane.setMaxHeight(50 + (tileSize * ADD_ATTR_OFFSET));
-							tile.pane.setMinHeight(50 + (tileSize * ADD_ATTR_OFFSET));
+							tile.pane.setMaxHeight(150 + (tileSize * ADD_ATTR_OFFSET));
+							tile.pane.setMinHeight(150 + (tileSize * ADD_ATTR_OFFSET));
 							tile.pane.getChildren().remove(tile.add);
 							env.createMappingFor(i, tile);
 							// tile.removeAttr.setVisible(false);
@@ -811,10 +819,6 @@ public class GUI extends Application {
 					t.displayFunctionType.setText(newType);
 					t.displayFunctionVar.setText(newVar);
 				}
-				// for (String i : test.values()) {
-				// newAttr = t.displayFunctionVar.getText() + test.get(i) + "\n";
-				// t.displayFunctionVar.setText(newAttr);
-				// }
 
 				t.pane.setMinHeight(t.pane.getHeight() + ADD_ATTR_OFFSET);
 				t.pane.setMaxHeight(t.pane.getHeight() + ADD_ATTR_OFFSET);
@@ -975,7 +979,7 @@ public class GUI extends Application {
 							t.displayFunctionType.setText(newType);
 							t.displayFunctionVar.setText(newVar);
 						}
-						Alert a = new Alert(Alert.AlertType.ERROR, "Field not found in list.");
+						Alert a = new Alert(Alert.AlertType.ERROR, "Function not found in list.");
 						a.show();
 						return;
 
@@ -991,10 +995,6 @@ public class GUI extends Application {
 
 					}
 				}
-				// for (String i : test.values()) {
-				// newAttr = t.displayFunctionVar.getText() + test.get(i) + "\n";
-				// t.displayFunctionVar.setText(newAttr);
-				// }
 
 				t.pane.setMinHeight(t.pane.getHeight() - ADD_ATTR_OFFSET);
 				t.pane.setMaxHeight(t.pane.getHeight() - ADD_ATTR_OFFSET);
@@ -1003,9 +1003,6 @@ public class GUI extends Application {
 				t.editFunction.setLayoutY(t.editFunction.getLayoutY() - ADD_ATTR_OFFSET);
 				t.edit.setLayoutY(t.edit.getLayoutY() - ADD_ATTR_OFFSET);
 				t.addChild.setLayoutY(t.addChild.getLayoutY() - ADD_ATTR_OFFSET);
-				System.out.println("Function button pressed");
-				System.out.println(found.getFunctions());
-				System.out.println(found.getFunctions().size());
 			}
 		});
 	}
