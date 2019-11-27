@@ -522,46 +522,44 @@ public class GUI extends Application {
 				// for/stored
 				UMLItem found = env.findItem(t.nameBox.getText());
 				if (found != null) {
-					HashMap<String, String> testName = new HashMap<>(found.getFunctions());
+					HashMap<String, String> testName = new HashMap<>(found.getFields());
 					for (String i : testName.keySet()) {
-						if (answerType.getText().trim().equals(testName.get(i))
-								&& answerVar.getText().trim().contentEquals(i)) {
+						if (answerVar.getText().trim().equals(i)) {
 							Alert a = new Alert(Alert.AlertType.ERROR, "Field " + testName.get(i).toString()
 									+ " already exists. Please enter an original field.");
 							a.show();
 							return;
 						}
 					}
-				}
-				t.displayFieldType.setText("");
-				t.displayFieldVar.setText("");
-				String newType = "";
-				String newVar = "";
-				found.addField(answerType.getText().trim(), answerVar.getText().trim());
-				HashMap<String, String> test = new HashMap<>(found.getFields());
-				for (String i : test.keySet()) {
-					newType = t.displayFieldType.getText() + test.get(i) + "\n";
-					newVar = t.displayFieldVar.getText() + i + "\n";
-					t.displayFieldType.setText(newType);
-					t.displayFieldVar.setText(newVar);
-				}
 
-				t.pane.setMinHeight(t.pane.getHeight() + ADD_ATTR_OFFSET);
-				t.pane.setMaxHeight(t.pane.getHeight() + ADD_ATTR_OFFSET);
-				t.ffDivider.setLayoutY(t.ffDivider.getLayoutY() + ADD_ATTR_OFFSET);
-				t.displayFunctionType.setLayoutY(t.displayFunctionType.getLayoutY() + ADD_ATTR_OFFSET);
-				t.displayFunctionVar.setLayoutY(t.displayFunctionVar.getLayoutY() + ADD_ATTR_OFFSET);
-				t.field.setLayoutY(t.field.getLayoutY() + ADD_ATTR_OFFSET);
-				t.editField.setLayoutY(t.editField.getLayoutY() + ADD_ATTR_OFFSET);
-				t.removeField.setLayoutY(t.removeField.getLayoutY() + ADD_ATTR_OFFSET);
-				t.function.setLayoutY(t.function.getLayoutY() + ADD_ATTR_OFFSET);
-				t.removeFunction.setLayoutY(t.removeFunction.getLayoutY() + ADD_ATTR_OFFSET);
-				t.editFunction.setLayoutY(t.editFunction.getLayoutY() + ADD_ATTR_OFFSET);
-				t.functionsLabel.setLayoutY(t.functionsLabel.getLayoutY() + ADD_ATTR_OFFSET);
-				t.edit.setLayoutY(t.edit.getLayoutY() + ADD_ATTR_OFFSET);
-				t.addChild.setLayoutY(t.addChild.getLayoutY() + ADD_ATTR_OFFSET);
-				System.out.println("Field button pressed");
-				System.out.println(found.getFields());
+					t.displayFieldType.setText("");
+					t.displayFieldVar.setText("");
+					String newType = "";
+					String newVar = "";
+					found.addField(answerType.getText().trim(), answerVar.getText().trim());
+					HashMap<String, String> test = new HashMap<>(found.getFields());
+					for (String i : test.keySet()) {
+						newType = t.displayFieldType.getText() + test.get(i) + "\n";
+						newVar = t.displayFieldVar.getText() + i + "\n";
+						t.displayFieldType.setText(newType);
+						t.displayFieldVar.setText(newVar);
+					}
+
+					t.pane.setMinHeight(t.pane.getHeight() + ADD_ATTR_OFFSET);
+					t.pane.setMaxHeight(t.pane.getHeight() + ADD_ATTR_OFFSET);
+					t.ffDivider.setLayoutY(t.ffDivider.getLayoutY() + ADD_ATTR_OFFSET);
+					t.displayFunctionType.setLayoutY(t.displayFunctionType.getLayoutY() + ADD_ATTR_OFFSET);
+					t.displayFunctionVar.setLayoutY(t.displayFunctionVar.getLayoutY() + ADD_ATTR_OFFSET);
+					t.field.setLayoutY(t.field.getLayoutY() + ADD_ATTR_OFFSET);
+					t.editField.setLayoutY(t.editField.getLayoutY() + ADD_ATTR_OFFSET);
+					t.removeField.setLayoutY(t.removeField.getLayoutY() + ADD_ATTR_OFFSET);
+					t.function.setLayoutY(t.function.getLayoutY() + ADD_ATTR_OFFSET);
+					t.removeFunction.setLayoutY(t.removeFunction.getLayoutY() + ADD_ATTR_OFFSET);
+					t.editFunction.setLayoutY(t.editFunction.getLayoutY() + ADD_ATTR_OFFSET);
+					t.functionsLabel.setLayoutY(t.functionsLabel.getLayoutY() + ADD_ATTR_OFFSET);
+					t.edit.setLayoutY(t.edit.getLayoutY() + ADD_ATTR_OFFSET);
+					t.addChild.setLayoutY(t.addChild.getLayoutY() + ADD_ATTR_OFFSET);
+				}
 			}
 		});
 
@@ -625,8 +623,7 @@ public class GUI extends Application {
 				if (found != null) {
 					HashMap<String, String> testName = new HashMap<>(found.getFields());
 					for (String i : testName.keySet()) {
-						if (answerNewType.getText().trim().equals(testName.get(i))
-								&& answerNewVar.getText().trim().contentEquals(i)) {
+						if (answerNewVar.getText().trim().equals(i)) {
 							Alert a = new Alert(Alert.AlertType.ERROR, "Field " + testName.get(i).toString()
 									+ " already exists. Please enter an original field.");
 							a.show();
@@ -649,7 +646,6 @@ public class GUI extends Application {
 						t.displayFieldVar.setText(newVar);
 					}
 				}
-				System.out.println(found.getFields());
 			}
 
 		});
@@ -658,7 +654,6 @@ public class GUI extends Application {
 	public void setRemoveFieldAction(GUITile t, Group layout) {
 
 		t.removeField.setOnAction((event) -> {
-			System.out.println("remove F pressed");
 			TextInputDialog input = new TextInputDialog();
 			input.setTitle("Remove Field Input");
 			input.setHeaderText("Enter the type and name for the field to be removed:");
@@ -705,7 +700,6 @@ public class GUI extends Application {
 				String newType = "";
 				String newVar = "";
 				if (found != null) {
-					System.out.println(found.existingField(answerVar.getText().trim()));
 					if (!found.existingField(answerVar.getText().trim())) {
 						HashMap<String, String> test = new HashMap<>(found.getFields());
 						for (String i : test.keySet()) {
@@ -745,8 +739,6 @@ public class GUI extends Application {
 				t.functionsLabel.setLayoutY(t.functionsLabel.getLayoutY() - ADD_ATTR_OFFSET);
 				t.edit.setLayoutY(t.edit.getLayoutY() - ADD_ATTR_OFFSET);
 				t.addChild.setLayoutY(t.addChild.getLayoutY() - ADD_ATTR_OFFSET);
-				System.out.println("Field button pressed");
-				System.out.println(found.getFields());
 			}
 
 		});
@@ -777,65 +769,61 @@ public class GUI extends Application {
 				return;
 			}
 
-				String[] typeTest = answerType.getText().toString().split(" ");
-				String[] varTest = answerVar.getText().toString().split(" ");
-				boolean typeIsWhitespace = answerType.getText().matches("^\\s*$");
-				boolean varIsWhitespace = answerVar.getText().matches("^\\s*$");
-				if (typeTest.length > 1 || varTest.length > 1) {
-					Alert a = new Alert(Alert.AlertType.ERROR,
-							"Functions cannot contain spaces.\nPlease retry inputs without spaces");
-					a.show();
-					return;
-				} else if (typeIsWhitespace || varIsWhitespace) {
-					Alert a = new Alert(Alert.AlertType.ERROR, "Function inputs cannot be only whitespace.");
-					a.show();
-					return;
-				} else {
-					// going to want to add type and name to data set then loop through
-					// and add all from functions with name from where tehy're being accounded
-					// for/stored
-					UMLItem found = env.findItem(t.nameBox.getText());
-					if (found != null) {
-						HashMap<String, String> testName = new HashMap<>(found.getFunctions());
-						for (String i : testName.keySet()) {
-							if (answerType.getText().trim().equals(testName.get(i))
-									&& answerVar.getText().trim().contentEquals(i)) {
-								Alert a = new Alert(Alert.AlertType.ERROR, "Function " + testName.get(i).toString()
-										+ " already exists. Please enter an original field.");
-								a.show();
-								return;
-							}
+			String[] typeTest = answerType.getText().toString().split(" ");
+			String[] varTest = answerVar.getText().toString().split(" ");
+			boolean typeIsWhitespace = answerType.getText().matches("^\\s*$");
+			boolean varIsWhitespace = answerVar.getText().matches("^\\s*$");
+			if (typeTest.length > 1 || varTest.length > 1) {
+				Alert a = new Alert(Alert.AlertType.ERROR,
+						"Functions cannot contain spaces.\nPlease retry inputs without spaces");
+				a.show();
+				return;
+			} else if (typeIsWhitespace || varIsWhitespace) {
+				Alert a = new Alert(Alert.AlertType.ERROR, "Function inputs cannot be only whitespace.");
+				a.show();
+				return;
+			} else {
+				// going to want to add type and name to data set then loop through
+				// and add all from functions with name from where tehy're being accounded
+				// for/stored
+				UMLItem found = env.findItem(t.nameBox.getText());
+				if (found != null) {
+					HashMap<String, String> testName = new HashMap<>(found.getFunctions());
+					for (String i : testName.keySet()) {
+						if (answerVar.getText().trim().equals(i)) {
+							Alert a = new Alert(Alert.AlertType.ERROR, "Function " + testName.get(i).toString()
+									+ " already exists. Please enter an original function.");
+							a.show();
+							return;
 						}
 					}
-					t.displayFunctionType.setText("");
-					t.displayFunctionVar.setText("");
-
-					String newType = "";
-					String newVar = "";
-					found.addFunction(answerType.getText().trim(), answerVar.getText().trim());
-					HashMap<String, String> test = new HashMap<>(found.getFunctions());
-					for (String i : test.keySet()) {
-						newType = t.displayFunctionType.getText() + test.get(i) + "\n";
-						newVar = t.displayFunctionVar.getText() + i + "()\n";
-						t.displayFunctionType.setText(newType);
-						t.displayFunctionVar.setText(newVar);
-					}
-					// for (String i : test.values()) {
-					// newAttr = t.displayFunctionVar.getText() + test.get(i) + "\n";
-					// t.displayFunctionVar.setText(newAttr);
-					// }
-
-					t.pane.setMinHeight(t.pane.getHeight() + ADD_ATTR_OFFSET);
-					t.pane.setMaxHeight(t.pane.getHeight() + ADD_ATTR_OFFSET);
-					t.function.setLayoutY(t.function.getLayoutY() + ADD_ATTR_OFFSET);
-					t.removeFunction.setLayoutY(t.removeFunction.getLayoutY() + ADD_ATTR_OFFSET);
-					t.editFunction.setLayoutY(t.editFunction.getLayoutY() + ADD_ATTR_OFFSET);
-					t.edit.setLayoutY(t.edit.getLayoutY() + ADD_ATTR_OFFSET);
-					t.addChild.setLayoutY(t.addChild.getLayoutY() + ADD_ATTR_OFFSET);
-					System.out.println("Function button pressed");
-					System.out.println(found.getFunctions());
-					System.out.println(found.getFunctions().size());
 				}
+				t.displayFunctionType.setText("");
+				t.displayFunctionVar.setText("");
+
+				String newType = "";
+				String newVar = "";
+				found.addFunction(answerType.getText().trim(), answerVar.getText().trim());
+				HashMap<String, String> test = new HashMap<>(found.getFunctions());
+				for (String i : test.keySet()) {
+					newType = t.displayFunctionType.getText() + test.get(i) + "\n";
+					newVar = t.displayFunctionVar.getText() + i + "()\n";
+					t.displayFunctionType.setText(newType);
+					t.displayFunctionVar.setText(newVar);
+				}
+				// for (String i : test.values()) {
+				// newAttr = t.displayFunctionVar.getText() + test.get(i) + "\n";
+				// t.displayFunctionVar.setText(newAttr);
+				// }
+
+				t.pane.setMinHeight(t.pane.getHeight() + ADD_ATTR_OFFSET);
+				t.pane.setMaxHeight(t.pane.getHeight() + ADD_ATTR_OFFSET);
+				t.function.setLayoutY(t.function.getLayoutY() + ADD_ATTR_OFFSET);
+				t.removeFunction.setLayoutY(t.removeFunction.getLayoutY() + ADD_ATTR_OFFSET);
+				t.editFunction.setLayoutY(t.editFunction.getLayoutY() + ADD_ATTR_OFFSET);
+				t.edit.setLayoutY(t.edit.getLayoutY() + ADD_ATTR_OFFSET);
+				t.addChild.setLayoutY(t.addChild.getLayoutY() + ADD_ATTR_OFFSET);
+			}
 		});
 	}
 
@@ -891,16 +879,15 @@ public class GUI extends Application {
 						"Function inputs cannot be only whitespace.\nNothing has been edited from functions.");
 				a.show();
 				return;
-			}  else {
+			} else {
 
 				UMLItem found = env.findItem(t.nameBox.getText());
 				if (found != null) {
 					HashMap<String, String> testName = new HashMap<>(found.getFunctions());
 					for (String i : testName.keySet()) {
-						if (answerNewType.getText().trim().equals(testName.get(i))
-								&& answerNewVar.getText().trim().contentEquals(i)) {
+						if (answerNewVar.getText().trim().equals(i)) {
 							Alert a = new Alert(Alert.AlertType.ERROR, "Function " + testName.get(i).toString()
-									+ " already exists. Please enter an original field.");
+									+ " already exists. Please enter an original function name.");
 							a.show();
 							return;
 						}
@@ -921,7 +908,6 @@ public class GUI extends Application {
 						t.displayFunctionVar.setText(newVar);
 					}
 				}
-				System.out.println(found.getFunctions());
 			}
 
 		});

@@ -35,8 +35,8 @@ public class GUITile extends Pane {
 	Button field = new Button("+");
 	Button function = new Button("+");
 	Label ffDivider = new Label("---------------");
-	Button removeField = new Button("x");
-	Button removeFunction = new Button("x");
+	Button removeField = new Button("-");
+	Button removeFunction = new Button("-");
 	Label fieldsLabel = new Label("Fields");
 	Label functionsLabel = new Label("Functions");
 	Button editField = new Button("e");
