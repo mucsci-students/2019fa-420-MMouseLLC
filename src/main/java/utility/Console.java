@@ -516,61 +516,6 @@ public class Console {
 		
 		env.listCategories();
 	}
-	
-	
-	/**
-	 * Removes a child class from another class given the input of child and parent
-	 * to be unlinked
-	 * 
-	 * @param input The input
-	 */
-	@Deprecated
-	public void removeChild(String[] input) {
-		if (input.length != 3) {
-			logger.warning(
-					"Invalid: removechild [childClass] [parentClass] - 3 fields required, " + input.length + " found.");
-		} else {
-			String childName = input[1];
-			String parentName = input[2];
-			UMLItem childItem = env.findItem(childName);
-			UMLItem parentItem = env.findItem(parentName);
-
-			env.removeChild(childName, parentName, childItem, parentItem);
-			System.out.println(env.listClasses());
-		}
-	}
-
-	/**
-	 * Lists the children of a given parent class
-	 * 
-	 * @param input
-	 */
-	@Deprecated
-	public void listChildren(String[] input) {
-		if (input.length != 2) {
-			logger.warning("Invalid: listchildren [parentClass] - 2 fields required, " + input.length + " found.");
-		} else {
-			String parentName = input[1];
-			String childList = env.listChildren(parentName);
-			System.out.println(childList);
-		}
-	}
-
-	/**
-	 * Lists the parents of a given child class
-	 * 
-	 * @param input The input
-	 */
-	@Deprecated
-	public void listParents(String[] input) {
-		if (input.length != 2) {
-			logger.warning("Invalid: listparents [childClass] - 2 fields required, " + input.length + " found.");
-		} else {
-			String childName = input[1];
-			String parentList = env.listParents(childName);
-			System.out.println(parentList);
-		}
-	}
 
 	/**
 	 * edit a field type currently in a class and gives list of fields currently in
