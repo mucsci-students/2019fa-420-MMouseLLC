@@ -1157,7 +1157,7 @@ public class GUI extends Application {
 			env.replaceArrow(pair, newArrow);
 			arrowLayout.getChildren().add(newArrow);
 
-		};
+		}; 
 	}
 
 	/*
