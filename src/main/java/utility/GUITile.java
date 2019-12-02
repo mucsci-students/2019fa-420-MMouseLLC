@@ -3,13 +3,12 @@ package utility;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.text.TextAlignment;
 
 /**
  * @author eric
  * 
  * GUITile is the graphical representation of an UMLItem in the environment
- * It keeps track of all the things that makes an UMLItem and builds a usuable 
+ * It keeps track of all the things that makes an UMLItem and builds a usable 
  * pane for the GUI interface. 
  * 
  */
@@ -133,7 +132,11 @@ public class GUITile extends Pane {
 		this.nameLabel.setVisible(false);
 		this.pane.getChildren().add(this.nameLabel);
 	}
-	
+	/**
+	 * @author lauren
+	 * build ff divide panel is the label divider that separates
+	 * the field and function areas in the gui tile
+	 */
 	public void buildffDividePanel() {
 		this.ffDivider.setLayoutX(30);
 		this.ffDivider.setLayoutY(95);
@@ -142,7 +145,10 @@ public class GUITile extends Pane {
 		this.ffDivider.setVisible(false);
 		this.pane.getChildren().add(this.ffDivider);
 	}
-	
+	/**
+	 * build f1 label makes the header label for fields
+	 * colored brown
+	 */
 	public void buildf1Label() {
 		this.fieldsLabel.setTextFill(Color.web("6F3800"));
 		this.fieldsLabel.setLayoutX(30);
@@ -250,43 +256,7 @@ public class GUITile extends Pane {
 		this.editFunction.setVisible(false);
 		this.pane.getChildren().add(this.editFunction);
 	}
-	/**
-	 * @author eric
-	 * build attr button makes the add attribute button for adding attributes
-	 * to the main pane
-	 */
-	/*public void buildAddAttrButton() {
-		this.addAttr.setLayoutX(10);
-		this.addAttr.setLayoutY(70);
-		this.addAttr.setVisible(false);
-		this.addAttr.setMaxSize(120, 30);
-		this.addAttr.setMinSize(120, 30);
-		this.pane.getChildren().add(this.addAttr);
-	}*/
-	/**
-	 * @author eric
-	 * build remove attr button makes the remove attribute button for removing attributes
-	 * from the main pane
-	 */
-	/*public void buildRemAttrButton() {
-		this.removeAttr.setLayoutX(10);
-		this.removeAttr.setLayoutY(110);
-		this.removeAttr.setVisible(false);
-		this.removeAttr.setMaxSize(120, 30);
-		this.removeAttr.setMinSize(120, 30);
-		this.pane.getChildren().add(this.removeAttr);
-	}*/
-	/**
-	 * @author eric
-	 * build attr label makes the label for attributes after adding attributes
-	 * to the main pane. this displays them after adding. 
-	 */
-	/*public void buildAttrLabel() {
-		this.displayAttr.setLayoutX(10);
-		this.displayAttr.setLayoutY(45);
-		this.displayAttr.setVisible(true);
-		this.pane.getChildren().add(this.displayAttr);
-	}*/
+
 	/**
 	 * @author eric
 	 * build edit button makes the edit button for editting the name of the tile

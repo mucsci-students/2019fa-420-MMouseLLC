@@ -1,6 +1,5 @@
 package utility;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Optional;
 import java.util.function.BiConsumer;
@@ -15,7 +14,6 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.stage.*;
 import javafx.scene.control.*;
-import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.layout.*;
 
 /**
@@ -148,11 +146,7 @@ public class GUI extends Application {
 							// tile.removeAttr.setVisible(true);
 							tile.pane.getChildren().remove(tile.add);
 							setMoveTileAction(tile, layout);
-							env.getRelationshipsFor(i).forEach(updateArrowWithParent());
-						}
-
-						for (UMLItem j : env.getItems()) {
-							env.getRelationshipsFor(j).forEach(updateArrowWithParent());
+							//env.getRelationshipsFor(i).forEach(updateArrowWithParent());
 						}
 
 						displayMode.setSelected(false);
@@ -160,6 +154,10 @@ public class GUI extends Application {
 						addButton.setDisable(false);
 						return;
 					}
+				}
+
+				for (UMLItem j : env.getItems()) {
+					env.getRelationshipsFor(j).forEach(updateArrowWithParent());
 				}
 			}
 		});
@@ -212,17 +210,15 @@ public class GUI extends Application {
 							tile.pane.getChildren().remove(tile.add);
 
 						}
-
-						for (UMLItem j : env.getItems()) {
-							env.getRelationshipsFor(j).forEach(updateArrowWithParent());
-						}
-
 						// reset the main buttons to be appropriate
 						displayMode.setSelected(true);
 						editMode.setSelected(false);
 						addButton.setDisable(true);
 						return;
 					}
+				}
+				for (UMLItem j : env.getItems()) {
+					env.getRelationshipsFor(j).forEach(updateArrowWithParent());
 				}
 			}
 
@@ -362,7 +358,6 @@ public class GUI extends Application {
 					t.editField.setVisible(true);
 					t.removeFunction.setVisible(true);
 					t.editFunction.setVisible(true);
-					// t.addAttr.setVisible(true);
 					t.addChild.setVisible(true);
 					t.move.setVisible(true);
 					t.pane.setMaxHeight(250);
@@ -370,7 +365,6 @@ public class GUI extends Application {
 					t.pane.getChildren().remove(t.add);
 					UMLItem item = env.findItem(t.nameBox.getText());
 					env.createMappingFor(item, t);
-					// t.removeAttr.setVisible(true);
 					t.pane.getChildren().remove(t.add);
 				} else {
 					t.nameBox.setVisible(false);
@@ -387,7 +381,6 @@ public class GUI extends Application {
 					t.editFunction.setVisible(false);
 					t.removeField.setVisible(false);
 					t.removeFunction.setVisible(false);
-					// t.addAttr.setVisible(false);
 					t.addChild.setVisible(false);
 					t.move.setVisible(false);
 					t.pane.setMaxHeight(50);
@@ -395,7 +388,6 @@ public class GUI extends Application {
 					t.pane.getChildren().remove(t.add);
 					UMLItem item = env.findItem(t.nameBox.getText());
 					env.createMappingFor(item, t);
-					// t.removeAttr.setVisible(false);
 					t.pane.getChildren().remove(t.add);
 				}
 
@@ -492,7 +484,11 @@ public class GUI extends Application {
 
 		});
 	}
-
+	/**
+	 * 
+	 * @param t
+	 * @param layout
+	 */
 	public void setFieldButtonAction(GUITile t, Group layout) {
 
 		t.field.setOnAction((event) -> {
