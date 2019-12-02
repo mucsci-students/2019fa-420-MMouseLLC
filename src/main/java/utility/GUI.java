@@ -7,6 +7,7 @@ import config.ArrowModifier;
 import data.Arrow;
 import data.GUIEnvironment;
 import data.ParentChildPair;
+import data.Relationship;
 import data.UMLItem;
 import javafx.application.Application;
 import javafx.event.*;
@@ -230,7 +231,7 @@ public class GUI extends Application {
 		 * based on which tile is selected.
 		 */
 		EventHandler<ActionEvent> clickAddEvent = new EventHandler<ActionEvent>() {
-
+			
 			public void handle(ActionEvent e) {
 				GUITile t = new GUITile();
 				if (getSize() == 0) {
@@ -243,8 +244,6 @@ public class GUI extends Application {
 					t.pane.setTranslateY(0);
 					t.layoutX = t.pane.getLayoutX();
 					t.layoutY = t.pane.getLayoutY();
-					// t.pane.setLayoutX(getSize() * TILE_OFFSET); <- old way for not stacking on
-					// creation
 				}
 				layout.getChildren().add(t.pane);
 				increaseSize();
@@ -343,6 +342,10 @@ public class GUI extends Application {
 					t.nameBox.setVisible(false);
 					t.nameLabel.setVisible(true);
 					t.nameLabel.setText(t.nameBox.getText());
+					if(t.nameLabel.getText().toString().length() > 17) {
+						t.pane.setMinWidth(t.pane.getWidth() + (t.nameLabel.getText().toString().length() - 19) * 8);
+						t.nameLabel.setMinWidth(t.pane.getWidth() + (t.nameLabel.getText().toString().length() - 19) * 8);
+					}
 					t.edit.setVisible(true);
 					t.remove.setVisible(true);
 					t.field.setVisible(true);
@@ -366,6 +369,10 @@ public class GUI extends Application {
 					t.nameBox.setVisible(false);
 					t.nameLabel.setVisible(true);
 					t.nameLabel.setText(t.nameBox.getText());
+					if(t.nameLabel.getText().toString().length() > 17) {
+						t.pane.setMinWidth(t.pane.getWidth() + (t.nameLabel.getText().toString().length() - 19) * 8);
+						t.nameLabel.setMinWidth(t.pane.getWidth() + (t.nameLabel.getText().toString().length() - 19) * 8);
+					}
 					t.edit.setVisible(false);
 					t.remove.setVisible(false);
 					t.field.setVisible(false);
@@ -392,15 +399,15 @@ public class GUI extends Application {
 						t.nameBox.getText() + " could not be added. Name already exists.\nPlease choose another name.");
 				b.show();
 			}
-			t.pane.setLayoutX(t.layoutX + t.pane.getTranslateX() + 10);
-			t.pane.setLayoutY(t.layoutY + t.pane.getTranslateY() + 10);
+			t.pane.setLayoutX(t.getVirtualX());
+			t.pane.setLayoutY(t.getVirtualY());
 			t.layoutX = t.pane.getLayoutX();
 			t.layoutY = t.pane.getLayoutY();
 
 			t.pane.setTranslateX(0);
 			t.pane.setTranslateY(0);
-			t.pane.setLayoutX(10);
-			t.pane.setLayoutY(110);
+			//t.pane.setLayoutX(10);
+			//t.pane.setLayoutY(110);
 		});
 	}
 
@@ -442,8 +449,26 @@ public class GUI extends Application {
 				env.editItem(t.nameBox.getText(), answer.get(), env.findItem(t.nameBox.getText()));
 
 				if (env.findItem(answer.get()) != null) {
+					if(answer.get().toString().length() < t.nameBox.getText().toString().length()) {
+						t.pane.setMaxWidth(t.pane.getWidth() + (answer.get().toString().length() - 17) * 8);
+					}
 					t.nameBox.setText(answer.get());
 					t.nameLabel.setText(answer.get());
+					UMLItem found = env.findItem(t.nameLabel.getText());
+					ArrayList<String> testArr = new ArrayList<String>(found.getAttributes());
+					String newAttr = "";
+					for (int i = 0; i < testArr.size(); i++) {
+						newAttr += "\u2022" + testArr.get(i).toString() + "\n";
+					}
+					int maxAttr = 0;
+					for(int i = 0; i < testArr.size(); i++) {
+						if(testArr.get(i).toString().length() > 17 && testArr.get(i).toString().length() > maxAttr) {
+							maxAttr = testArr.get(i).toString().length();
+						}
+					}
+					if(maxAttr > t.nameBox.getText().toString().length()) {
+						t.pane.setMaxWidth(t.pane.getWidth() + (maxAttr - 17) * 8);
+					}
 				} else {
 					Alert b = new Alert(Alert.AlertType.ERROR,
 							answer.get() + " already exists. Please choose another name.");
@@ -527,9 +552,6 @@ public class GUI extends Application {
 				a.show();
 				return;
 			} else {
-				// going to want to add type and name to data set then loop through
-				// and add all from fields with name from where tehy're being accounded
-				// for/stored
 				UMLItem found = env.findItem(t.nameBox.getText());
 				if (found != null) {
 					HashMap<String, String> testName = new HashMap<>(found.getFields());
@@ -554,7 +576,6 @@ public class GUI extends Application {
 						t.displayFieldType.setText(newType);
 						t.displayFieldVar.setText(newVar);
 					}
-
 					t.pane.setMinHeight(t.pane.getHeight() + ADD_ATTR_OFFSET);
 					t.pane.setMaxHeight(t.pane.getHeight() + ADD_ATTR_OFFSET);
 					t.ffDivider.setLayoutY(t.ffDivider.getLayoutY() + ADD_ATTR_OFFSET);
@@ -1080,11 +1101,20 @@ public class GUI extends Application {
 			UMLItem child = env.findItem(nameTest[0]);
 			UMLItem parent = env.findItem(t.nameBox.getText());
 			ArrowModifier mod = new ArrowModifier(parent, child);
-			Arrow arr = mod.makeNewArrow(env);
+			Arrow arr = mod.makeNewArrow(env, layout);
 			arrowLayout.getChildren().add(arr);
+			arrowLayout.getChildren().add(arr.editQuant);
+			arrowLayout.getChildren().add(arr.quantLabel);
+			arrowLayout.getChildren().add(arr.quantBox);
+			arrowLayout.getChildren().add(arr.quantButton);
 			env.addArrow(parent, child, arr);
 			if (child == null) {
 				Alert a = new Alert(Alert.AlertType.ERROR, nameTest[0] + " does not exist.");
+				a.show();
+				return;
+			}
+			if (child == parent) {
+				Alert a = new Alert(Alert.AlertType.ERROR, "A parent cannot be it's own child.");
 				a.show();
 				return;
 			}
@@ -1150,12 +1180,40 @@ public class GUI extends Application {
 
 			UMLItem parent = pair.getParent();
 			UMLItem child = pair.getChild();
-
+			GUITile parentTile = env.getTileFor(parent);
+			GUITile childTile = env.getTileFor(child);
+			
+			
 			ArrowModifier mod = new ArrowModifier(parent, child);
-			Arrow newArrow = mod.updateArrow(env);
+			
+			Arrow newArrow = mod.updateArrow(env, layout);
+			if(arrow.quantAdded) {
+				newArrow.quantAdded = true;
+				newArrow.quantLabel.setText(arrow.quantLabel.getText());
+				newArrow.quantLabel.setVisible(true);
+				newArrow.editQuant.setVisible(true);
+				newArrow.quantBox.setVisible(false);
+				newArrow.quantButton.setVisible(false);
+			}
+			if(arrow.isRemoved) {
+				newArrow.isRemoved = true;
+				newArrow.quantLabel.setVisible(false);
+				newArrow.editQuant.setVisible(false);
+				newArrow.quantBox.setVisible(false);
+				newArrow.quantButton.setVisible(false);
+			}
+			arrowLayout.getChildren().remove(arrow);
+			arrowLayout.getChildren().remove(arrow.editQuant);
+			arrowLayout.getChildren().remove(arrow.quantLabel);
+			arrowLayout.getChildren().remove(arrow.quantBox);
+			arrowLayout.getChildren().remove(arrow.quantButton);
 			arrowLayout.getChildren().remove(arrow);
 			env.replaceArrow(pair, newArrow);
 			arrowLayout.getChildren().add(newArrow);
+			arrowLayout.getChildren().add(newArrow.editQuant);
+			arrowLayout.getChildren().add(newArrow.quantLabel);
+			arrowLayout.getChildren().add(newArrow.quantBox);
+			arrowLayout.getChildren().add(newArrow.quantButton);
 
 		};
 	}
@@ -1169,11 +1227,21 @@ public class GUI extends Application {
 	 */
 	private BiConsumer<? super ParentChildPair, ? super Arrow> removeArrow() {
 		return (ParentChildPair pair, Arrow arrow) -> {
+			arrow.isRemoved = true;
+			arrow.quantLabel.setVisible(false);
+			arrow.editQuant.setVisible(false);
+			arrow.quantBox.setVisible(false);
+			arrow.quantButton.setVisible(false);
 			arrowLayout.getChildren().remove(arrow);
+			arrowLayout.getChildren().remove(arrow.editQuant);
+			arrowLayout.getChildren().remove(arrow.quantLabel);
+			arrowLayout.getChildren().remove(arrow.quantBox);
+			arrowLayout.getChildren().remove(arrow.quantButton);
 			env.removeArrow(pair.getParent(), pair.getChild());
 			env.removeArrow(pair.getChild(), pair.getParent());
-			pair.getChild().removeParent(pair.getParent());
-			pair.getParent().removeChild(pair.getChild());
+
+			Relationship r = env.findRelationship(pair.getParent(), pair.getChild());
+			env.removeRelationship(r);
 
 		};
 	}
