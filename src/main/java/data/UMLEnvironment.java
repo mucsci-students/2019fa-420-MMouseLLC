@@ -19,6 +19,7 @@ public class UMLEnvironment {
 
   ArrayList<UMLItem> items;
   ArrayList<Relationship> relationships;
+  ArrayList<Category> categories;
 
   /**
    * Construct a new UMLEnvironment
@@ -26,6 +27,7 @@ public class UMLEnvironment {
   public UMLEnvironment() {
     this.items = new ArrayList<>();
     this.relationships = new ArrayList<>();
+    this.categories =  new ArrayList<>();
     
   }
 
@@ -115,6 +117,22 @@ public class UMLEnvironment {
     builder.append("List of relationships: [ ");
     for (Relationship i : relationships) {
       builder.append("{" + i.getParent().getName() + "--[" + i.getQuantifierName() + "]->" + i.getChild().getName() + "} ");
+    }
+    builder.append("]");
+    return builder.toString();
+  }
+  
+  
+  /**
+   * Gets all categories in the environment.
+   * 
+   * @return builder the String of all classes
+   */
+  public String listCategories() {
+    StringBuilder builder = new StringBuilder();
+    builder.append("List of categories: [ ");
+    for (Category i : categories) {
+      builder.append("{" + i.getParent().getName() + "--[" + i.getCategoryType() + "]->" + i.getChild().getName() + "} ");
     }
     builder.append("]");
     return builder.toString();
@@ -244,6 +262,19 @@ public class UMLEnvironment {
   }
   
   /**
+   * Add a new category to the environment
+   * @param parent
+   * @param child
+   */
+  public void addCategory(Category c) {
+	  if (findCategory(c) == null) {
+		  categories.add(c);
+	  }
+	  
+  }
+  
+  
+  /**
    * Try to remove a relationship from the environment
    * 
    * @param parent
@@ -260,6 +291,23 @@ public class UMLEnvironment {
 	  
 	  return true;
   }
+  /**
+   * Try to remove a relationship from the environment
+   * 
+   * @param parent
+   * @param child
+   * @return true if found, else false
+   */
+  public boolean removeCategory(Category c) {
+	  Category toRemove = findCategory(c);
+	  if (toRemove == null) {
+		  return false;
+	  }
+	  
+	  categories.remove(toRemove);
+	  
+	  return true;
+  }
   
   /**
    * Find and return Relationship r in list of relationships
@@ -270,6 +318,21 @@ public class UMLEnvironment {
   public Relationship findRelationship(Relationship r) {
 	  for (Relationship i : relationships) {
 		  if (i.getParent().equals(r.getParent()) && i.getChild().equals(r.getChild() )) {
+			  return i;
+		  }
+	  }
+	  return null;
+  }
+  
+  /**
+   * Find and return Category c in list of category
+   *   else return null
+   * @param c
+   * @return Category or null if not found
+   */
+  public Category findCategory(Category c) {
+	  for (Category i : categories) {
+		  if (i.getParent().equals(c.getParent()) && i.getChild().equals(c.getChild() )) {
 			  return i;
 		  }
 	  }
@@ -292,11 +355,34 @@ public class UMLEnvironment {
   }
   
   /**
+   * Find and return a Category
+   * @param parent
+   * @param child
+   * @return Category or null if not found
+   */
+  public Category findCategoryp(UMLItem parent, UMLItem child) {
+	  for (Category i : categories) {
+		  if (i.getParent().equals(parent) && i.getChild().equals(child)) {
+			  return i;
+		  }
+	  }
+	  return null;
+  }
+  
+  /**
    * 
    * @return ArrayList of running relationships
    */
   public ArrayList<Relationship> getRelationships(){
 	  return relationships;
+  }
+  
+  /**
+   * 
+   * @return ArrayList of running categories
+   */
+  public ArrayList<Category> getCategories(){
+	  return categories;
   }
   
   /**
@@ -313,6 +399,7 @@ public class UMLEnvironment {
 	  }
 	  return arr;
   }
+
   
   /**
    * Returns a list containing relationships where UMLItem i is the child

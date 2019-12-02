@@ -6,24 +6,25 @@ package data;
  * @author Matt Fossett
  *
  */
-public class Relationship extends ParentChildPair{
+public class Category extends ParentChildPair{
     
-    private int quantifier;
+    private int categories;
     /** Simple String[] of names associated with the type of relationship:
      * 0 => None; 1 => OneToOne; 2 => OneToMany; 3 => ManyToMany; 4 => ManyToMany  **/
-    final public String[] quantifierNames = {"N", "1t1", "1tM", "Mt1", "MtM"};
-    
+    final public String[] categoryTypes = {"None", "Aggregation", "Composition", "Generalization", "Realization"};
+
     /**
      * Construct new Relationship between parent and child, specifiying a quantifier
      * Quantifiers as strings are OneToOne, OneToMany, ManyToOne, ManyToMany
      * A quantifier out of range [0, quantifierNames.length) will default to 0
+     * @param categories 
      */
-    public Relationship(UMLItem p, UMLItem c, int quantifier){
+    public Category(UMLItem p, UMLItem c, int categories){
         super(p, c);
-        if (quantifier < 0 || quantifier >= quantifierNames.length){
-            quantifier = 0;
+        if (categories < 0 || categories >= categoryTypes.length){
+        	categories = 0;
         }
-        this.quantifier = quantifier;
+        this.categories = categories;
     }
 
     /**
@@ -31,36 +32,38 @@ public class Relationship extends ParentChildPair{
      *   Note field quantifierNames holds the names of each quantifier, where 0 is OneToOne
      * Quantifiers as strings are OneToOne, OneToMany, ManyToOne, ManyToMany
      */
-    public Relationship(UMLItem p, UMLItem c){
+    public Category(UMLItem p, UMLItem c){
         super(p, c);
-        this.quantifier = 0;
+        this.categories = 0;
     }
-   
+    
+  
+    
     /**
      * Return the int representation of the contained quantifier
      * @return int quantifier
      */
-    public int getQuantifier() {
-    	return quantifier;
+    public int getCategory() {
+    	return categories;
     }
     
     /**
      * Change the quantifier
      * @param newQuantifier
      */
-    public void setQuantifier(int newQuantifier) {
+    public void setCategory(int newCategory) {
     	
-    	this.quantifier = newQuantifier;
+    	this.categories = newCategory;
     }
     
     /**
      * Return quantifier as its verbose String name
      * @return String of Quantifier names
      */
-    public String getQuantifierName() {
-    	return quantifierNames[quantifier];
+    public String getCategoryType() {
+    	return categoryTypes[categories];
     }
     
-  
-    
 }
+    
+ 
