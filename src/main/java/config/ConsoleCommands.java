@@ -57,5 +57,9 @@ public enum ConsoleCommands {
 	/** Add a category */
 	ADD_CATEGORY,
 	/** List categories */
-	LIST_CATEGORIES;
+	LIST_CATEGORIES,
+	/** Edit a category */
+	EDIT_CATEGORY,
+	/** Remove a category */
+	REMOVE_CATEGORY;
 }
