@@ -124,14 +124,14 @@ public class GUI extends Application {
 							tile.nameLabel.setText(tile.nameBox.getText());
 							tile.edit.setVisible(true);
 							tile.remove.setVisible(true);
-							// tile.addAttr.setVisible(true);
 							tile.addChild.setVisible(true);
 							tile.move.setVisible(true);
 							tile.field.setVisible(true);
 							tile.function.setVisible(true);
 							tile.ffDivider.setVisible(true);
 							tile.ffDivider.setLayoutY(tile.ffDivider.getLayoutY() + ADD_ATTR_OFFSET);
-							tile.displayFunctionType.setLayoutY(tile.displayFunctionType.getLayoutY() + ADD_ATTR_OFFSET);
+							tile.displayFunctionType
+									.setLayoutY(tile.displayFunctionType.getLayoutY() + ADD_ATTR_OFFSET);
 							tile.displayFunctionVar.setLayoutY(tile.displayFunctionVar.getLayoutY() + ADD_ATTR_OFFSET);
 							tile.functionsLabel.setLayoutY(tile.functionsLabel.getLayoutY() + ADD_ATTR_OFFSET);
 							tile.editField.setVisible(true);
@@ -143,10 +143,9 @@ public class GUI extends Application {
 							tile.pane.setMinHeight(250 + (tileSize * ADD_ATTR_OFFSET));
 							tile.pane.getChildren().remove(tile.add);
 							env.createMappingFor(i, tile);
-							// tile.removeAttr.setVisible(true);
 							tile.pane.getChildren().remove(tile.add);
 							setMoveTileAction(tile, layout);
-							//env.getRelationshipsFor(i).forEach(updateArrowWithParent());
+							// env.getRelationshipsFor(i).forEach(updateArrowWithParent());
 						}
 
 						displayMode.setSelected(false);
@@ -191,14 +190,14 @@ public class GUI extends Application {
 							tile.function.setVisible(false);
 							tile.ffDivider.setVisible(true);
 							tile.ffDivider.setLayoutY(tile.ffDivider.getLayoutY() - ADD_ATTR_OFFSET);
-							tile.displayFunctionType.setLayoutY(tile.displayFunctionType.getLayoutY() - ADD_ATTR_OFFSET);
+							tile.displayFunctionType
+									.setLayoutY(tile.displayFunctionType.getLayoutY() - ADD_ATTR_OFFSET);
 							tile.displayFunctionVar.setLayoutY(tile.displayFunctionVar.getLayoutY() - ADD_ATTR_OFFSET);
 							tile.functionsLabel.setLayoutY(tile.functionsLabel.getLayoutY() - ADD_ATTR_OFFSET);
 							tile.editField.setVisible(false);
 							tile.editFunction.setVisible(false);
 							tile.removeField.setVisible(false);
 							tile.removeFunction.setVisible(false);
-							// tile.addAttr.setVisible(false);
 							tile.addChild.setVisible(false);
 							tile.move.setVisible(false);
 							int tileSize = i.getFields().size() + i.getFunctions().size();
@@ -206,7 +205,6 @@ public class GUI extends Application {
 							tile.pane.setMinHeight(120 + (tileSize * ADD_ATTR_OFFSET));
 							tile.pane.getChildren().remove(tile.add);
 							env.createMappingFor(i, tile);
-							// tile.removeAttr.setVisible(false);
 							tile.pane.getChildren().remove(tile.add);
 
 						}
@@ -254,16 +252,14 @@ public class GUI extends Application {
 				setAddButtonAction(t);
 				setEditButtonAction(t);
 				setRemoveButtonAction(t, layout);
-				setFieldButtonAction(t, layout);
-				setRemoveFieldAction(t, layout);
-				setEditFieldAction(t, layout);
-				setFunctionButtonAction(t, layout);
-				setRemoveFunctionAction(t, layout);
-				setEditFunctionAction(t, layout);
-				// setAddAttributeAction(t, layout);
+				setFieldButtonAction(t);
+				setRemoveFieldAction(t);
+				setEditFieldAction(t);
+				setFunctionButtonAction(t);
+				setRemoveFunctionAction(t);
+				setEditFunctionAction(t);
 				setAddChildButtonAction(t, layout);
 				setMoveTileAction(t, layout);
-				// setRemoveAttrButton(t, layout);
 				sp.setContent(mainLayout);
 
 			}
@@ -484,12 +480,17 @@ public class GUI extends Application {
 
 		});
 	}
+
 	/**
+	 * @author lauren
+	 * @param t GUI tile being worked on
 	 * 
-	 * @param t
-	 * @param layout
+	 *          t.field button event is set to add a field to the gui tile and
+	 *          display a uml items field type and name once entered into the dialog
+	 *          box. buttons appear after the uml item/gui tile is added to the
+	 *          environment
 	 */
-	public void setFieldButtonAction(GUITile t, Group layout) {
+	public void setFieldButtonAction(GUITile t) {
 
 		t.field.setOnAction((event) -> {
 			TextInputDialog input = new TextInputDialog();
@@ -529,9 +530,6 @@ public class GUI extends Application {
 				a.show();
 				return;
 			} else {
-				// going to want to add type and name to data set then loop through
-				// and add all from fields with name from where tehy're being accounded
-				// for/stored
 				UMLItem found = env.findItem(t.nameBox.getText());
 				if (found != null) {
 					HashMap<String, String> testName = new HashMap<>(found.getFields());
@@ -577,7 +575,16 @@ public class GUI extends Application {
 
 	}
 
-	public void setEditFieldAction(GUITile t, Group layout) {
+	/**
+	 * @author lauren
+	 * @param t GUI tile being worked on
+	 * 
+	 *          t.editField button event is set to edit an existing field on the
+	 *          tile and in the uml environment and update them to be something new
+	 *          based on the users input. buttons appear after the uml item/gui tile
+	 *          is added to the environment
+	 */
+	public void setEditFieldAction(GUITile t) {
 		t.editField.setOnAction((event) -> {
 			TextInputDialog input = new TextInputDialog();
 			input.setTitle("Edit Field Input");
@@ -663,7 +670,13 @@ public class GUI extends Application {
 		});
 	}
 
-	public void setRemoveFieldAction(GUITile t, Group layout) {
+	/**
+	 * @author lauren
+	 * @param t GUI tile being worked on t.removeField button event is set to remove
+	 *          an existing field on the gui tile/in the uml environment. button
+	 *          appear after the uml item/gui tile is added to the environment
+	 */
+	public void setRemoveFieldAction(GUITile t) {
 
 		t.removeField.setOnAction((event) -> {
 			TextInputDialog input = new TextInputDialog();
@@ -756,7 +769,16 @@ public class GUI extends Application {
 		});
 	}
 
-	public void setFunctionButtonAction(GUITile t, Group layout) {
+	/**
+	 * @author lauren
+	 * @param t GUI tile being worked on
+	 * 
+	 *          t.funciton button event is set to add a function to the gui tile and
+	 *          display a uml items function type and name once entered into the
+	 *          dialog box. buttons appear after the uml item/gui tile is added to
+	 *          the environment
+	 */
+	public void setFunctionButtonAction(GUITile t) {
 
 		t.function.setOnAction((event) -> {
 			TextInputDialog input = new TextInputDialog();
@@ -795,9 +817,6 @@ public class GUI extends Application {
 				a.show();
 				return;
 			} else {
-				// going to want to add type and name to data set then loop through
-				// and add all from functions with name from where tehy're being accounded
-				// for/stored
 				UMLItem found = env.findItem(t.nameBox.getText());
 				if (found != null) {
 					HashMap<String, String> testName = new HashMap<>(found.getFunctions());
@@ -835,7 +854,16 @@ public class GUI extends Application {
 		});
 	}
 
-	public void setEditFunctionAction(GUITile t, Group layout) {
+	/**
+	 * @author lauren
+	 * @param t GUI tile being worked on
+	 * 
+	 *          t.editFunction button event is set to edit an existing function on
+	 *          the tile and in the uml environment and update them to be something
+	 *          new based on the users input. buttons appear after the uml item/gui
+	 *          tile is added to the environment
+	 */
+	public void setEditFunctionAction(GUITile t) {
 		t.editFunction.setOnAction((event) -> {
 			TextInputDialog input = new TextInputDialog();
 			input.setTitle("Edit Function Input");
@@ -921,7 +949,14 @@ public class GUI extends Application {
 		});
 	}
 
-	public void setRemoveFunctionAction(GUITile t, Group layout) {
+	/**
+	 * @author lauren
+	 * @param t GUI tile being worked on t.removeFunction button event is set to
+	 *          remove an existing function on the gui tile/in the uml environment.
+	 *          button appear after the uml item/gui tile is added to the
+	 *          environment
+	 */
+	public void setRemoveFunctionAction(GUITile t) {
 
 		t.removeFunction.setOnAction((event) -> {
 			TextInputDialog input = new TextInputDialog();
@@ -963,9 +998,6 @@ public class GUI extends Application {
 				a.show();
 				return;
 			} else {
-				// going to want to add type and name to data set then loop through
-				// and add all from functions with name from where tehy're being accounded
-				// for/stored
 				UMLItem found = env.findItem(t.nameBox.getText());
 
 				t.displayFunctionType.setText("");
@@ -1010,58 +1042,6 @@ public class GUI extends Application {
 			}
 		});
 	}
-
-	/**
-	 * @author eric
-	 * 
-	 *         setAddAttributeAction is an action listener on the add attr button in
-	 *         the tile. This button will take in a value and then update the list
-	 *         of attributes on a tile after it has been added.
-	 * 
-	 */
-
-	/*
-	 * public void setAddAttributeAction(GUITile t, Group layout) { // Adds an
-	 * attribute as text to the tile clicked t.addAttr.setOnAction((event) -> {
-	 * TextInputDialog input = new TextInputDialog();
-	 * input.setHeaderText("Enter attribute to add for " + t.nameBox.getText() +
-	 * ":\nMust be one word no spaces\nExample: NewAttribute"); input.setHeight(50);
-	 * input.setWidth(120); Optional<String> answer = input.showAndWait(); String[]
-	 * attrTest = answer.toString().split(" ");
-	 * 
-	 * if (attrTest.length > 1) { Alert a = new Alert(Alert.AlertType.ERROR,
-	 * "Attribute cannot contain spaces.\nExample: New Attr should be NewAttr");
-	 * a.show(); return; }
-	 * 
-	 * boolean isWhitespace = answer.get().matches("^\\s*$"); // checks if name
-	 * entered is only whitespace.
-	 * 
-	 * if (isWhitespace) { Alert a = new Alert(Alert.AlertType.ERROR,
-	 * "Attribute cannot be only whitespace.\nExample: NewAttr"); a.show(); return;
-	 * } if (answer.isPresent()) { UMLItem found =
-	 * env.findItem(t.nameBox.getText()); if (found != null) { ArrayList<String>
-	 * testName = new ArrayList<String>(found.getAttributes()); for (int i = 0; i <
-	 * testName.size(); i++) { if (answer.get().equals(testName.get(i))) { Alert a =
-	 * new Alert(Alert.AlertType.ERROR, "Attribute " + testName.get(i).toString() +
-	 * " already exists. Please enter an original name."); a.show(); return; } }
-	 * t.displayAttr.setText(""); String newAttr = "";
-	 * found.addAttribute(answer.get()); ArrayList<String> test = new
-	 * ArrayList<>(found.getAttributes()); for (int i = 0; i < test.size(); i++) {
-	 * newAttr = t.displayAttr.getText() + "\u2022" + test.get(i).toString() + "\n";
-	 * t.displayAttr.setText(newAttr); } t.pane.setMinHeight(t.pane.getHeight() +
-	 * ADD_ATTR_OFFSET); t.pane.setMaxHeight(t.pane.getHeight() + ADD_ATTR_OFFSET);
-	 * t.edit.setLayoutY(t.edit.getLayoutY() + ADD_ATTR_OFFSET);
-	 * t.addAttr.setLayoutY(t.addAttr.getLayoutY() + ADD_ATTR_OFFSET);
-	 * t.removeAttr.setLayoutY(t.removeAttr.getLayoutY() + ADD_ATTR_OFFSET);
-	 * t.addChild.setLayoutY(t.addChild.getLayoutY() + ADD_ATTR_OFFSET);
-	 * 
-	 * newAttr = t.displayAttr.getText() + "\u2022" + answer.get() + "\n"; } else {
-	 * Alert a = new Alert(Alert.AlertType.ERROR,
-	 * "Something went wrong finding the class."); a.show(); } } else { Alert a =
-	 * new Alert(Alert.AlertType.ERROR, "Attribute cannot be blank."); a.show(); }
-	 * 
-	 * }); }
-	 */
 
 	/**
 	 * @author matt and eric
@@ -1159,49 +1139,6 @@ public class GUI extends Application {
 		});
 	}
 
-	/**
-	 * @author eric
-	 * 
-	 *         setRemoveAttrButton sets an event listener to listen for when the
-	 *         remove attribute button is going to be clicked. When clicked it takes
-	 *         in an input and re-renders the tile being clicked to the appropriate
-	 *         size and amount of attributes.
-	 * 
-	 */
-	/*
-	 * public void setRemoveAttrButton(GUITile t, Group layout) { // Removes
-	 * attribute from text field in tile t t.removeAttr.setOnAction((event) -> {
-	 * TextInputDialog input = new TextInputDialog();
-	 * input.setHeaderText("Enter attribute to remove for " + t.nameBox.getText() +
-	 * "."); input.setHeight(50); input.setWidth(120); Optional<String> answer =
-	 * input.showAndWait(); String[] attrTest = answer.toString().split(" ");
-	 * 
-	 * if (attrTest.length > 1) { Alert a = new Alert(Alert.AlertType.ERROR,
-	 * "Attribute cannot contain spaces.\nExample: New Attr should be NewAttr");
-	 * a.show(); return; } boolean isWhitespace = answer.get().matches("^\\s*$"); //
-	 * checks if name entered is only whitespace.
-	 * 
-	 * if (isWhitespace) { Alert a = new Alert(Alert.AlertType.ERROR,
-	 * "Attribute cannot be only whitespace.\nExample: NewAttr"); a.show(); return;
-	 * } if (answer.isPresent()) { UMLItem found =
-	 * env.findItem(t.nameBox.getText()); if (found != null) { ArrayList<String>
-	 * testName = new ArrayList<String>(found.getAttributes()); boolean isFound =
-	 * false; for (int i = 0; i < testName.size(); i++) { if
-	 * (answer.get().equals(testName.get(i))) { isFound = true;
-	 * found.removeAttribute(answer.get()); break; } } if (!isFound) { Alert a = new
-	 * Alert(Alert.AlertType.ERROR, "Attribute " + answer.get() +
-	 * " not found in list of attributes."); a.show(); return; }
-	 * t.displayAttr.setText(""); ArrayList<String> testArr = new
-	 * ArrayList<String>(found.getAttributes()); String newAttr = ""; for (int i =
-	 * 0; i < testArr.size(); i++) { newAttr += "\u2022" + testArr.get(i).toString()
-	 * + "\n"; } t.displayAttr.setText(newAttr);
-	 * t.pane.setMinHeight(t.pane.getHeight() - ADD_ATTR_OFFSET);
-	 * t.pane.setMaxHeight(t.pane.getHeight() - ADD_ATTR_OFFSET);
-	 * t.edit.setLayoutY(t.edit.getLayoutY() - ADD_ATTR_OFFSET);
-	 * t.addAttr.setLayoutY(t.addAttr.getLayoutY() - ADD_ATTR_OFFSET);
-	 * t.removeAttr.setLayoutY(t.removeAttr.getLayoutY() - ADD_ATTR_OFFSET);
-	 * t.addChild.setLayoutY(t.addChild.getLayoutY() - ADD_ATTR_OFFSET); } } }); }
-	 */
 	/*
 	 * @author eric
 	 * 
