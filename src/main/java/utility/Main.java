@@ -12,12 +12,12 @@ public class Main {
 	 */
 	public static void main(String[] args) {
 		//If we have a command line arg run the GUI environment
-		//if (args.length > 0) {
+		if (args.length > 0) {
 			runGUI(args);
-		//} else {
-			 //run CLI
-		//	run();
-		//}
+		} else {
+		 	// run CLI
+			run();
+		}
 	}
 	
 	/**
