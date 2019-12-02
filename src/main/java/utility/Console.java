@@ -265,7 +265,7 @@ public class Console {
 
 	/**
 	 * Adds a relationship between 2 UMLItems to environment
-	 * Command: add_relationship [parentClass] [childClass] [optional quantifier]  [optional category]
+	 * Command: add_relationship [parentClass] [childClass] [optional quantifier]
 	 * @param input The input
 	 */
 	public void addRelationship(String[] input) {
@@ -287,7 +287,7 @@ public class Console {
 		if (input.length > 3) {
 			int q = getQuantifier(input[3]);
 			if (q < 0) {
-				logger.warning("Quantifier needs to be of form: [N] | [a] | [c] | [g] | [r]");
+				logger.warning("Quantifier needs to be of form: [N] | [1t1] | [1tM] | [Mt1] | [MtM]");
 				return;
 			}
 			Relationship r = new Relationship(parentItem, childItem, q);
@@ -426,6 +426,10 @@ public class Console {
 	}
 	
 	
+	/**
+	 * Adds a category between 2 UMLItems to environment
+	 * @param input The input
+	 */
 	public void addCategory(String[] input) {
 		if (input.length < 3) {
 			logger.warning("Invalid: add_category [childClass] [parentClass] [category] - minimum 3 fields required, " + input.length
@@ -444,7 +448,7 @@ public class Console {
 		if (input.length > 3) {
 			int c = getCategory(input[3]);
 			if (c < 0) {
-				logger.warning("Category needs to be of form: [N] | [Aggregation] | [Composition] | [Generalization] | [Realization]");
+				logger.warning("Category needs to be of form: [N] | [a] | [c] | [g] | [r]");
 				return;
 			}
 			Category c2 = new Category(parentItem, childItem, c);
@@ -455,12 +459,12 @@ public class Console {
 		}
 	}
 	/**
-	 * Edits relationship between 2 UMLItems to environment
+	 * Edits category between 2 UMLItems to environment
 	 * @param input The input
 	 */
 	public void editCategory(String[] input) {
 		if (input.length < 4) {
-			logger.warning("Invalid: edit_category [childClass] [parentClass] [quantifier] - 4 fields required, " + input.length
+			logger.warning("Invalid: edit_category [childClass] [parentClass] [category] - 4 fields required, " + input.length
 					+ " found.");
 			return;
 		}
@@ -481,7 +485,7 @@ public class Console {
 		}
 		int c2 = getCategory(input[3]);
 		if (c2 < 0) {
-			logger.warning("Quantifier needs to be of form: [N] | [Aggregation] | [Composition] | [Generalization] | [Realization]");
+			logger.warning("Quantifier needs to be of form: [N] | [a] | [c] | [g] | [r]");
 			return;
 		}
 		c.setCategory(c2);
@@ -489,8 +493,7 @@ public class Console {
 	}
 	
 	/**
-	 * Remove a class relationship from the environment
-	 * Command: remove_relationship [parentClass] [childClass] 
+	 * Remove a class category from the environment
 	 * @param input
 	 */
 	public void removeCategory(String[] input) {

@@ -196,7 +196,7 @@ public class UMLEnvironment {
 	  return true;
   }
   /**
-   * Try to remove a relationship from the environment
+   * Try to remove a Category from the environment
    * 
    * @param parent
    * @param child

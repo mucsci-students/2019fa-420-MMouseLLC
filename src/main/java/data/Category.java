@@ -1,22 +1,24 @@
 package data;
 
 /**
- * Storage of a Relationship between two UMLItem objects
+ * Storage of a Category between two UMLItem objects
  * Original intent is used in UMLEnvironment as a list of relationships
+ * modified to be used for categories
  * @author Matt Fossett
+ * @modified by Kasey Kocher
  *
  */
 public class Category extends ParentChildPair{
     
     private int categories;
-    /** Simple String[] of names associated with the type of relationship:
-     * 0 => None; 1 => OneToOne; 2 => OneToMany; 3 => ManyToMany; 4 => ManyToMany  **/
+    /** Simple String[] of names associated with the type of category:
+     * 0 => None; 1 => A; 2 => C; 3 => G; 4 => R  **/
     final public String[] categoryTypes = {"None", "Aggregation", "Composition", "Generalization", "Realization"};
 
     /**
-     * Construct new Relationship between parent and child, specifiying a quantifier
-     * Quantifiers as strings are OneToOne, OneToMany, ManyToOne, ManyToMany
-     * A quantifier out of range [0, quantifierNames.length) will default to 0
+     * Construct new Category between parent and child, specifiying a certain category
+     * Categories as strings are OneToOne, OneToMany, ManyToOne, ManyToMany
+     * A category out of range [0, categoryTypes.length) will default to 0
      * @param categories 
      */
     public Category(UMLItem p, UMLItem c, int categories){
@@ -28,9 +30,9 @@ public class Category extends ParentChildPair{
     }
 
     /**
-     * Construct new Relationship between parent and child, Defaulting to 0 
-     *   Note field quantifierNames holds the names of each quantifier, where 0 is OneToOne
-     * Quantifiers as strings are OneToOne, OneToMany, ManyToOne, ManyToMany
+     * Construct new Category between parent and child, Defaulting to 0 
+     *   Note field categoryTypes holds the names of each category, where 0 is None
+     * Quantifiers as strings are Aggregation, Composition, Generalization, Realization
      */
     public Category(UMLItem p, UMLItem c){
         super(p, c);
@@ -40,16 +42,16 @@ public class Category extends ParentChildPair{
   
     
     /**
-     * Return the int representation of the contained quantifier
-     * @return int quantifier
+     * Return the int representation of the contained category
+     * @return int categories
      */
     public int getCategory() {
     	return categories;
     }
     
     /**
-     * Change the quantifier
-     * @param newQuantifier
+     * Change the category
+     * @param newCategory
      */
     public void setCategory(int newCategory) {
     	
@@ -57,8 +59,8 @@ public class Category extends ParentChildPair{
     }
     
     /**
-     * Return quantifier as its verbose String name
-     * @return String of Quantifier names
+     * Return category as its verbose String name
+     * @return String of Category names
      */
     public String getCategoryType() {
     	return categoryTypes[categories];
