@@ -15,7 +15,7 @@ public class Main {
 		if (args.length > 0) {
 			runGUI(args);
 		} else {
-		 	// run CLI
+			 //run CLI
 			run();
 		}
 	}
