@@ -451,12 +451,21 @@ public class Console {
 				logger.warning("Category needs to be of form: [N] | [a] | [c] | [g] | [r]");
 				return;
 			}
+			
 			Category c2 = new Category(parentItem, childItem, c);
-			env.addCategory(c2);
+			Category findCategory = env.findCategory(c2);
+			if (findCategory != null) {
+				logger.warning("Category already exists");
+			}
+			else if (findCategory == null) {
+				env.addCategory(c2);
+			}
+			
 		} else {
 			Category c2 = new Category(parentItem, childItem);
 			env.addCategory(c2);
 		}
+		System.out.println(env.listCategories());
 	}
 	/**
 	 * Edits category between 2 UMLItems to environment
