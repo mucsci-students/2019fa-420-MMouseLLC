@@ -3,7 +3,7 @@ package data;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-/*
+/**
  * UMLItem is a class that represents a single item in the UML Environment.
  * Getters and Setters are created here to define Id, Name, Parent, Children
  * and Attributes for the UMLItem.
@@ -17,6 +17,7 @@ public class UMLItem {
 	/** Unique class name **/
 	private String name;
 	/** List of attributes associated with this class **/
+	@Deprecated
 	private ArrayList<String> attributes;
 	/**
 	 * Map of fields associated with this class Map of variable names to their type
@@ -25,11 +26,6 @@ public class UMLItem {
 	/** Map of functions associated with this class **/
 	private HashMap<String, String> functions;
 	/** List of parents that this class inherits from **/
-	@Deprecated
-	private ArrayList<UMLItem> parents;
-	/** List of children that inherit from this class **/
-	@Deprecated
-	private ArrayList<UMLItem> children;
 
 	/**
 	 * Default Constructor id is assigned -1, Name is empty string, lists are empty
@@ -40,8 +36,6 @@ public class UMLItem {
 		attributes = new ArrayList<String>();
 		this.fields = new HashMap<>();
 		this.functions = new HashMap<>();
-		parents = new ArrayList<>();
-		children = new ArrayList<>();
 	}
 
 	/**
@@ -49,8 +43,8 @@ public class UMLItem {
 	 * 
 	 * @param Id
 	 * @param Name
-	 * @param Parent- Single UMLItem
-	 * @param Child-  Single UMLItem
+	 * @param Parent Single UMLItem
+	 * @param Child  Single UMLItem
 	 */
 	public UMLItem(int id, String name, UMLItem parent, UMLItem child) {
 		this.id = id;
@@ -59,12 +53,6 @@ public class UMLItem {
 		this.attributes = new ArrayList<>();
 		this.fields = new HashMap<>();
 		this.functions = new HashMap<>();
-
-		this.parents = new ArrayList<>();
-		this.children = new ArrayList<>();
-
-		this.parents.add(parent);
-		this.children.add(child);
 	}
 
 	/**
@@ -79,8 +67,6 @@ public class UMLItem {
 		this.attributes = new ArrayList<>();
 		this.fields = new HashMap<>();
 		this.functions = new HashMap<>();
-		this.parents = new ArrayList<>();
-		this.children = new ArrayList<>();
 	}
 
 	/**
@@ -93,8 +79,6 @@ public class UMLItem {
 		this.attributes = new ArrayList<>();
 		this.fields = new HashMap<>();
 		this.functions = new HashMap<>();
-		this.parents = new ArrayList<>();
-		this.children = new ArrayList<>();
 	}
 
 	/**
@@ -116,7 +100,7 @@ public class UMLItem {
 	/**
 	 * Return name associated with this class
 	 * 
-	 * @return
+	 * @return String name
 	 */
 	public String getName() {
 		return this.name;
@@ -340,109 +324,5 @@ public class UMLItem {
 		return this.attributes.remove(attr);
 	}
 
-	/**
-	 * Getter for parents list
-	 * 
-	 * @return
-	 */
-	@Deprecated
-	public ArrayList<UMLItem> getParents() {
-		return this.parents;
-	}
 
-	/**
-	 * Adds UMLItem to this class list of parents
-	 * 
-	 * @param parent
-	 */
-	@Deprecated
-	public void addParent(UMLItem parent) {
-		parents.add(parent);
-	}
-
-	/**
-	 * Set field ArrayList<UMLItem> parents to the parents parameter
-	 * 
-	 * @param parents
-	 */
-	@Deprecated
-	public void setParents(ArrayList<UMLItem> parents) {
-		this.parents = parents;
-	}
-
-	/**
-	 * If UMLItem i is found in parent list then it will be removed
-	 * 
-	 * @param i
-	 * @return true if item exists in list else false
-	 */
-	@Deprecated
-	public boolean removeParent(UMLItem i) {
-		return parents.remove(i);
-	}
-
-	/**
-	 * Getter for the children ArrayList
-	 * 
-	 * @return ArrayList<UMLItem> children
-	 */
-	@Deprecated
-	public ArrayList<UMLItem> getChildren() {
-		return this.children;
-	}
-
-	/**
-	 * Sets children field ArrayList<UMLItem> to c
-	 * 
-	 * @param c
-	 */
-	@Deprecated
-	public void setChildren(ArrayList<UMLItem> c) {
-		this.children = c;
-	}
-
-	/**
-	 * Add UMLItem as a child to the children list
-	 * 
-	 * @param newChild
-	 */
-	@Deprecated
-	public void addChild(UMLItem newChild) {
-		this.children.add(newChild);
-	}
-
-	/**
-	 * if UMLItem is found in children list then it will be removed
-	 *
-	 * @param remove
-	 * @return true if item found in children, else false
-	 */
-	@Deprecated
-	public boolean removeChild(UMLItem remove) {
-		return children.remove(remove);
-	}
-
-	/**
-	 * Removes the child from a specified parent object.
-	 * 
-	 * @param parent the parent
-	 * @param child  the child
-	 */
-	@Deprecated
-	public void deleteChildFromParent(UMLItem parent, UMLItem child) {
-		parent.removeChild(child);
-	}
-
-	/**
-	 * Removes the child from all parent objects it is attached to.
-	 * 
-	 * @param child the child
-	 */
-	@Deprecated
-	public void deleteAllChildren(UMLItem child) {
-		for (UMLItem i : parents) {
-			if (i.equals(child))
-				i.removeChild(child);
-		}
-	}
 }

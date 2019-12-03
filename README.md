@@ -1,5 +1,7 @@
 # MMouseLLC
 
+[![Build Status](https://travis-ci.org/mucs420f19/MMouseLLC.svg?branch=develop)](https://travis-ci.org/mucs420f19/MMouseLLC) [![Coverage Status](https://coveralls.io/repos/github/mucs420f19/MMouseLLC/badge.svg?branch=develop)](https://coveralls.io/github/mucs420f19/MMouseLLC?branch=develop)
+
 ## Installation guide
 
 * Ensure that maven package manager is installed
@@ -20,4 +22,4 @@ In the root project directory, run
 
 > mvn clean install <br>
 > mvn package <br>
-> java -cp target/mmouse-uml-0.0.2-SNAPSHOT-jar-with-dependencies.jar utility.Main
+> java -cp target/mmouse-uml-0.0.3-SNAPSHOT-jar-with-dependencies.jar utility.Main

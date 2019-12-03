@@ -1,23 +1,33 @@
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import org.junit.After;
-
 import data.*;
 import utility.Console;
 
 import org.junit.Test;
 
+/**
+ * Test Relationship implementation
+ * @author Matt Fossett
+ *
+ */
 public class RelationshipTest {
 	
 	//UMLEnvironment env = new UMLEnvironment();
 	Console c = new Console();
 	UMLEnvironment env = c.getUMLEnvironment();
 	
+	/**
+	 * Friendly way to run commands to the console
+	 * @param command
+	 */
 	public void run(String command) {
 		String[] arr = command.split(" ");
 		c.checkInput(arr);
 	}
 	
+	/**
+	 * Regular test for relationships
+	 */
 	@Test
 	public void testRelationship() {
 		env.addItem(new UMLItem("Matt"));
@@ -56,6 +66,9 @@ public class RelationshipTest {
 		
 	}
 	
+	/**
+	 * Run console commands to test relationships
+	 */
 	@Test
 	public void consoleRelationships() {
 		run("add Matt");
@@ -85,19 +98,5 @@ public class RelationshipTest {
 		assertEquals(1, env.getRelationships().size());
 		run("edit_relationship A B N");
 		assertEquals("N", env.findRelationship(new Relationship(env.findItem("A"), env.findItem("B"))).getQuantifierName());
-	}
-	
-	@After
-	@Test
-	public void testListClasses() {
-		run("add Matt");
-		run("add Kasey");
-		run("add_field Matt Kasey frien");
-		run("add_function Matt Kasey getFrien()");
-		System.out.println("Start");
-		System.out.println(env.listClass(env.findItem("Matt")));
-		System.out.println("End");
-
-		
 	}
 }

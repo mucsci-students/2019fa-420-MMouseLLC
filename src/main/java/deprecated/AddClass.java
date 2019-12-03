@@ -12,7 +12,7 @@ import data.UMLItem;
  * 
  * @author Matt Fossett, Grant Hartenstine
  */
-
+@SuppressWarnings("javadoc")
 @Deprecated
 public class AddClass {
 

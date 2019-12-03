@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
 
-/*
+/**
  * UMLEnvironment is an object meant to keep track of all the UMLItems that 
  * exist at any given point in the running of the program. The purpose of this 
  * class will be to help define what can and cannot be used during the duration
@@ -19,17 +19,16 @@ public class UMLEnvironment {
 
   ArrayList<UMLItem> items;
   ArrayList<Relationship> relationships;
+  ArrayList<Category> categories;
 
+  /**
+   * Construct a new UMLEnvironment
+   */
   public UMLEnvironment() {
     this.items = new ArrayList<>();
     this.relationships = new ArrayList<>();
+    this.categories =  new ArrayList<>();
     
-  }
-
-  public UMLEnvironment(UMLItem item) {
-    this.items = new ArrayList<>();
-    this.items.add(item);
-    this.relationships = new ArrayList<>();
   }
 
   /**
@@ -41,12 +40,10 @@ public class UMLEnvironment {
    */
   public UMLItem findItem(String itemName) {
     for (UMLItem i : items) {
-      if (i.getName().equals(itemName)) {
-        //System.out.println("Class " + itemName + " found.");
+      if (i.getName().equals(itemName)) { 
         return i;
       }
     }
-    //logger.warning("Class " + itemName + " not found.");
     return null;
   }
 
@@ -125,6 +122,22 @@ public class UMLEnvironment {
     return builder.toString();
   }
   
+  
+  /**
+   * Gets all categories in the environment.
+   * 
+   * @return builder the String of all classes
+   */
+  public String listCategories() {
+    StringBuilder builder = new StringBuilder();
+    builder.append("List of categories: [ ");
+    for (Category i : categories) {
+      builder.append("{" + i.getParent().getName() + "--[" + i.getCategoryType() + "]->" + i.getChild().getName() + "} ");
+    }
+    builder.append("]");
+    return builder.toString();
+  }
+  
   /**
    * Gets all classes in the environment.
    * 
@@ -140,105 +153,6 @@ public class UMLEnvironment {
     return builder.toString();
   }
   
-  
-  
-
-  /**
-   * Adds a child to a parent in the environment. Checks if the child/parent
-   * exists, and if the child is not already linked to the parent. If so add
-   * the child to the parent.
-   * 
-   * @param childName The child name
-   * @param parentName The parent name
-   * @param childItem The child UMLItem
-   * @param parentItem The parent UMLItem
-   */
-  @Deprecated
-  public void addChild(String childName, String parentName, UMLItem childItem, UMLItem parentItem) {
-    if (childItem == null || !itemExists(childItem)) {
-      logger.warning("Child class " + childName + " does not exist. Add child cancelled.");
-    } else if (parentItem == null || !itemExists(parentItem)) {
-      logger.warning("Parent class " + parentName + " does not exist. Add child cancelled.");
-    } else if (childItem == parentItem) {
-      logger.warning("Child name cannot be the same as parent: " + parentName + ". Add child cancelled.");
-    } else if (childItem.getParents().contains(parentItem) && parentItem.getChildren().contains(childItem)) {
-      logger.warning("Child " + childName + " already linked to parent " + parentName + ". Add child cancelled.");
-    } else {
-      parentItem.addChild(childItem);
-      childItem.addParent(parentItem);
-      System.out.println("Child successfully added.");
-    }
-  }
-
-  /**
-   * Removes a child from a parent in the environment.Checks if the child/parent
-   * exists, and if the child is not already linked to the parent. If so remove
-   * the child to the parent.
-   * 
-   * @param childName The child name
-   * @param parentName The parent name
-   * @param childItem The child UMLItem
-   * @param parentItem The parent UMLItem
-   */
-  @Deprecated
-  public void removeChild(String childName, String parentName, UMLItem childItem, UMLItem parentItem) {
-    if (childItem == null || !itemExists(childItem)) {
-      logger.warning("Child class " + childName + " does not exist. Remove child cancelled.");
-    } else if (parentItem == null || !itemExists(parentItem)) {
-      logger.warning("Parent class " + parentName + " does not exist. Remove child cancelled.");
-    } else if (!childItem.getParents().contains(parentItem) && !parentItem.getChildren().contains(childItem)) {
-      logger.warning("Child " + childName + " not linked to parent " + parentName + ". Remove child cancelled.");
-    } else {
-      parentItem.removeChild(childItem);
-      childItem.removeParent(parentItem);
-      System.out.println("Child successfully removed.");
-    }
-  }
-
-  /**
-   * Lists all children from a parent UMLItem
-   * 
-   * @param parentName The parent name
-   * @return builder The string of all children
-   */
-  @Deprecated
-  public String listChildren(String parentName) {
-    UMLItem parentItem = findItem(parentName);
-    StringBuilder builder = new StringBuilder();
-    if (parentItem == null || !itemExists(parentItem)) {
-      logger.warning("Parent class " + parentName + " does not exist. List children cancelled.");
-    } else {
-      builder.append("List of children [ ");
-      for (UMLItem i : parentItem.getChildren()) {
-        builder.append("{" + i.getName() + "} ");
-      }
-      builder.append("]");      
-    }
-    return builder.toString();
-  }
-
-  /**
-   * Lists all parents from a child UMLItem
-   * 
-   * @param childName The child name
-   * @return builder The string of all parents
-   */
-  @Deprecated
-  public String listParents(String childName) {
-    StringBuilder builder = new StringBuilder();
-    UMLItem childItem = findItem(childName);
-    if (childItem == null || !itemExists(childItem)) {
-      logger.warning("Child class " + childName + " does not exist. List parents cancelled.");
-    } else {
-      builder.append("List of parents [ ");
-      for (UMLItem i : childItem.getParents()) {
-        builder.append("{" + i.getName() + "} ");
-      }
-      builder.append("]");      
-    }
-    return builder.toString();
-  }
-  
   /**
    * Add a new relationship to the environment
    * @param parent
@@ -250,6 +164,19 @@ public class UMLEnvironment {
 	  }
 	  
   }
+  
+  /**
+   * Add a new category to the environment
+   * @param parent
+   * @param child
+   */
+  public void addCategory(Category c) {
+	  if (findCategory(c) == null) {
+		  categories.add(c);
+	  }
+	  
+  }
+  
   
   /**
    * Try to remove a relationship from the environment
@@ -268,12 +195,29 @@ public class UMLEnvironment {
 	  
 	  return true;
   }
+  /**
+   * Try to remove a Category from the environment
+   * 
+   * @param parent
+   * @param child
+   * @return true if found, else false
+   */
+  public boolean removeCategory(Category c) {
+	  Category toRemove = findCategory(c);
+	  if (toRemove == null) {
+		  return false;
+	  }
+	  
+	  categories.remove(toRemove);
+	  
+	  return true;
+  }
   
   /**
    * Find and return Relationship r in list of relationships
    *   else return null
    * @param r
-   * @return
+   * @return Relationship or null if not found
    */
   public Relationship findRelationship(Relationship r) {
 	  for (Relationship i : relationships) {
@@ -285,10 +229,25 @@ public class UMLEnvironment {
   }
   
   /**
+   * Find and return Category c in list of category
+   *   else return null
+   * @param c
+   * @return Category or null if not found
+   */
+  public Category findCategory(Category c) {
+	  for (Category i : categories) {
+		  if (i.getParent().equals(c.getParent()) && i.getChild().equals(c.getChild() )) {
+			  return i;
+		  }
+	  }
+	  return null;
+  }
+  
+  /**
    * Find and return a Relationship 
    * @param parent
    * @param child
-   * @return
+   * @return Relationship or null if not found
    */
   public Relationship findRelationship(UMLItem parent, UMLItem child) {
 	  for (Relationship i : relationships) {
@@ -299,8 +258,35 @@ public class UMLEnvironment {
 	  return null;
   }
   
+  /**
+   * Find and return a Category
+   * @param parent
+   * @param child
+   * @return Category or null if not found
+   */
+  public Category findCategoryp(UMLItem parent, UMLItem child) {
+	  for (Category i : categories) {
+		  if (i.getParent().equals(parent) && i.getChild().equals(child)) {
+			  return i;
+		  }
+	  }
+	  return null;
+  }
+  
+  /**
+   * 
+   * @return ArrayList of running relationships
+   */
   public ArrayList<Relationship> getRelationships(){
 	  return relationships;
+  }
+  
+  /**
+   * 
+   * @return ArrayList of running categories
+   */
+  public ArrayList<Category> getCategories(){
+	  return categories;
   }
   
   /**
@@ -317,6 +303,7 @@ public class UMLEnvironment {
 	  }
 	  return arr;
   }
+
   
   /**
    * Returns a list containing relationships where UMLItem i is the child
@@ -337,7 +324,7 @@ public class UMLEnvironment {
    * Given a map String=>String, return a String in Array style showing all members
    * Ex: [ { height: int } { Matt: String } ] 
    * @param m
-   * @return
+   * @return Human Readable String of Map
    */
   public String listMap(HashMap<String, String> m) {
 		StringBuilder s = new StringBuilder();
@@ -376,7 +363,7 @@ public class UMLEnvironment {
   /**
    * Builds string containing verbose info on every class in environment
    *   Calls listClass
-   * @return
+   * @return Human readable String
    */
   public String listClassesVerbose() {
 	  StringBuilder s = new StringBuilder();

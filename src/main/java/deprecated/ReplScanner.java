@@ -2,6 +2,7 @@ package deprecated;
 
 import java.util.Scanner;
 
+@SuppressWarnings("javadoc")
 @Deprecated
 public class ReplScanner {
 	private static Scanner repl = null;

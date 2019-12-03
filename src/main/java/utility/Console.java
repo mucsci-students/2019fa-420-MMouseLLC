@@ -5,6 +5,7 @@ import java.util.logging.Logger;
 import org.jline.reader.LineReader;
 
 import config.HelpScreenConfig;
+import data.Category;
 import data.Relationship;
 import data.UMLEnvironment;
 import data.UMLItem;
@@ -25,6 +26,9 @@ public class Console {
 	/** The UMLEnvironment. */
 	private UMLEnvironment env;
 
+	/**
+	 * Setup environment
+	 */
 	public Console() {
 		this.env = new UMLEnvironment();
 	}
@@ -77,6 +81,14 @@ public class Console {
 			save(input);
 		} else if (command.equals("load")) {
 			load(input);
+		} else if (command.equals("add_category")) {
+			addCategory(input);
+		} else if (command.equals("list_categories")) {
+			listCategories();
+		} else if (command.equals("edit_category")) {
+			editCategory(input);
+		} else if (command.equals("remove_category")) {
+			removeCategory(input);
 		} else if (command.equals("add_relationship")) {
 			addRelationship(input);
 		} else if (command.equals("edit_relationship")) {
@@ -194,6 +206,10 @@ public class Console {
 		System.out.println(env.listClasses());
 	}
 	
+	/**
+	 * Console list everything associated with a provided class name
+	 * @param input name of Class
+	 */
 	public void listClass(String[] input) {
 		if (input.length < 2) {
 			logger.warning("Usage: list_class [className]");
@@ -249,7 +265,7 @@ public class Console {
 
 	/**
 	 * Adds a relationship between 2 UMLItems to environment
-	 * Command: add_relationship [parentClass] [childClass] [optional quantifier]  
+	 * Command: add_relationship [parentClass] [childClass] [optional quantifier]
 	 * @param input The input
 	 */
 	public void addRelationship(String[] input) {
@@ -280,7 +296,6 @@ public class Console {
 			Relationship r = new Relationship(parentItem, childItem);
 			env.addRelationship(r);
 		}
-
 		System.out.println(env.listRelationships());
 	}
 
@@ -342,12 +357,36 @@ public class Console {
 			return -1;
 		}
 	}
+	/**
+	 * Return integer corresponding to command past with arg 
+	 * @param arg
+	 * @return
+	 */
+	private int getCategory(String arg) {
+		switch (arg.toLowerCase()) {
+		case ("n"):
+			return 0;
+		//aggregation
+		case ("a"):
+			return 1;
+		//composition
+		case ("c"):
+			return 2;
+		//generalization
+		case ("g"):
+			return 3;
+		//realization
+		case ("r"):
+			return 4;
+		default:
+			return -1;
+		}
+	}
 
 	/**
 	 * Remove a class relationship from the environment
 	 * Command: remove_relationship [parentClass] [childClass] 
 	 * @param input
-	 * @return
 	 */
 	public void removeRelationship(String[] input) {
 		if (input.length != 3) {
@@ -373,63 +412,121 @@ public class Console {
 		env.listRelationships();
 	}
 	
+	/**
+	 * List all of the relationships in the running environment
+	 */
 	public void listRelationships() {
 		System.out.println(env.listRelationships());
 	}
+	/**
+	 * List all of the categories in the running environment
+	 */
+	public void listCategories() {
+		System.out.println(env.listCategories());
+	}
 	
 	
 	/**
-	 * Removes a child class from another class given the input of child and parent
-	 * to be unlinked
-	 * 
+	 * Adds a category between 2 UMLItems to environment
 	 * @param input The input
 	 */
-	@Deprecated
-	public void removeChild(String[] input) {
-		if (input.length != 3) {
-			logger.warning(
-					"Invalid: removechild [childClass] [parentClass] - 3 fields required, " + input.length + " found.");
-		} else {
-			String childName = input[1];
-			String parentName = input[2];
-			UMLItem childItem = env.findItem(childName);
-			UMLItem parentItem = env.findItem(parentName);
-
-			env.removeChild(childName, parentName, childItem, parentItem);
-			System.out.println(env.listClasses());
+	public void addCategory(String[] input) {
+		if (input.length < 3) {
+			logger.warning("Invalid: add_category [childClass] [parentClass] [category] - minimum 3 fields required, " + input.length
+					+ " found.");
+			return;
 		}
+		UMLItem parentItem  = env.findItem(input[1]);
+		UMLItem childItem = env.findItem(input[2]);
+		if (parentItem == null) {
+			logger.warning("Class " + input[1] + " was not found.");
+			return;
+		} else if (childItem == null) {
+			logger.warning("Class " + input[2] + " was not found.");
+			return;
+		}
+		if (input.length > 3) {
+			int c = getCategory(input[3]);
+			if (c < 0) {
+				logger.warning("Category needs to be of form: [N] | [a] | [c] | [g] | [r]");
+				return;
+			}
+			
+			Category c2 = new Category(parentItem, childItem, c);
+			Category findCategory = env.findCategory(c2);
+			if (findCategory != null) {
+				logger.warning("Category already exists");
+			}
+			else if (findCategory == null) {
+				env.addCategory(c2);
+			}
+			
+		} else {
+			Category c2 = new Category(parentItem, childItem);
+			env.addCategory(c2);
+		}
+		System.out.println(env.listCategories());
 	}
-
 	/**
-	 * Lists the children of a given parent class
-	 * 
+	 * Edits category between 2 UMLItems to environment
+	 * @param input The input
+	 */
+	public void editCategory(String[] input) {
+		if (input.length < 4) {
+			logger.warning("Invalid: edit_category [childClass] [parentClass] [category] - 4 fields required, " + input.length
+					+ " found.");
+			return;
+		}
+		UMLItem parentItem  = env.findItem(input[1]);
+		UMLItem childItem = env.findItem(input[2]);
+		if (parentItem == null) {
+			logger.warning("Class " + input[1] + " was not found.");
+			return;
+		} else if (childItem == null) {
+			logger.warning("Class " + input[2] + " was not found.");
+			return;
+		}
+
+		Category c = env.findCategory(new Category(parentItem, childItem));
+		if (c == null) {
+			logger.warning("Category not found. Add with command add_category");
+			return;
+		}
+		int c2 = getCategory(input[3]);
+		if (c2 < 0) {
+			logger.warning("Quantifier needs to be of form: [N] | [a] | [c] | [g] | [r]");
+			return;
+		}
+		c.setCategory(c2);
+		System.out.println(env.listCategories());
+	}
+	
+	/**
+	 * Remove a class category from the environment
 	 * @param input
 	 */
-	@Deprecated
-	public void listChildren(String[] input) {
-		if (input.length != 2) {
-			logger.warning("Invalid: listchildren [parentClass] - 2 fields required, " + input.length + " found.");
-		} else {
-			String parentName = input[1];
-			String childList = env.listChildren(parentName);
-			System.out.println(childList);
+	public void removeCategory(String[] input) {
+		if (input.length != 3) {
+			logger.warning("Invalid: remove_Category [parentClass] [childClass]");
+			return;
 		}
-	}
-
-	/**
-	 * Lists the parents of a given child class
-	 * 
-	 * @param input The input
-	 */
-	@Deprecated
-	public void listParents(String[] input) {
-		if (input.length != 2) {
-			logger.warning("Invalid: listparents [childClass] - 2 fields required, " + input.length + " found.");
-		} else {
-			String childName = input[1];
-			String parentList = env.listParents(childName);
-			System.out.println(parentList);
+		
+		UMLItem parentItem  = env.findItem(input[1]);
+		UMLItem childItem = env.findItem(input[2]);
+		if (childItem == null) {
+			logger.warning("Class " + input[2] + " was not found.");
+			return;
+		} else if (parentItem == null) {
+			logger.warning("Class " + input[1] + " was not found.");
+			return;
 		}
+		
+		if (!env.removeCategory(new Category(parentItem, childItem))) {
+			logger.warning("Could not find Category to remove.");
+			return;
+		}
+		
+		env.listCategories();
 	}
 
 	/**

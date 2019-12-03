@@ -1,11 +1,17 @@
 package data;
 
+import java.util.Optional;
+
+import javafx.event.*;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.LineTo;
 import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
+import utility.GUITile;
 
 /**
  * @author kn0412 on GitHub
@@ -15,7 +21,12 @@ import javafx.scene.shape.Path;
  */
 public class Arrow extends Path {
 	private static final double defaultArrowHeadSize = 5.0;
-
+	public Label quantLabel = new Label();
+	public Button editQuant = new Button("edit quantifier");
+	public Button quantButton = new Button("add quantifier");
+	public TextField quantBox = new TextField("quantifier");
+	public boolean quantAdded = false;
+	public boolean isRemoved = false;
 	/**
 	 * Take origin x and y, destination x and y, and a double Size for the arrows
 	 * head
@@ -31,6 +42,42 @@ public class Arrow extends Path {
 		strokeProperty().bind(fillProperty());
 		setFill(Color.BLACK);
 
+		quantLabel.setLayoutX((startX + endX) / 2);
+		quantLabel.setLayoutY((startY + endY) / 2);
+		quantButton.setLayoutX((startX + endX) / 2);
+		quantButton.setLayoutY(((startY + endY) / 2) + 40);
+		quantBox.setLayoutX((startX + endX) / 2);
+		quantBox.setLayoutY(((startY + endY) / 2) + 10);
+		editQuant.setLayoutX((startX + endX) / 2);
+		editQuant.setLayoutY(((startY + endY) / 2) + 20);
+		editQuant.setVisible(false);
+		quantLabel.setVisible(false);
+		quantButton.setOnAction(new EventHandler<ActionEvent>() {
+
+			public void handle(ActionEvent clickQuantButton) {
+				quantLabel.setText(quantBox.getText());
+				quantLabel.setMinWidth(120);
+				quantLabel.setMaxWidth(120);
+				quantLabel.setVisible(true);
+				editQuant.setVisible(true);
+				quantBox.setVisible(false);
+				quantButton.setVisible(false);
+				quantAdded = true;
+			}
+			
+		});
+		
+		editQuant.setOnAction(new EventHandler<ActionEvent>() {
+			public void handle(ActionEvent clickEditEvent) {
+				TextInputDialog input = new TextInputDialog();
+				input.setHeaderText("Enter New quantifier: ");
+				input.setHeight(50);
+				input.setWidth(120);
+				Optional<String> answer = input.showAndWait();
+				quantLabel.setText(answer.get());
+			}
+
+		});
 
 		// Line
 		getElements().add(new MoveTo(startX, startY));
@@ -52,7 +99,6 @@ public class Arrow extends Path {
 		getElements().add(new LineTo(endX, endY));
 		
 	}
-
 	/**
 	 * Origin x and y and Destination x and y with default arrow head size 5.0
 	 * 

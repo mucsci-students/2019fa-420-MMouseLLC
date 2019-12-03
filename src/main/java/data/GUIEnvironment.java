@@ -51,7 +51,7 @@ public class GUIEnvironment extends UMLEnvironment {
 	/**
 	 * Returns value for given key item, null if key item not in map
 	 * @param item
-	 * @return
+	 * @return UMLItem
 	 */
 	public GUITile getTileFor(UMLItem item) {
 		return tileMapping.get(item);
@@ -63,11 +63,12 @@ public class GUIEnvironment extends UMLEnvironment {
 	public void removeItemGUI(UMLItem item) {
 		//boolean result = this.items.remove(item);
 		this.tileMapping.remove(item);
-		for(UMLItem child : item.getChildren()) {
-			this.arrowMapping.remove(new ParentChildPair(item , child));
+		
+		for(Relationship r : this.relationshipsWithChild(item)) {
+			this.arrowMapping.remove(new ParentChildPair(r.getParent() , r.getChild()));
 		}
-		for(UMLItem parent : item.getParents()) {
-			this.arrowMapping.remove(new ParentChildPair(parent , item));
+		for(Relationship r : this.relationshipsWithParent(item)) {
+			this.arrowMapping.remove(new ParentChildPair(r.getParent() , r.getChild()));
 		}
 	}
 
@@ -102,11 +103,13 @@ public class GUIEnvironment extends UMLEnvironment {
 	/**
 	 * Filters all managed arrow relationships given a UMLItem
 	 * @param item
-	 * @return
+	 * @returns hash map where item entered is in pair for 
+	 * parent and child //tile a entered -> Pair 1(a,b) Pair 2(b,a) in map
 	 */
 	public HashMap<ParentChildPair, Arrow> getRelationshipsFor(UMLItem item) {
 		return (HashMap<ParentChildPair, Arrow>) arrowMapping.entrySet().stream()
 				.filter(pair -> (pair.getKey().getChild() == item) || (pair.getKey().getParent() == item))
 				.collect(Collectors.toMap(x -> x.getKey(), x -> x.getValue()));
 	}
+	
 }
