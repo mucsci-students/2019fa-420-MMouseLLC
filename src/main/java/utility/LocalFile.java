@@ -14,6 +14,7 @@ import org.apache.commons.io.FilenameUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 
+import data.GUIEnvironment;
 import data.UMLEnvironment;
 
 /**
@@ -40,6 +41,8 @@ public class LocalFile {
   /** The file name. */
   String fileName;
   
+  GUIEnvironment guiEnv;
+  
   /**
    * Default Constructor.
    */
@@ -55,6 +58,11 @@ public class LocalFile {
   public LocalFile(UMLEnvironment env) {
     this.env = env;
     this.directory = new File(SAVE_DIR);
+  }
+  
+  public LocalFile(GUIEnvironment guiEnv) {
+	  this.guiEnv = guiEnv;
+	  this.directory = new File(SAVE_DIR);
   }
   
   /**
