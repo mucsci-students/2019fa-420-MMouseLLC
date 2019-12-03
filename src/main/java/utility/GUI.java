@@ -87,6 +87,13 @@ public class GUI extends Application {
 		addButton.setText("Add Class");
 		ScrollPane sp = new ScrollPane();
 		sp.setContent(mainLayout);
+		
+		Button saveButton = new Button();
+		saveButton.setText("Save");
+		
+		Button loadButton = new Button();
+		loadButton.setText("Load");
+
 
 		// Allows for the display/edit modes buttons
 		ToggleGroup group = new ToggleGroup();
@@ -277,6 +284,33 @@ public class GUI extends Application {
 
 			layout.getChildren().add(resetAll);
 		});
+		
+		/*
+		 * @author grant This section is where save will be written
+		 * 
+		 * 
+		 */
+		
+		EventHandler<ActionEvent> clickSaveEvent = new EventHandler<ActionEvent>() {
+			
+			public void handle(ActionEvent e) {
+				LocalFile file = new LocalFile(env);
+				file.saveFile();
+			};
+		};
+		
+		/*
+		 * @author grant This section is where load will be
+		 * 
+		 * 
+		 */
+		
+		EventHandler<ActionEvent> clickLoadEvent = new EventHandler<ActionEvent>() {
+			
+			public void handle(ActionEvent e) {
+				
+			};
+		};
 
 		/*
 		 * @author eric This bottom section sets the stage size, add button layout and
@@ -291,9 +325,17 @@ public class GUI extends Application {
 		resetAll.setLayoutX(110);
 		resetAll.setLayoutY(10);
 		resetAll.setVisible(false);
+		saveButton.setLayoutX(300);
+		saveButton.setLayoutY(10);
+		saveButton.setOnAction(clickSaveEvent);
+		loadButton.setLayoutX(350);
+		loadButton.setLayoutY(10);
+		loadButton.setOnAction(clickLoadEvent);
 		primary.setMinHeight(winHeight);
 		primary.setMinWidth(winLength);
 		layout.getChildren().add(addButton);
+		layout.getChildren().add(saveButton);
+		layout.getChildren().add(loadButton);
 		layout.getChildren().add(resetAll);
 		mainLayout.getChildren().add(arrowLayout);
 		mainLayout.getChildren().add(layout);
