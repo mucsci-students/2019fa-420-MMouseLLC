@@ -271,7 +271,7 @@ public class GUI extends Application {
 
 		
 		/*
-		 * @author grant This section is where the listener is set for the save button
+		 * @author grant This section is where save will be written
 		 * 
 		 * 
 		 */
@@ -285,7 +285,7 @@ public class GUI extends Application {
 		};
 		
 		/*
-		 * @author grant This section is where the listener is set for the save button
+		 * @author grant This section is where load will be
 		 * 
 		 * 
 		 */
