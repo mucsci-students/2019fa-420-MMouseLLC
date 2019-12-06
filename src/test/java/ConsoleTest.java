@@ -26,20 +26,44 @@ public class ConsoleTest {
   @Test
   public void testConsole() {
     String[] help = { "help" };
+    console.checkInput(help);
+    
     String[] add = { "add" , "dan" };
-    String[] delete = { "delete", "dan", "-f" };
+    console.checkInput(add);
+    
+    String[] find = { "find" , "dan" };
+    console.checkInput(find);
+    
+    String[] addMore = { "add" , "grant" };
+    console.checkInput(addMore);
+    String[] addRelationship = { "add_relationship" , "grant", "dan" };
+    console.checkInput(addRelationship);
+    
+//    String[] edit = { "edit" , "grant" , "matt" };
+//    console.checkInput(edit);
+//    
+
+    console.listRelationships();
+    
     String[] list = { "list" };
+    console.checkInput(list);
+    
+    
+    
+    
     String[] listCategories = { "list_categories" };
     String[] listRelationships = { "list_relationships" };
     String[] listFields = { "list_fields" };
     String[] listFunctions = { "list_functions" };
-    console.checkInput(help);
-    console.checkInput(add);
-    console.checkInput(list);
     console.checkInput(listCategories);
     console.checkInput(listRelationships);
     console.checkInput(listFields);
     console.checkInput(listFunctions);
+
+
+
+
+    String[] delete = { "delete", "matt", "-f" };
     console.checkInput(delete);
   }
 
