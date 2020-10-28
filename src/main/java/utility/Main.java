@@ -4,6 +4,8 @@ package utility;
  * Beginning of program
  */
 public class Main {
+  
+  private static Console console = new Console();
 
 	/**
 	 * Depending on cmd line args start different instance of UML Editor Project
@@ -24,7 +26,6 @@ public class Main {
 	 * Run the Console
 	 */
 	public static void run() {
-		Console console = new Console();
 		try {
 			console.run();
 		} catch (org.jline.reader.EndOfFileException e) {
@@ -41,4 +42,14 @@ public class Main {
 	public static void runGUI(String[] args) {
 		GUI.main(args);
 	}
+	
+	/**
+	 * Gets the Console
+	 * 
+	 * @return console the Console
+	 */
+	public Console getConsole() {
+	  return console;
+	}
 }
+
